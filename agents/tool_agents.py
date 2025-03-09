@@ -141,7 +141,13 @@ class ReactAgent:
         elif react_llm_name in ['gemini']:
             self.llm = ChatGoogleGenerativeAI(temperature=0,model="gemini-pro",google_api_key=GOOGLE_API_KEY)
             self.max_token_length = 30000
-        # TODO: Add case for DeepSeek model
+
+        elif react_llm_name in ['deepseek']:
+            # Assuming you have a DeepSeek model running locally and accessible via a direct method
+            # This is a placeholder, replace with your actual DeepSeek implementation
+            from deepseek_local import DeepSeekLocal  # Hypothetical local DeepSeek class
+            self.llm = DeepSeekLocal()  # Initialize your local DeepSeek model, pass the path to your model
+            self.max_token_length = 30000
 
         self.illegal_early_stop_patience = illegal_early_stop_patience
 
