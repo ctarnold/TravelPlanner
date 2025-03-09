@@ -15,7 +15,7 @@ from langchain.schema import (
     AIMessage,
     HumanMessage,
     SystemMessage
-)
+) 
 from prompts import zeroshot_react_agent_prompt
 from utils.func import load_line_json_data, save_file
 import sys
@@ -141,7 +141,7 @@ class ReactAgent:
         elif react_llm_name in ['gemini']:
             self.llm = ChatGoogleGenerativeAI(temperature=0,model="gemini-pro",google_api_key=GOOGLE_API_KEY)
             self.max_token_length = 30000
-
+        # TODO: Add case for DeepSeek model
 
         self.illegal_early_stop_patience = illegal_early_stop_patience
 
@@ -451,6 +451,7 @@ class ReactAgent:
         while True:
             try:
                 # print(self._build_agent_prompt())
+                # TODO: build case for DeepSeek model
                 if self.react_name == 'gemini':
                     request = format_step(self.llm.invoke(self._build_agent_prompt(),stop=['\n']).content)
                 else:
