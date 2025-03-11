@@ -142,11 +142,9 @@ class ReactAgent:
             self.llm = ChatGoogleGenerativeAI(temperature=0,model="gemini-pro",google_api_key=GOOGLE_API_KEY)
             self.max_token_length = 30000
 
-        elif react_llm_name in ['deepseek']:
-            # Assuming you have a DeepSeek model running locally and accessible via a direct method
-            # This is a placeholder, replace with your actual DeepSeek implementation
-            from deepseek_local import DeepSeekLocal  # Hypothetical local DeepSeek class
-            self.llm = DeepSeekLocal()  # Initialize your local DeepSeek model, pass the path to your model
+        else: # fall back to attempt on local model
+            from agents.local_model import LocalModel 
+            self.llm = LocalModel(stop_list = stop_list)  
             self.max_token_length = 30000
 
         self.illegal_early_stop_patience = illegal_early_stop_patience
@@ -456,13 +454,13 @@ class ReactAgent:
     def prompt_agent(self) -> str:
         while True:
             try:
-                # print(self._build_agent_prompt())
-                # TODO: build case for DeepSeek model
+                prompt = self._build_agent_prompt()
                 if self.react_name == 'gemini':
                     request = format_step(self.llm.invoke(self._build_agent_prompt(),stop=['\n']).content)
-                else:
+                elif isinstance(self.llm, ChatOpenAI):
                     request = format_step(self.llm([HumanMessage(content=self._build_agent_prompt())]).content)
-                # print(request)
+                else:
+                    request = format_step(self.llm(prompt, stop_list = ['\n']))
                 return request
             except:
                 catch_openai_api_error()
@@ -645,7 +643,7 @@ if __name__ == '__main__':
     # model_name = ['gpt-3.5-turbo-1106','gpt-4-1106-preview','gemini','mistral-7B-32K','mixtral','ChatGLM3-6B-32K'][2]
     parser = argparse.ArgumentParser()
     parser.add_argument("--set_type", type=str, default="validation")
-    parser.add_argument("--model_name", type=str, default="gpt-3.5-turbo-1106")
+    parser.add_argument("--model_name", type=str, default="local") # CHANGE TO TEST DIFFERENT MODELS
     parser.add_argument("--output_dir", type=str, default="./")
     args = parser.parse_args()
     if args.set_type == 'validation':
