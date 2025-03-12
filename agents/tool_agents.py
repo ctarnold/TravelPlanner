@@ -16,7 +16,7 @@ from langchain.schema import (
     HumanMessage,
     SystemMessage
 ) 
-from prompts import zeroshot_react_agent_prompt
+from .prompts import zeroshot_react_agent_prompt
 from utils.func import load_line_json_data, save_file
 import sys
 import json
