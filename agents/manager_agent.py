@@ -1,6 +1,12 @@
+import sys
+import os
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
 from typing import List, Dict, Any
-from agents.tool_agents import ReactAgent  # Import your ReactAgent
+from tool_agents import ReactAgent  # Changed from agents.tool_agents
 from prompts import MANAGER_AGENT_INSTRUCTION
+
+# ...existing code...
 
 class ManagerAgent:
     def __init__(self,
@@ -82,6 +88,6 @@ if __name__ == '__main__':
     tools_list = ["notebook", "flights", "attractions", "accommodations",
                   "restaurants", "googleDistanceMatrix", "planner", "cities"]
     manager = ManagerAgent(tools=tools_list)
-    query = "I want to visit New York City for 3 days.  Suggest some attractions and restaurants."
+    query = "Can you create a 3-day travel plan for 2 people from Orlando to Boston from March 15th to March 17th, 2022, with a budget of $2000?"
     final_plan = manager.run(query)
     print("Final Plan:", final_plan)

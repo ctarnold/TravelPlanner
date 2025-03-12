@@ -57,7 +57,6 @@ def eval_score(set_type: str, file_path: str):
     elif set_type == 'validation':
         query_data_list  = load_dataset('osunlp/TravelPlanner','validation',download_mode="force_redownload")['validation']
 
-    
     query_data_list = [x for x in query_data_list]
     hardConstraint_statistic= {level:{day:[] for day in [3,5,7]} for level in ['easy','medium','hard']} 
     commonsenseConstraint_statistic = {level:{day:[] for day in [3,5,7]} for level in ['easy','medium','hard']} 
