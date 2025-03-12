@@ -30,8 +30,8 @@ import argparse
 from datasets import load_dataset
 import os
 
-OPENAI_API_KEY = os.environ['OPENAI_API_KEY']
-GOOGLE_API_KEY = os.environ['GOOGLE_API_KEY']
+# OPENAI_API_KEY = os.environ['OPENAI_API_KEY']
+# GOOGLE_API_KEY = os.environ['GOOGLE_API_KEY']
 
 
 pd.options.display.max_info_columns = 200

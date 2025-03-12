@@ -9,8 +9,8 @@ from .prompts import MANAGER_AGENT_INSTRUCTION
 class ManagerAgent:
     def __init__(self,
                  tools: List[str],
-                 react_llm_name: str = 'gpt-3.5-turbo-1106',
-                 planner_llm_name: str = 'gpt-3.5-turbo-1106',
+                 react_llm_name: str = 'local',
+                 planner_llm_name: str = 'local',
                  max_iterations: int = 3,
                  evaluation_criteria: List[str] = None):  # Add criteria
         """
