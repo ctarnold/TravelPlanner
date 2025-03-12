@@ -3,8 +3,8 @@ import os
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from typing import List, Dict, Any
-from tool_agents import ReactAgent  # Changed from agents.tool_agents
-from prompts import MANAGER_AGENT_INSTRUCTION
+from .tool_agents import ReactAgent  # Changed from agents.tool_agents
+from .prompts import MANAGER_AGENT_INSTRUCTION
 
 # ...existing code...
 
