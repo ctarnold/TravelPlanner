@@ -1,4 +1,6 @@
 import re, string, os, sys
+import sys, os
+
 sys.path.append(os.path.abspath(os.path.join(os.getcwd(), "..")))
 sys.path.append(os.path.abspath(os.path.join(os.getcwd(), "tools/planner")))
 sys.path.append(os.path.abspath(os.path.join(os.getcwd(), "../tools/planner")))
@@ -7,8 +9,8 @@ import importlib
 from typing import List, Dict, Any
 import tiktoken
 from pandas import DataFrame
-from langchain.chat_models import ChatOpenAI
-from langchain.callbacks import get_openai_callback
+from langchain_community.chat_models import ChatOpenAI
+from langchain_community.callbacks.manager import get_openai_callback
 from langchain.llms.base import BaseLLM
 from langchain.prompts import PromptTemplate
 from langchain.schema import (
@@ -25,14 +27,11 @@ import time
 import pandas as pd
 from datetime import datetime
 from tqdm import tqdm
-from langchain_google_genai import ChatGoogleGenerativeAI
 import argparse
 from datasets import load_dataset
 import os
 
-# OPENAI_API_KEY = os.environ['OPENAI_API_KEY']
-# GOOGLE_API_KEY = os.environ['GOOGLE_API_KEY']
-
+OPENAI_API_KEY = ""
 
 pd.options.display.max_info_columns = 200
 
@@ -71,7 +70,7 @@ class ReactAgent:
                  react_llm_name = 'gpt-3.5-turbo-1106',
                  planner_llm_name = 'gpt-3.5-turbo-1106',
                 #  logs_path = '../logs/',
-                 city_file_path = '../database/background/citySet.txt'
+                 city_file_path = '../../database/database/background/citySet.txt'
                  ) -> None: 
 
         self.answer = ''
@@ -90,6 +89,7 @@ class ReactAgent:
         self.current_data = None
 
         if 'gpt-3.5' in react_llm_name:
+            OPENAI_API_KEY = os.environ['OPENAI_API_KEY']
             stop_list = ['\n']
             self.max_token_length = 15000
             self.llm = ChatOpenAI(temperature=1,
@@ -99,6 +99,7 @@ class ReactAgent:
                      model_kwargs={"stop": stop_list})
             
         elif 'gpt-4' in react_llm_name:
+            OPENAI_API_KEY = os.environ['OPENAI_API_KEY']
             stop_list = ['\n']
             self.max_token_length = 30000
             self.llm = ChatOpenAI(temperature=0,
@@ -108,6 +109,7 @@ class ReactAgent:
                      model_kwargs={"stop": stop_list})
             
         elif react_llm_name in ['mistral-7B-32K']:
+            OPENAI_API_KEY = os.environ['OPENAI_API_KEY']
             stop_list = ['\n']
             self.max_token_length = 30000
             self.llm = ChatOpenAI(temperature=0,
@@ -118,6 +120,7 @@ class ReactAgent:
                      model_kwargs={"stop": stop_list})
             
         elif react_llm_name in ['mixtral']:
+            OPENAI_API_KEY = os.environ['OPENAI_API_KEY']
             stop_list = ['\n']
             self.max_token_length = 30000
             self.llm = ChatOpenAI(temperature=0,
@@ -128,6 +131,7 @@ class ReactAgent:
                      model_kwargs={"stop": stop_list})
             
         elif react_llm_name in ['ChatGLM3-6B-32K']:
+            OPENAI_API_KEY = os.environ['OPENAI_API_KEY']
             stop_list = ['\n']
             self.max_token_length = 30000
             self.llm = ChatOpenAI(
@@ -137,14 +141,11 @@ class ReactAgent:
                      openai_api_base="http://localhost:8501/v1", 
                      model_name="gpt-3.5-turbo",
                      model_kwargs={"stop": stop_list})
-        
-        elif react_llm_name in ['gemini']:
-            self.llm = ChatGoogleGenerativeAI(temperature=0,model="gemini-pro",google_api_key=GOOGLE_API_KEY)
-            self.max_token_length = 30000
 
         else: # fall back to attempt on local model
+            stop_list = ['\n']
             from agents.local_model import LocalModel 
-            self.llm = LocalModel(stop_list = stop_list)  
+            self.llm = LocalModel()  
             self.max_token_length = 30000
 
         self.illegal_early_stop_patience = illegal_early_stop_patience
@@ -452,21 +453,30 @@ class ReactAgent:
             return
 
     def prompt_agent(self) -> str:
+        iterations = 0
         while True:
             try:
+                iterations = 0
                 prompt = self._build_agent_prompt()
                 if self.react_name == 'gemini':
                     request = format_step(self.llm.invoke(self._build_agent_prompt(),stop=['\n']).content)
+                elif self.react_name == 'local':
+                    request = format_step(self.llm(prompt = prompt))
                 elif isinstance(self.llm, ChatOpenAI):
                     request = format_step(self.llm([HumanMessage(content=self._build_agent_prompt())]).content)
                 else:
-                    request = format_step(self.llm(prompt, stop_list = ['\n']))
+                    print("WARNING: NO MODEL FOUND")
                 return request
             except:
+                iterations+=1
                 catch_openai_api_error()
                 print(self._build_agent_prompt())
                 print(len(self.enc.encode(self._build_agent_prompt())))
-                time.sleep(5)
+                time.sleep(1)
+            if iterations >= 10:
+                print("WARNING: The agent is stuck. Please check the agent.")
+                break
+            
 
     def _build_agent_prompt(self) -> str:
         if self.mode == "zero_shot":

@@ -5,6 +5,7 @@ from langchain.prompts import PromptTemplate
 from agents.prompts import planner_agent_prompt, cot_planner_agent_prompt, react_planner_agent_prompt,reflect_prompt,react_reflect_planner_agent_prompt, REFLECTION_HEADER
 from langchain.chat_models import ChatOpenAI
 from langchain.llms.base import BaseLLM
+from pydantic.v1 import BaseModel
 from langchain.schema import (
     AIMessage,
     HumanMessage,
@@ -17,12 +18,13 @@ import openai
 import time
 from enum import Enum
 from typing import List, Union, Literal
-from langchain_google_genai import ChatGoogleGenerativeAI
+from agents.local_model import LocalModel
+# from langchain_google_genai import ChatGoogleGenerativeAI
 import argparse
 
 
-OPENAI_API_KEY = os.environ['OPENAI_API_KEY']
-GOOGLE_API_KEY = os.environ['GOOGLE_API_KEY']
+# OPENAI_API_KEY = os.environ['OPENAI_API_KEY']
+# GOOGLE_API_KEY = os.environ['GOOGLE_API_KEY']
 
 
 def catch_openai_api_error():
@@ -84,7 +86,8 @@ class Planner:
         elif model_name in ['gemini']:
             self.llm = ChatGoogleGenerativeAI(temperature=0,model="gemini-pro",google_api_key=GOOGLE_API_KEY)
         else:
-            self.llm = ChatOpenAI(model_name=model_name, temperature=0, max_tokens=4096, openai_api_key=OPENAI_API_KEY)
+            self.llm = LocalModel()
+            self.max_token_length = 30000
 
 
         print(f"PlannerAgent {model_name} loaded.")

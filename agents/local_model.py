@@ -13,11 +13,47 @@ class StopWordsCriteria(StoppingCriteria):
         return False
 
 class LocalModel:
-    def __init__(self, model_path="../../models/DeepSeek-R1-Distill-Qwen-1.5B ", device="cuda"):  # Replace with your model path
-        self.device = device
-        self.tokenizer = AutoTokenizer.from_pretrained(model_path, trust_remote_code=True)
-        self.model = AutoModelForCausalLM.from_pretrained(model_path, torch_dtype=torch.float16, trust_remote_code=True).to(self.device)
-        self.model.eval()
+    # For local testing
+    # def __init__(self, model_path="../../agents/models/Qwen2.5-0.5B-Instruct", device="cpu"):  # Replace with your model path
+    #    print("Loading LocalModel...")
+    #    self.device = device
+    #    self.tokenizer = AutoTokenizer.from_pretrained(model_path, trust_remote_code=True)
+    #   self.model = AutoModelForCausalLM.from_pretrained(model_path, torch_dtype=torch.float16, trust_remote_code=True).to(self.device)
+    #    self.model.eval()
+    #    print("LocalModel loaded.")
+
+    # For compute clusters
+    def __init__(self, model_path="../../models/DeepSeek-R1-Distill-Llama-8B"):  
+        print("Loading LocalModel...")
+        self.device = "cuda" if torch.cuda.is_available() else "cpu"
+        print(f"Using device: {self.device}")
+        try:
+            self.tokenizer = AutoTokenizer.from_pretrained(model_path, trust_remote_code=True)
+            # Enable flash attention if CUDA is available
+            use_flash_attention = torch.cuda.is_available()
+            model_kwargs = {
+                "torch_dtype": torch.bfloat16,  
+                "trust_remote_code": True,
+                "device_map": "auto",  
+            }
+            if use_flash_attention:
+                try:
+                    model_kwargs["attn_implementation"] = "flash_attention_2"
+                    print("Using flash_attention_2")
+                except Exception as e:
+                    print(f"Failed to enable flash attention 2: {e}")
+                    use_flash_attention = False  
+
+            self.model = AutoModelForCausalLM.from_pretrained(
+                model_path,
+                **model_kwargs
+            ).to(self.device)
+            self.model.eval()
+            print("LocalModel loaded.")
+        except Exception as e:
+            print(f"Error loading model: {e}")
+            raise  
+
 
     def __call__(self, prompt, max_length=30000, stop_list = ['\n']):
         input_ids = self.tokenizer(prompt, return_tensors="pt").input_ids.to(self.device)

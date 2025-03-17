@@ -44,7 +44,7 @@ Parameters: Short Description - A brief description or label for the stored data
 Example: NotebookWrite[Flights from Rome to Paris in 2022-02-01] would store the informatrion of flights from Rome to Paris in 2022-02-01 in the Notebook.
 
 (8) Planner[Query]
-Description: A smart planning tool that crafts detailed plans based on user input and the information stroed in Notebook.
+Description: A smart planning tool that crafts detailed plans based on user input and the information stored in Notebook.
 Parameters: 
 Query: The query from user.
 Example: Planner[Give me a 3-day trip plan from Seattle to New York] would return a detailed 3-day trip plan.
