@@ -23,7 +23,7 @@ class LocalModel:
     #    print("LocalModel loaded.")
 
     # For compute clusters
-    def __init__(self, model_path="../../models/DeepSeek-R1-Distill-Llama-8B"):  
+    def __init__(self, model_path="/scratch/gpfs/ca2992/models/DeepSeek-R1-Distill-Llama-8B"):  
         print("Loading LocalModel...")
         self.device = "cuda" if torch.cuda.is_available() else "cpu"
         print(f"Using device: {self.device}")
