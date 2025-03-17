@@ -5,7 +5,7 @@ from utils.func import extract_before_parenthesis
 
 class Flights:
 
-    def __init__(self, path="../../../TravelData/database/flights/clean_Flights_2022.csv"):
+    def __init__(self, path="/scratch/gpfs/ca2992/TravelData/database/flights/clean_Flights_2022.csv"):
         self.path = path
         self.data = None
 
