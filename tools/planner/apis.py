@@ -148,7 +148,7 @@ class ReactPlanner:
         # Think
         self.scratchpad += f'\nThought {self.curr_step}:'
         self.scratchpad += ' ' + self.prompt_agent()
-        print(self.scratchpad.split('\n')[-1])
+        # print(self.scratchpad.split('\n')[-1])
 
         # Act
         self.scratchpad += f'\nAction {self.curr_step}:'
@@ -183,7 +183,7 @@ class ReactPlanner:
         self.curr_step += 1
 
         self.scratchpad += observation
-        print(self.scratchpad.split('\n')[-1])
+        # print(self.scratchpad.split('\n')[-1])
 
     def prompt_agent(self) -> str:
         while True:
@@ -266,7 +266,7 @@ class ReactReflectPlanner:
         # Think
         self.scratchpad += f'\nThought {self.curr_step}:'
         self.scratchpad += ' ' + self.prompt_agent()
-        print(self.scratchpad.split('\n')[-1])
+        # print(self.scratchpad.split('\n')[-1])
 
         # Act
         self.scratchpad += f'\nAction {self.curr_step}:'
@@ -310,7 +310,7 @@ class ReactReflectPlanner:
             self.reflections_str = format_reflections(self.reflections)
         else:
             raise NotImplementedError(f'Unknown reflection strategy: {strategy}')
-        print(self.reflections_str)
+        # print(self.reflections_str)
 
     def prompt_agent(self) -> str:
         while True:
