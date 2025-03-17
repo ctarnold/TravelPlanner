@@ -55,10 +55,11 @@ class ManagerAgent:
         if not feedback:
             return plan  # No feedback, no refinement needed
         
+        refinement_prompt = f"Current plan:\n{plan}\n\nImprove the plan for the included query based on the attached feedback. Do not change aspects outside of the feedback.\n" + "query: \n" + self.query + "\nfeedback:\n "
         for k, v in feedback.items():
-            print("\nREFINING PLAN\n")
-            refinement_prompt = f"Current plan:\n{plan}\n\nImprove the plan for the included query based on the attached feedback. Do not change aspects outside of the feedback.\n" + "query: \n" + self.query + "\nfeedback:\n " + k + ": " + v
-            refined_plan, _, _ = self.react_agent.run(refinement_prompt, reset=True) # Do I want true or false? True new agent, false keeps mems+ context.
+            refinement_prompt += f"{k}: {v}\n"
+        print("\nREFINING PLAN\n")
+        refined_plan, _, _ = self.react_agent.run(refinement_prompt, reset=True) # Do I want true or false? True new agent, false keeps mems+ context.
         
         return refined_plan
 
