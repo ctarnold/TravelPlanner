@@ -12,7 +12,7 @@
 
 module purge
 module load anaconda3/2024.6
-module load cudatoolkit/12.2
+module load cudatoolkit/12.8
 conda activate thesis
 
 python ../run_planner.py
