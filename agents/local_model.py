@@ -67,6 +67,7 @@ class LocalModel:
         with torch.no_grad():
             outputs = self.model.generate(input_ids, 
                                           max_length=max_length, 
+                                          pad_token_id=self.tokenizer.eos_token_id,
                                           stopping_criteria=stopping_criteria_list)
 
         return self.tokenizer.decode(outputs[0], skip_special_tokens=True)
