@@ -70,7 +70,7 @@ class ReactAgent:
                  react_llm_name = 'gpt-3.5-turbo-1106',
                  planner_llm_name = 'gpt-3.5-turbo-1106',
                 #  logs_path = '../logs/',
-                 city_file_path = '../../database/database/background/citySet.txt'
+                 city_file_path = '/scratch/gpfs/ca2992/TravelData/database/background/citySet.txt'
                  ) -> None: 
 
         self.answer = ''
