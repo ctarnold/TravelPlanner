@@ -190,7 +190,7 @@ class ReactAgent:
         self.scratchpad += f'\nThought {self.step_n}:'
         self.scratchpad += ' ' + self.prompt_agent()
 
-        print(self.scratchpad.split('\n')[-1])
+        # print(self.scratchpad.split('\n')[-1])
         self.json_log[-1]['thought'] = self.scratchpad.split('\n')[-1].replace(f'\nThought {self.step_n}:',"")
         # self.log_file.write(self.scratchpad.split('\n')[-1] + '\n')
 
