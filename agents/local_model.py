@@ -21,10 +21,11 @@ class LocalModel:
     #   self.model = AutoModelForCausalLM.from_pretrained(model_path, torch_dtype=torch.float16, trust_remote_code=True).to(self.device)
     #    self.model.eval()
     #    print("LocalModel loaded.")
-
+    # cluster directory: /scratch/gpfs/ca2992/models/DeepSeek-R1-Distill-Llama-8B
     # For compute clusters
     def __init__(self, model_path="/scratch/gpfs/ca2992/models/DeepSeek-R1-Distill-Llama-8B"):  
         print("Loading LocalModel...")
+        self.name = model_path
         self.device = "cuda" if torch.cuda.is_available() else "cpu"
         print(f"Using device: {self.device}")
         try:
