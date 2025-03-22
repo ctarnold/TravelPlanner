@@ -56,7 +56,7 @@ class LocalModel:
             raise  
 
 
-    def __call__(self, prompt, max_length=30000, stop_list = ['\n']):
+    def __call__(self, prompt, max_length=30000, stop_list = []):
         # input_ids = self.tokenizer(prompt, return_tensors="pt").input_ids.to(self.device)
         
         input_ids = self.tokenizer(prompt)
@@ -70,7 +70,8 @@ class LocalModel:
             outputs = self.model.generate(**input_ids, 
                                           max_length=max_length, 
                                           # pad_token_id=self.tokenizer.eos_token_id,
-                                          stopping_criteria=stopping_criteria_list)
+                                          # stopping_criteria=stopping_criteria_list
+            )
 
         return self.tokenizer.decode(outputs[0], skip_special_tokens=True)
 

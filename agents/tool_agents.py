@@ -456,7 +456,6 @@ class ReactAgent:
         iterations = 0
         while True:
             try:
-                iterations = 0
                 prompt = self._build_agent_prompt()
                 if self.react_name == 'gemini':
                     request = format_step(self.llm.invoke(self._build_agent_prompt(),stop=['\n']).content)
@@ -466,6 +465,7 @@ class ReactAgent:
                     request = format_step(self.llm([HumanMessage(content=self._build_agent_prompt())]).content)
                 else:
                     print("WARNING: NO MODEL FOUND")
+                iterations = 0
                 return request
             except:
                 iterations+=1
