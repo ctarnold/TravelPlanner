@@ -45,10 +45,16 @@ class LocalModel:
                     print(f"Failed to enable flash attention 2: {e}")
                     use_flash_attention = False  
 
+            # self.model = AutoModelForCausalLM.from_pretrained(
+            #    model_path,
+            #    **model_kwargs
+            # ).to(self.device)
+
             self.model = AutoModelForCausalLM.from_pretrained(
                 model_path,
                 **model_kwargs
-            ).to(self.device)
+            )
+
             self.model.eval()
             print("LocalModel loaded.")
         except Exception as e:
