@@ -170,7 +170,7 @@ class ReactAgent:
 
         self.__reset_agent()
 
-    def run(self, query, reset=True) -> None:
+    def run(self, query, reset=True):
 
         self.query = query
         
