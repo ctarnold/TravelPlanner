@@ -272,7 +272,7 @@ class ReactReflectPlanner:
         self.scratchpad += f'\nAction {self.curr_step}:'
         action = self.prompt_agent()
         self.scratchpad += ' ' + action
-        print(self.scratchpad.split('\n')[-1])
+        # print(self.scratchpad.split('\n')[-1])
 
         # Observe
         self.scratchpad += f'\nObservation {self.curr_step}: '
@@ -301,7 +301,7 @@ class ReactReflectPlanner:
         self.curr_step += 1
 
         self.scratchpad += observation
-        print(self.scratchpad.split('\n')[-1])
+        # print(self.scratchpad.split('\n')[-1])
 
     def reflect(self, strategy: ReflexionStrategy) -> None:
         print('Reflecting...')
