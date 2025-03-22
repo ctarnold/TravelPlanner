@@ -1,6 +1,5 @@
-from typing import List, Dict, Any
+from typing import List
 from .tool_agents import ReactAgent
-from .prompts import manager_agent_prompt  
 from agents.local_model import LocalModel 
 
 class ManagerAgent:
@@ -15,7 +14,6 @@ class ManagerAgent:
         Initializes the ManagerAgent.
         """
         self.query = query
-        self.tools = self.load_tools(tools, planner_model_name=planner_llm_name)
         self.llm = LocalModel()
         self.react_agent = ReactAgent(
             args=None,
