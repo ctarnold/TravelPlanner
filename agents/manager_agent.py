@@ -71,6 +71,9 @@ class ManagerAgent:
         self.react_agent.run(query)
         plan = self.react_agent.answer
         print("\nInitial Plan:", plan)
+        if (len(plan) == 0):
+            print("ERROR: No initial plan generated. Exiting.")
+            return plan
 
         print("\nEvaluating Plan with ", self.max_iterations, " iterations.")
         for i in range(self.max_iterations):
