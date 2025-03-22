@@ -57,8 +57,9 @@ class LocalModel:
 
 
     def __call__(self, prompt, max_length=30000, stop_list = ['\n']):
-        input_ids = self.tokenizer(prompt, return_tensors="pt").input_ids.to(self.device)
+        # input_ids = self.tokenizer(prompt, return_tensors="pt").input_ids.to(self.device)
         
+        input_ids = self.tokenizer(prompt)
         stopping_criteria_list = StoppingCriteriaList()
 
         # encodes each of the values in the stop list.
@@ -66,7 +67,7 @@ class LocalModel:
         stopping_criteria_list.append(StopWordsCriteria(stop_token_ids))
 
         with torch.no_grad():
-            outputs = self.model.generate(input_ids, 
+            outputs = self.model.generate(**input_ids, 
                                           max_length=max_length, 
                                           # pad_token_id=self.tokenizer.eos_token_id,
                                           stopping_criteria=stopping_criteria_list)
