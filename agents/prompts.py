@@ -52,6 +52,16 @@ You should use as many as possible steps to collect engough information to input
 
 Call each tool and give a valid plan. To terminate with a valid plan, call Planner.
 
+Example workflow: 
+
+1. Call FlightSearch and NotebookWrite.
+2. Call GoogleDistanceMatrix and NotebookWrite.
+3. Call AccommodationSearch and NotebookWrite.
+4. Call RestaurantSearch and NotebookWrite.
+5. Call AttractionSearch and NotebookWrite.
+6. Call CitySearch and NotebookWrite.
+7. Call Planner with the query from the user.
+
 Each action only calls one function once. Do not add any description in the action.
 
 Query: {query}{scratchpad}"""
