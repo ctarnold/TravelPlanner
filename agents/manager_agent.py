@@ -72,13 +72,20 @@ class ManagerAgent:
         print("\nRunning ManagerAgent...", flush = True)
         print("\nQuery:", query + "\n")
         plan, _, json = self.react_agent.run(query)
+
+        iterations = 1
+        while plan == None:
+                iterations += 1
+                plan, _, json  = self.react_agent.run(query)
         print("\nInitial Plan: ", plan, flush = True)
+        print("\n After ", iterations, " iterations.", plan, flush = True)
+
         if (len(plan) == 0 and len(str(json)) == 0):
-            print("ERROR: No initial plan generated. Exiting.")
+            print("ERROR: No initial plan generated. Exiting.", flush=True)
             return "", ""
 
         if (len(plan) == 0):
-            print("ERROR: No initial plan generated despite valid json. Exiting.")
+            print("ERROR: No initial plan generated despite valid json. Exiting.", flush=True)
             return "", ""
         
         print("\nEvaluating Plan with ", self.max_iterations, " iterations.")

@@ -145,8 +145,8 @@ class ReactAgent:
         else: # fall back to attempt on local model
             stop_list = ['\n']
             from agents.local_model import LocalModel 
-            self.llm = LocalModel(model_path="/scratch/gpfs/ca2992/models/Llama-3.1-8B-Instruct-travelplanner-SFT")  
-            self.llm.name = "/scratch/gpfs/ca2992/models/Llama-3.1-8B-Instruct-travelplanner-SFT"
+            self.llm = LocalModel(model_path="/scratch/gpfs/ca2992/models/DeepSeek-R1-Distill-Llama-8B")  
+            self.llm.name = "/scratch/gpfs/ca2992/models/DeepSeek-R1-Distill-Llama-8B"
             print("Managed LLM: ", self.llm.name)
             self.max_token_length = 30000
 
@@ -172,7 +172,6 @@ class ReactAgent:
 
         self.__reset_agent()
 
-    # TODO: make a BRIEF JSON LOG with just the end result
     def run(self, query, reset=True):
 
         self.query = query
@@ -430,6 +429,7 @@ class ReactAgent:
                     self.answer = self.current_observation
                     self.__reset_record()
                     self.json_log[-1]['state'] = f'Successful'
+                    print("SUCCESSFUL STATE REACHED", flush=True)
 
             else:
                 self.retry_record['invalidAction'] += 1

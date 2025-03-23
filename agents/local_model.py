@@ -73,7 +73,8 @@ class LocalModel:
             # encodes each of the values in the stop list.
             stop_token_ids = [self.tokenizer.encode(w)[0] for w in stop_list]
             stopping_criteria_list.append(StopWordsCriteria(stop_token_ids))
-
+            
+            print("Generating output...", flush=True)
             with torch.no_grad():
                 outputs = self.model.generate(input_ids, 
                                             max_length=max_length, 
