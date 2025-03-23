@@ -50,6 +50,8 @@ Query: The query from user.
 Example: Planner[Give me a 3-day trip plan from Seattle to New York] would return a detailed 3-day trip plan.
 You should use as many as possible steps to collect engough information to input to the Planner tool. 
 
+Call each tool and give a valid plan. To terminate with a valid plan, call Planner.
+
 Each action only calls one function once. Do not add any description in the action.
 
 Query: {query}{scratchpad}"""
