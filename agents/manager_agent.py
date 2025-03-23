@@ -48,7 +48,7 @@ class ManagerAgent:
         
         return evaluation
 
-    def refine_plan(self, plan: str, feedback: str) -> tuple[str, str | list]:
+    def refine_plan(self, plan: str, feedback: str) -> tuple[str, str]:
         """
         Refines the plan based on feedback by re-prompting the ReactAgent.
         """
@@ -61,9 +61,9 @@ class ManagerAgent:
         print("\nREFINING PLAN\n")
         refined_plan, _, json = self.react_agent.run(refinement_prompt, reset=True) # Do I want true or false? True new agent, false keeps mems+ context.
         
-        return refined_plan, json
+        return refined_plan, str(json)
 
-    def run(self, query: str) -> tuple[str, str | list]:
+    def run(self, query: str) -> tuple[str, str]:
         """
         Runs the manager agent to generate and refine a travel plan.
         """
@@ -82,7 +82,7 @@ class ManagerAgent:
             plan, json = self.refine_plan(plan, evaluations)
 
         print("\nManagerAgent finished.")
-        return plan, json
+        return plan, str(json)
 
 if __name__ == '__main__':
     # Example usage
