@@ -22,6 +22,7 @@ class ManagerAgent:
             planner_llm_name=planner_llm_name,
             max_steps=30
         )
+        self.react_agent.__reset_agent()
         print("\nPlanner LLM: ", planner_llm_name)
         print("\nReact LLM: ", react_llm_name)
         print("\n Manager LLM: ", self.llm.name)
@@ -72,7 +73,7 @@ class ManagerAgent:
         print("\nRunning ManagerAgent...", flush = True)
         print("\nQuery:", query + "\n")
         plan, _, json = self.react_agent.run(query)
-        print("\nInitial Plan:", plan, json, flush = True)
+        print("\nInitial Plan: ", plan, flush = True)
         if (len(plan) == 0 and len(str(json)) == 0):
             print("ERROR: No initial plan generated. Exiting.")
             return "", ""
@@ -83,7 +84,7 @@ class ManagerAgent:
         
         print("\nEvaluating Plan with ", self.max_iterations, " iterations.")
         for i in range(self.max_iterations):
-            evaluations = self.evaluate_plan(plan)
+            evaluations = self.evaluate_plan(str(plan))
 
             plan, json = self.refine_plan(plan, evaluations)
 
