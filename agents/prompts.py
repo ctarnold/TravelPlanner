@@ -54,12 +54,12 @@ Call each tool and give a valid plan. To terminate with a valid plan, call Plann
 
 Example workflow, in order.
 
-1. Call FlightSearch and NotebookWrite.
-2. Call GoogleDistanceMatrix and NotebookWrite.
-3. Call AccommodationSearch and NotebookWrite.
-4. Call RestaurantSearch and NotebookWrite.
-5. Call AttractionSearch and NotebookWrite.
-6. Call CitySearch and NotebookWrite.
+1. Call CitySearch if needed (query has a U.S. state).
+2. Call FlightSearch and NotebookWrite.
+3. Call GoogleDistanceMatrix and NotebookWrite.
+4. Call AccommodationSearch and NotebookWrite.
+5. Call RestaurantSearch and NotebookWrite.
+6. Call AttractionSearch and NotebookWrite.
 7. Call Planner with the query from the user.
 
 Each action only calls one function once. Do not add any description in the action.
