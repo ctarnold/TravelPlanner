@@ -63,21 +63,25 @@ class LocalModel:
 
 
     def __call__(self, prompt, max_length=30000, stop_list = ['\n']):
-        input_ids = self.tokenizer(prompt, return_tensors="pt").input_ids.to(self.device)
-        
-        # input_ids = self.tokenizer(prompt)
-        stopping_criteria_list = StoppingCriteriaList()
+        try:
+            input_ids = self.tokenizer(prompt, return_tensors="pt").input_ids.to(self.device)
+            
+            # input_ids = self.tokenizer(prompt)
+            stopping_criteria_list = StoppingCriteriaList()
 
-        # encodes each of the values in the stop list.
-        stop_token_ids = [self.tokenizer.encode(w)[0] for w in stop_list]
-        stopping_criteria_list.append(StopWordsCriteria(stop_token_ids))
+            # encodes each of the values in the stop list.
+            stop_token_ids = [self.tokenizer.encode(w)[0] for w in stop_list]
+            stopping_criteria_list.append(StopWordsCriteria(stop_token_ids))
 
-        with torch.no_grad():
-            outputs = self.model.generate(input_ids, 
-                                          max_length=max_length, 
-                                          # pad_token_id=self.tokenizer.pad_token_id,
-                                          stopping_criteria=stopping_criteria_list
-        )
+            with torch.no_grad():
+                outputs = self.model.generate(input_ids, 
+                                            max_length=max_length, 
+                                            # pad_token_id=self.tokenizer.pad_token_id,
+                                            stopping_criteria=stopping_criteria_list
+            )
+        except Exception as e:
+            print(f"Error generating output: {e}")
+            return
 
         return self.tokenizer.decode(outputs[0], skip_special_tokens=True)
 
