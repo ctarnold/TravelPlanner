@@ -63,7 +63,7 @@ class LocalModel:
             raise  
 
 
-    def __call__(self, prompt, max_length=10000, stop_list = ['\n']):
+    def __call__(self, prompt, max_length=30000, stop_list = ['\n']):
         try:
             input_ids = self.tokenizer(prompt, return_tensors="pt").input_ids.to(self.device)
             
