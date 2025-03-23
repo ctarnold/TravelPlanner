@@ -79,7 +79,7 @@ class LocalModel:
                 outputs = self.model.generate(input_ids, 
                                             max_length=max_length, 
                                             # pad_token_id=self.tokenizer.pad_token_id,
-                                            stopping_criteria=stopping_criteria_list
+                                            # stopping_criteria=stopping_criteria_list
             )
         except Exception as e:
             print(f"Error generating output: {e}")
