@@ -48,7 +48,7 @@ class ManagerAgent:
         
         return evaluation
 
-    def refine_plan(self, plan: str, feedback: str) -> str:
+    def refine_plan(self, plan: str, feedback: str) -> tuple[str, str | list]:
         """
         Refines the plan based on feedback by re-prompting the ReactAgent.
         """
@@ -59,19 +59,18 @@ class ManagerAgent:
         refinement_prompt = f"Current plan:\n{plan}\n\nImprove the plan for the included query based on the attached feedback. Do not change aspects outside of the feedback.\n" + "query: \n" + self.query + "\nfeedback:\n "
         refinement_prompt = refinement_prompt + feedback
         print("\nREFINING PLAN\n")
-        refined_plan, _, _ = self.react_agent.run(refinement_prompt, reset=True) # Do I want true or false? True new agent, false keeps mems+ context.
+        refined_plan, _, json = self.react_agent.run(refinement_prompt, reset=True) # Do I want true or false? True new agent, false keeps mems+ context.
         
-        return refined_plan
+        return refined_plan, json
 
-    def run(self, query: str) -> str:
+    def run(self, query: str) -> tuple[str, str | list]:
         """
         Runs the manager agent to generate and refine a travel plan.
         """
         print("\nRunning ManagerAgent...")
         print("\nQuery:", query + "\n")
-        self.react_agent.run(query)
-        plan = self.react_agent.answer
-        print("\nInitial Plan:", plan)
+        plan, _, json = self.react_agent.run(query)
+        print("\nInitial Plan:", plan, json)
         if (len(plan) == 0):
             print("ERROR: No initial plan generated. Exiting.")
             return plan
@@ -80,10 +79,10 @@ class ManagerAgent:
         for i in range(self.max_iterations):
             evaluations = self.evaluate_plan(plan)
 
-            plan = self.refine_plan(plan, evaluations)
+            plan, json = self.refine_plan(plan, evaluations)
 
         print("\nManagerAgent finished.")
-        return plan
+        return plan, json
 
 if __name__ == '__main__':
     # Example usage
@@ -91,5 +90,6 @@ if __name__ == '__main__':
                   "restaurants", "googleDistanceMatrix", "planner", "cities"]
     query = "Can you create a 3-day travel plan for 2 people from Orlando to Boston from March 15th to March 17th, 2022, with a budget of $2000?  The user prefers vegetarian options and wants to stay in a hotel."
     manager = ManagerAgent(query=query, tools=tools_list)
-    final_plan = manager.run(query)
+    final_plan, json = manager.run(query)
     print("Final Plan:", final_plan)
+    print("JSON:", json)
