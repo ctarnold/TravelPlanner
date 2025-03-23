@@ -45,8 +45,6 @@ class LocalModel:
                 except Exception as e:
                     print(f"Failed to enable flash attention 2: {e}")
                     use_flash_attention = False 
-            if self.tokenizer.pad_token is None:
-                self.tokenizer.pad_token = self.tokenizer.eos_token 
 
             # self.model = AutoModelForCausalLM.from_pretrained(
             #    model_path,
@@ -77,7 +75,7 @@ class LocalModel:
         with torch.no_grad():
             outputs = self.model.generate(input_ids, 
                                           max_length=max_length, 
-                                          pad_token_id=self.tokenizer.pad_token_id,
+                                          # pad_token_id=self.tokenizer.pad_token_id,
                                           stopping_criteria=stopping_criteria_list
         )
 
