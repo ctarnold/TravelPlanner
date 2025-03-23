@@ -145,8 +145,8 @@ class ReactAgent:
         else: # fall back to attempt on local model
             stop_list = ['\n']
             from agents.local_model import LocalModel 
-            self.llm = LocalModel(model_path="/scratch/gpfs/ca2992/models/DeepSeek-R1-Distill-Qwen-14B")  
-            self.llm.name = "/scratch/gpfs/ca2992/models/DeepSeek-R1-Distill-Qwen-14B"
+            self.llm = LocalModel(model_path="/scratch/gpfs/ca2992/models/Llama-3.1-8B-Instruct-travelplanner-SFT")  
+            self.llm.name = "/scratch/gpfs/ca2992/models/Llama-3.1-8B-Instruct-travelplanner-SFT"
             print("Managed LLM: ", self.llm.name)
             self.max_token_length = 30000
 
@@ -457,7 +457,7 @@ class ReactAgent:
             self.finished = True
             self.answer = self.current_observation
             self.step_n += 1
-            return
+            return 
 
     def prompt_agent(self) -> str:
         iterations = 0
