@@ -21,6 +21,7 @@ class LocalModel:
     #   self.model = AutoModelForCausalLM.from_pretrained(model_path, torch_dtype=torch.float16, trust_remote_code=True).to(self.device)
     #    self.model.eval()
     #    print("LocalModel loaded.")
+    # consider using from HF: https://huggingface.co/deepseek-ai/DeepSeek-R1-Distill-Qwen-14B
     # cluster directory: /scratch/gpfs/ca2992/models/DeepSeek-R1-Distill-Llama-8B
     # cluster directory: /scratch/gpfs/ca2992/models/QwQ-32B
     # For compute clusters

@@ -145,7 +145,7 @@ class ReactAgent:
         else: # fall back to attempt on local model
             stop_list = ['\n']
             from agents.local_model import LocalModel 
-            self.llm = LocalModel(model_path="/scratch/gpfs/ca2992/models/QwQ-32B")  
+            self.llm = LocalModel(model_path="/scratch/gpfs/ca2992/models/DeepSeek-R1-Distill-Qwen-14B")  
             self.max_token_length = 30000
 
         self.illegal_early_stop_patience = illegal_early_stop_patience
@@ -170,6 +170,7 @@ class ReactAgent:
 
         self.__reset_agent()
 
+    # TODO: make a BRIEF JSON LOG with just the end result
     def run(self, query, reset=True):
 
         self.query = query
@@ -440,13 +441,14 @@ class ReactAgent:
             print(f'Observation {self.step_n}: ' + self.current_observation+'\n')
             # rite(f'Observation {self.step_n}: ' + self.current_observation+'\n')
             self.json_log[-1]['observation'] = self.current_observation
+            
 
         self.step_n += 1
 
         # 
 
         if action_type and action_type == 'Planner' and self.retry_record['planner']==0:
-            
+            print("Planner action is successful. We stop here.", flush=True)
             self.finished = True
             self.answer = self.current_observation
             self.step_n += 1

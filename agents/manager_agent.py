@@ -31,7 +31,7 @@ class ManagerAgent:
         """
         Evaluates the plan against the criteria and returns feedback.
         """
-        
+        print("\nEvaluating Plan...\n\n", flush = True)
         prompt = "You are a manager agent evaluating a travel plan. Evaluate the plan on Budget Compliance, Room Rules, Room Type, Cuisine, Transportation, and Common Sense. Provide feedback for each specification, with reference to the user query. For example, if the plan is over budget, you need to include this in your feedback, as for the other categories."
         
         prompt = prompt + " The query is as follows: \n" + self.query + "\n\n"
@@ -45,14 +45,16 @@ class ManagerAgent:
         prompt = prompt + "Give Feedback: \n"
 
         evaluation = self.llm(prompt)
-        
+        self.react_agent.__reset_agent()
+
+        print(evaluation, "\n\n", flush = True)
         return evaluation
 
     def refine_plan(self, plan: str, feedback: str) -> tuple[str, str]:
         """
         Refines the plan based on feedback by re-prompting the ReactAgent.
         """
-        if len(feedback) == 0:
+        if len(str(feedback)) == 0:
             print("potential error in agent, no feedback by manager.")
             return plan
         
@@ -76,7 +78,9 @@ class ManagerAgent:
             return plan, str(json)
 
         if (len(plan) == 0):
-            plan = str(json)
+            print("ERROR: No initial plan generated despite valid json. Exiting.")
+            return plan, str(json)
+        
         print("\nEvaluating Plan with ", self.max_iterations, " iterations.")
         for i in range(self.max_iterations):
             evaluations = self.evaluate_plan(plan)
