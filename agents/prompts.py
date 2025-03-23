@@ -52,7 +52,7 @@ You should use as many as possible steps to collect engough information to input
 
 Call each tool and give a valid plan. To terminate with a valid plan, call Planner.
 
-Example workflow: 
+Example workflow, in order.
 
 1. Call FlightSearch and NotebookWrite.
 2. Call GoogleDistanceMatrix and NotebookWrite.
