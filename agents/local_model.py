@@ -74,7 +74,7 @@ class LocalModel:
             stopping_criteria_list.append(StopWordsCriteria(stop_token_ids))
 
             with torch.no_grad():
-                outputs = self.model.generate(**input_ids, 
+                outputs = self.model.generate(input_ids, 
                                             max_length=max_length, 
                                             # pad_token_id=self.tokenizer.pad_token_id,
                                             stopping_criteria=stopping_criteria_list
