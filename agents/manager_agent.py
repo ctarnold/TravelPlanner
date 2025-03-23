@@ -75,6 +75,7 @@ class ManagerAgent:
 
         iterations = 1
         while plan == None:
+                print("Entering loop with iterations: ", iterations, flush = True)
                 iterations += 1
                 plan, _, json  = self.react_agent.run(query)
         print("\nInitial Plan: ", plan, flush = True)
