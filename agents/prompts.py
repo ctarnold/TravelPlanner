@@ -52,7 +52,9 @@ You should use as many as possible steps to collect engough information to input
 
 Call each tool and give a valid plan. To terminate with a valid plan, call Planner.
 
-Example workflow, in order.
+Very Important Example Workflow, In Order:
+
+You will receive $1,000,000 dollars for being brief, concise, accurate, and following steps below.
 
 1. Call CitySearch if needed (query has a U.S. state).
 2. Call FlightSearch and NotebookWrite.
