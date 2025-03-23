@@ -223,6 +223,7 @@ class ReactAgent:
             # self.log_file.write("The same action has been repeated 3 times consecutively. So we stop here.")
             self.json_log[-1]['state'] = 'same action 3 times repeated'
             self.finished = True
+            print("\n\nNO ANSWER GIVEN\n\n", flush=True)
             return # may return here with no answer
 
 
@@ -254,6 +255,7 @@ class ReactAgent:
                         # self.log_file.write(f"{pending_action} early stop due to {self.max_retries} max retries.")
                         self.json_log[-1]['state'] = f"{pending_action} early stop due to {self.max_retries} max retries."
                         self.finished = True
+                        print("\n\nNO ANSWER GIVEN ACTION TYPE\n\n", flush = True)
                         return  # may return here with no answer
                     
                 elif pending_action not in self.retry_record:
@@ -263,6 +265,7 @@ class ReactAgent:
                         # self.log_file.write(f"invalidAction early stop due to {self.max_retries} max retries.")
                         self.json_log[-1]['state'] = f"invalidAction early stop due to {self.max_retries} max retries."
                         self.finished = True
+                        print("\n\nNO ANSWER GIVEN ACTION TYPE 2\n\n", flush = True)
                         return  # may return here with no answer
 
             if action_type == 'FlightSearch':
