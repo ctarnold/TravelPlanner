@@ -71,10 +71,12 @@ class ManagerAgent:
         print("\nQuery:", query + "\n")
         plan, _, json = self.react_agent.run(query)
         print("\nInitial Plan:", plan, json)
-        if (len(plan) == 0):
+        if (len(plan) == 0 and len(str(json)) == 0):
             print("ERROR: No initial plan generated. Exiting.")
-            return plan
+            return plan, str(json)
 
+        if (len(plan) == 0):
+            plan = str(json)
         print("\nEvaluating Plan with ", self.max_iterations, " iterations.")
         for i in range(self.max_iterations):
             evaluations = self.evaluate_plan(plan)
