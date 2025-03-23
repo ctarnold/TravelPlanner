@@ -22,7 +22,6 @@ class ManagerAgent:
             planner_llm_name=planner_llm_name,
             max_steps=30
         )
-        self.react_agent.__reset_agent()
         print("\nPlanner LLM: ", planner_llm_name)
         print("\nReact LLM: ", react_llm_name)
         print("\n Manager LLM: ", self.llm.name)
