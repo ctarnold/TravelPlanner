@@ -68,6 +68,7 @@ class ManagerAgent:
         Runs the manager agent to generate and refine a travel plan.
         """
         print("\nRunning ManagerAgent...")
+        print("\nQuery:", query + "\n")
         self.react_agent.run(query)
         plan = self.react_agent.answer
         print("\nInitial Plan:", plan)

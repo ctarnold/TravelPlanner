@@ -49,13 +49,11 @@ class LocalModel:
             #    model_path,
             #    **model_kwargs
             # ).to(self.device)
-
             self.model = AutoModelForCausalLM.from_pretrained(
                 model_path,
                 **model_kwargs
             )
-
-            self.model.eval()
+            self.model.eval() # sets model to do inference
             print("LocalModel loaded.")
         except Exception as e:
             print(f"Error loading model: {e}")
