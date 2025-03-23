@@ -57,7 +57,7 @@ def catch_openai_api_error():
     elif error == openai.error.AuthenticationError:
         print("AuthenticationError")
     else:
-        print("API error:", error)
+        print("API error:", error, flush=True)
 
 class ReactAgent:
     def __init__(self,
@@ -216,7 +216,7 @@ class ReactAgent:
 
         # examine if the same action has been repeated 3 times consecutively
         if len(self.last_actions) == 3:
-            print("The same action has been repeated 3 times consecutively. So we stop here.")
+            print("The same action has been repeated 3 times consecutively. So we stop here.", flush=True)
             # self.log_file.write("The same action has been repeated 3 times consecutively. So we stop here.")
             self.json_log[-1]['state'] = 'same action 3 times repeated'
             self.finished = True
@@ -474,7 +474,7 @@ class ReactAgent:
                 print(len(self.enc.encode(self._build_agent_prompt())))
                 time.sleep(1)
             if iterations >= 10:
-                print("WARNING: The agent is stuck. Please check the agent.")
+                print("WARNING: The agent is stuck. Please check the agent.", flush = True)
                 break
             
 
