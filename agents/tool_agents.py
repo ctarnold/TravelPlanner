@@ -478,7 +478,7 @@ class ReactAgent:
                 iterations+=1
                 catch_openai_api_error()
                 # print(self._build_agent_prompt())
-                # print(len(self.enc.encode(self._build_agent_prompt())))
+                # # print(len(self.enc.encode(self._build_agent_prompt())))
                 self.scratchpad = "An error was made. Please try again. Call each tool once and give a valid plan. To terminate with a plan, call Planner."
                 time.sleep(1)
             if iterations >= 10:
