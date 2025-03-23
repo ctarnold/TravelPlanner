@@ -64,7 +64,7 @@ class LocalModel:
 
     def __call__(self, prompt, max_length=30000, stop_list = ['\n']):
         try:
-            input_ids = self.tokenizer(prompt, return_tensors="pt")
+            input_ids = self.tokenizer(prompt, return_tensors="pt").input_ids.to(self.device)
             
             # input_ids = self.tokenizer(prompt)
             stopping_criteria_list = StoppingCriteriaList()
