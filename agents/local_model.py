@@ -22,8 +22,9 @@ class LocalModel:
     #    self.model.eval()
     #    print("LocalModel loaded.")
     # cluster directory: /scratch/gpfs/ca2992/models/DeepSeek-R1-Distill-Llama-8B
+    # cluster directory: /scratch/gpfs/ca2992/models/QwQ-32B
     # For compute clusters
-    def __init__(self, model_path="/scratch/gpfs/ca2992/models/QwQ-32B"):  
+    def __init__(self, model_path="/scratch/gpfs/ca2992/models/DeepSeek-R1-Distill-Llama-8B"):  
         print("Loading LocalModel...")
         self.name = model_path
         self.device = "cuda" if torch.cuda.is_available() else "cpu"
@@ -43,16 +44,19 @@ class LocalModel:
                     print("Using flash_attention_2")
                 except Exception as e:
                     print(f"Failed to enable flash attention 2: {e}")
-                    use_flash_attention = False  
+                    use_flash_attention = False 
+            if self.tokenizer.pad_token is None:
+                self.tokenizer.pad_token = self.tokenizer.eos_token 
 
             # self.model = AutoModelForCausalLM.from_pretrained(
             #    model_path,
             #    **model_kwargs
             # ).to(self.device)
+
             self.model = AutoModelForCausalLM.from_pretrained(
                 model_path,
                 **model_kwargs
-            )
+            ).to(self.device)
             self.model.eval() # sets model to do inference
             print("LocalModel loaded.")
         except Exception as e:
@@ -73,9 +77,9 @@ class LocalModel:
         with torch.no_grad():
             outputs = self.model.generate(input_ids, 
                                           max_length=max_length, 
-                                          # pad_token_id=self.tokenizer.eos_token_id,
+                                          pad_token_id=self.tokenizer.pad_token_id,
                                           stopping_criteria=stopping_criteria_list
-            )
+        )
 
         return self.tokenizer.decode(outputs[0], skip_special_tokens=True)
 
