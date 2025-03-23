@@ -14,7 +14,7 @@ class ManagerAgent:
         Initializes the ManagerAgent.
         """
         self.query = query
-        self.llm = LocalModel()
+        self.llm = LocalModel(model_path="/scratch/gpfs/ca2992/models/DeepSeek-R1-Distill-Llama-8B")
         self.react_agent = ReactAgent(
             args=None,
             tools=tools,

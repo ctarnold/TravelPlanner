@@ -145,7 +145,7 @@ class ReactAgent:
         else: # fall back to attempt on local model
             stop_list = ['\n']
             from agents.local_model import LocalModel 
-            self.llm = LocalModel()  
+            self.llm = LocalModel(model_path="/scratch/gpfs/ca2992/models/QwQ-32B")  
             self.max_token_length = 30000
 
         self.illegal_early_stop_patience = illegal_early_stop_patience
