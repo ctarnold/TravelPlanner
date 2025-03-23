@@ -146,6 +146,8 @@ class ReactAgent:
             stop_list = ['\n']
             from agents.local_model import LocalModel 
             self.llm = LocalModel(model_path="/scratch/gpfs/ca2992/models/DeepSeek-R1-Distill-Qwen-14B")  
+            self.llm.name = "/scratch/gpfs/ca2992/models/DeepSeek-R1-Distill-Qwen-14B"
+            print("Managed LLM: ", self.llm.name)
             self.max_token_length = 30000
 
         self.illegal_early_stop_patience = illegal_early_stop_patience
@@ -221,7 +223,7 @@ class ReactAgent:
             # self.log_file.write("The same action has been repeated 3 times consecutively. So we stop here.")
             self.json_log[-1]['state'] = 'same action 3 times repeated'
             self.finished = True
-            return
+            return # may return here with no answer
 
 
         # action_type, action_arg = parse_action(action)
@@ -252,7 +254,7 @@ class ReactAgent:
                         # self.log_file.write(f"{pending_action} early stop due to {self.max_retries} max retries.")
                         self.json_log[-1]['state'] = f"{pending_action} early stop due to {self.max_retries} max retries."
                         self.finished = True
-                        return
+                        return  # may return here with no answer
                     
                 elif pending_action not in self.retry_record:
                     if self.retry_record['invalidAction'] + 1 > self.max_retries:
@@ -261,7 +263,7 @@ class ReactAgent:
                         # self.log_file.write(f"invalidAction early stop due to {self.max_retries} max retries.")
                         self.json_log[-1]['state'] = f"invalidAction early stop due to {self.max_retries} max retries."
                         self.finished = True
-                        return
+                        return  # may return here with no answer
 
             if action_type == 'FlightSearch':
                 try:

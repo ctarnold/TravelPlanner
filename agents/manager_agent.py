@@ -75,11 +75,11 @@ class ManagerAgent:
         print("\nInitial Plan:", plan, json, flush = True)
         if (len(plan) == 0 and len(str(json)) == 0):
             print("ERROR: No initial plan generated. Exiting.")
-            return plan, str(json)
+            return "", ""
 
         if (len(plan) == 0):
             print("ERROR: No initial plan generated despite valid json. Exiting.")
-            return plan, str(json)
+            return "", ""
         
         print("\nEvaluating Plan with ", self.max_iterations, " iterations.")
         for i in range(self.max_iterations):
