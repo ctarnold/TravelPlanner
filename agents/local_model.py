@@ -54,7 +54,7 @@ class LocalModel:
             self.model = AutoModelForCausalLM.from_pretrained(
                 model_path,
                 **model_kwargs
-            ).to(self.device)
+            )
             self.model.eval() # sets model to do inference
             print("LocalModel loaded.")
         except Exception as e:
