@@ -9,7 +9,7 @@ def main():
     # Test query
     query = "Can you create a 3-day travel plan for 2 people leaving from Orlando and vacationing in Boston from March 15th to March 17th, 2022, with a budget of $2000?"
     
-    agent = ReactAgent(query = query, tools=tools_list)
+    agent = ReactAgent(tools=tools_list)
 
     iterations = 0
     while True:
