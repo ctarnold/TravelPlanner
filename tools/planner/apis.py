@@ -233,6 +233,9 @@ class ReactReflectPlanner:
         if model_name in ['gemini']:
             self.react_llm = ChatGoogleGenerativeAI(temperature=0,model="gemini-pro",google_api_key=GOOGLE_API_KEY)
             self.reflect_llm = ChatGoogleGenerativeAI(temperature=0,model="gemini-pro",google_api_key=GOOGLE_API_KEY)
+        elif model_name == 'local':
+            self.react_llm = LocalModel(model_path = "/scratch/gpfs/ca2992/models/DeepSeek-R1-Distill-Llama-8B")
+            self.reflect_llm = LocalModel(model_path = "/scratch/gpfs/ca2992/models/DeepSeek-R1-Distill-Llama-8B")
         else:
             self.react_llm = ChatOpenAI(model_name=model_name, temperature=0, max_tokens=1024, openai_api_key=OPENAI_API_KEY,model_kwargs={"stop": ["Action","Thought","Observation,'\n"]})
             self.reflect_llm = ChatOpenAI(model_name=model_name, temperature=0, max_tokens=1024, openai_api_key=OPENAI_API_KEY,model_kwargs={"stop": ["Action","Thought","Observation,'\n"]})
@@ -320,6 +323,8 @@ class ReactReflectPlanner:
             try:
                 if self.model_name in ['gemini']:
                     return format_step(self.react_llm.invoke(self._build_agent_prompt()).content)
+                elif self.model_name == 'local':
+                    return format_step(self.react_llm(self._build_agent_prompt()))
                 else:
                     return format_step(self.react_llm([HumanMessage(content=self._build_agent_prompt())]).content)
             except:
@@ -333,6 +338,8 @@ class ReactReflectPlanner:
             try:
                 if self.model_name in ['gemini']:
                     return format_step(self.reflect_llm.invoke(self._build_reflection_prompt()).content)
+                elif self.model_name == 'local':
+                    return format_step(self.reflect_llm(self._build_reflection_prompt()))
                 else:
                     return format_step(self.reflect_llm([HumanMessage(content=self._build_reflection_prompt())]).content)
             except:
