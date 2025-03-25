@@ -21,11 +21,11 @@ def main():
             break
         iterations += 1
         if iterations > 10:
-            print("too many iterations, check agent", flush=True)
+            print("\n\ntoo many iterations, check agent\n\n", flush=True)
             break
     
-    print("Final Plan:", final_plan)
-    print("JSON:", json)
+    print("\n\nFinal Plan:\n\n", final_plan)
+    print("\n\nJSON:\n\n", json)
 
 if __name__ == "__main__":
     main()
