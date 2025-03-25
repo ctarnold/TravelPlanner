@@ -145,8 +145,10 @@ class ReactAgent:
         else: # fall back to attempt on local model
             stop_list = ['\n']
             from agents.local_model import LocalModel 
-            # /scratch/gpfs/ca2992/models/DeepSeek-R1-Distill-Llama-8B
-            name = "/scratch/gpfs/ca2992/models/QwQ-32B"
+            # /scratch/gpfs/ca2992/models/DeepSeek-R1-Distill-Llama-14B
+             # /scratch/gpfs/ca2992/models/DeepSeek-R1-Distill-Qwen-14B
+             # "/scratch/gpfs/ca2992/models/QwQ-32B"
+            name = "/scratch/gpfs/ca2992/models/DeepSeek-R1-Distill-Qwen-14B"
             self.llm = LocalModel(model_path=name) 
             self.llm.name=name 
             print("Managed LLM: ", self.llm.name)
