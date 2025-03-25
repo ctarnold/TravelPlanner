@@ -19,7 +19,10 @@ def main():
         final_plan, _, json = agent.run(query)
         if final_plan is not None:
             break
-        agent.__reset_agent()
+        agent = ReactAgent(args=None, tools=tools_list, 
+                       react_llm_name='local',
+                       planner_llm_name='local',
+                       max_steps=30)
         iterations += 1
         if iterations > 10:
             print("\n\ntoo many iterations, check agent\n\n", flush=True)
