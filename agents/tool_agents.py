@@ -70,10 +70,12 @@ class ReactAgent:
                  react_llm_name = 'gpt-3.5-turbo-1106',
                  planner_llm_name = 'gpt-3.5-turbo-1106',
                 #  logs_path = '../logs/',
+                # clusters: '/scratch/gpfs/ca2992/TravelData/database/background/citySet.txt'
+                # local '../../database/database/background/citySet.txt'
                  city_file_path = '/scratch/gpfs/ca2992/TravelData/database/background/citySet.txt'
                  ) -> None: 
 
-        self.answer = ''
+        self.answer = None # init to None
         self.max_steps = max_steps
         self.mode = mode
 
@@ -148,6 +150,9 @@ class ReactAgent:
             # /scratch/gpfs/ca2992/models/DeepSeek-R1-Distill-Llama-14B
              # /scratch/gpfs/ca2992/models/DeepSeek-R1-Distill-Qwen-14B
              # "/scratch/gpfs/ca2992/models/QwQ-32B"
+             # local machine:
+             # C:\Users\chris\OneDrive\Desktop\SeniorThesisCode\agents\models\Qwen2.5-0.5B-Instruct
+             # ../../agents/models/Qwen2.5-0.5B-Instruct
             name = "/scratch/gpfs/ca2992/models/DeepSeek-R1-Distill-Qwen-14B"
             self.llm = LocalModel(model_path=name) 
             self.llm.name=name 
@@ -426,14 +431,13 @@ class ReactAgent:
             
 
             elif action_type == "Planner":
-                # try:
-
-                    self.current_observation = str(self.tools['planner'].run(str(self.tools['notebook'].list_all()),action_arg))
-                    self.scratchpad  +=  self.current_observation
-                    self.answer = self.current_observation
-                    self.__reset_record()
-                    self.json_log[-1]['state'] = f'Successful'
-                    print("SUCCESSFUL STATE REACHED", flush=True)
+                
+                self.current_observation = str(self.tools['planner'].run(str(self.tools['notebook'].list_all()),action_arg))
+                self.scratchpad  +=  self.current_observation
+                self.answer = self.current_observation
+                self.__reset_record()
+                self.json_log[-1]['state'] = f'Successful'
+                print("SUCCESSFUL STATE REACHED", flush=True)
 
             else:
                 print("\n\nInvalid Action, ", str(action_type), "\n\n", flush=True)
@@ -504,10 +508,11 @@ class ReactAgent:
         return ((self.step_n > self.max_steps) or (
                     len(self.enc.encode(self._build_agent_prompt())) > self.max_token_length)) and not self.finished
 
+    # TODO: Validate if init to self.answer = None would help. 
     def __reset_agent(self) -> None:
         self.step_n = 1
         self.finished = False
-        self.answer = ''
+        self.answer = None # Changed from ''
         self.scratchpad: str = ''
         self.__reset_record()
         self.json_log = []

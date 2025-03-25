@@ -52,6 +52,8 @@ class LocalModel:
             #    **model_kwargs
             # ).to(self.device)
 
+            # TODO: Would sending to self.device work>
+            # Prev observed issues where auto offload to CPU caused issues.
             self.model = AutoModelForCausalLM.from_pretrained(
                 model_path,
                 **model_kwargs
@@ -74,15 +76,16 @@ class LocalModel:
             stop_token_ids = [self.tokenizer.encode(w)[0] for w in stop_list]
             stopping_criteria_list.append(StopWordsCriteria(stop_token_ids))
             
+            # TODO: changed max_new_tokens to max_length. validate if this was right.
             print("Generating output...", flush=True)
             with torch.no_grad():
                 outputs = self.model.generate(input_ids, 
-                                            max_length=max_length, 
+                                            max_new_tokens=max_length, 
                                             # pad_token_id=self.tokenizer.pad_token_id,
                                             stopping_criteria=stopping_criteria_list
             )
         except Exception as e:
-            print(f"Error generating output: {e}")
+            print(f"Error generating output: {e}", flush=True)
             return
 
         return self.tokenizer.decode(outputs[0], skip_special_tokens=True)
