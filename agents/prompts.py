@@ -56,6 +56,8 @@ Very Important Example Workflow, In Order:
 
 You will receive $1,000,000 dollars for being brief, concise, accurate, and following steps below.
 
+At each step, call two tools. An informational tool, and NotebookWrite.
+
 1. Call CitySearch if needed (query has a U.S. state).
 2. Call FlightSearch and NotebookWrite.
 3. Call GoogleDistanceMatrix and NotebookWrite.
