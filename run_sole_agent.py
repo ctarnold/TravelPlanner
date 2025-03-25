@@ -16,7 +16,7 @@ def main():
 
     iterations = 0
     while True:
-        final_plan, json = agent.run(query)
+        final_plan, _, json = agent.run(query)
         if final_plan is not None:
             break
         iterations += 1
