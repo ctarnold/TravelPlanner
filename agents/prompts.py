@@ -48,6 +48,7 @@ Description: A smart planning tool that crafts detailed plans based on user inpu
 Parameters: 
 Query: The query from user.
 Example: Planner[Give me a 3-day trip plan from Seattle to New York] would return a detailed 3-day trip plan.
+
 You should use as many as possible steps to collect engough information to input to the Planner tool. 
 
 Call each tool and give a valid plan. To terminate with a valid plan, call Planner.
@@ -67,6 +68,10 @@ At each step, call two tools. An informational tool, and NotebookWrite.
 7. Call Planner with the query from the user.
 
 Each action only calls one function once. Do not add any description in the action.
+
+You will be rewarded $500,000 for doing actions correctly. If you add description, you will lose $100,000 for each action.
+
+At each step, use an action. 
 
 Query: {query}{scratchpad}"""
 

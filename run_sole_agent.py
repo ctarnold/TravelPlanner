@@ -25,7 +25,7 @@ def main():
             break
     
     print("\n\nFinal Plan:\n\n", final_plan)
-    print("\n\nJSON:\n\n", json)
+    # print("\n\nJSON:\n\n", json)
 
 if __name__ == "__main__":
     main()

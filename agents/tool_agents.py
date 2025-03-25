@@ -145,8 +145,9 @@ class ReactAgent:
         else: # fall back to attempt on local model
             stop_list = ['\n']
             from agents.local_model import LocalModel 
-            self.llm = LocalModel(model_path="/scratch/gpfs/ca2992/models/DeepSeek-R1-Distill-Llama-8B")  
-            self.llm.name = "/scratch/gpfs/ca2992/models/DeepSeek-R1-Distill-Llama-8B"
+            # /scratch/gpfs/ca2992/models/DeepSeek-R1-Distill-Llama-8B
+            self.llm = LocalModel(model_path="/scratch/gpfs/ca2992/models/QwQ-32b")  
+            self.llm.name = "/scratch/gpfs/ca2992/models/QwQ-32b"
             print("Managed LLM: ", self.llm.name)
             self.max_token_length = 30000
 
@@ -254,7 +255,7 @@ class ReactAgent:
                         # self.log_file.write(f"{pending_action} early stop due to {self.max_retries} max retries.")
                         self.json_log[-1]['state'] = f"{pending_action} early stop due to {self.max_retries} max retries."
                         self.finished = True
-                        print("\n\nNO ANSWER GIVEN ACTION TYPE\n\n", flush = True)
+                        print("\n\nNO ANSWER GIVEN ACTION TYPE\n\n", str(pending_action), "\n\n", flush = True)
                         return  # may return here with no answer
                     
                 elif pending_action not in self.retry_record:
@@ -468,7 +469,7 @@ class ReactAgent:
                 if self.react_name == 'gemini':
                     request = format_step(self.llm.invoke(self._build_agent_prompt(),stop=['\n']).content)
                 elif self.react_name == 'local':
-                    request = format_step(self.llm(prompt = prompt))
+                    request = format_step(self.llm(prompt = prompt), stop_list=['\n'])
                 elif isinstance(self.llm, ChatOpenAI):
                     request = format_step(self.llm([HumanMessage(content=self._build_agent_prompt())]).content)
                 else:
