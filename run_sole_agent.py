@@ -21,6 +21,7 @@ def main():
             break
         iterations += 1
         if iterations > 10:
+            print("too many iterations, check agent", flush=True)
             break
     
     print("Final Plan:", final_plan)
