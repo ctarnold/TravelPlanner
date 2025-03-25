@@ -277,6 +277,7 @@ class ReactAgent:
                         return  # may return here with no answer
 
             if action_type == 'FlightSearch':
+                print("\n\nFlightSearch action reached\n", flush=True)
                 try:
                     if validate_date_format(action_arg.split(', ')[2]) and validate_city_format(action_arg.split(', ')[0],self.city_set ) and validate_city_format(action_arg.split(', ')[1],self.city_set):
                         self.scratchpad = self.scratchpad.replace(to_string(self.current_data).strip(),'Masked due to limited length. Make sure the data has been written in Notebook.')
@@ -306,7 +307,7 @@ class ReactAgent:
                     self.json_log[-1]['state'] = f'Illegal args. Other Error'
 
             elif action_type == 'AttractionSearch':
-
+                print("\n\nAttractionSearch action reached\n", flush=True)
                 try:
                     if validate_city_format(action_arg, self.city_set):
                         self.scratchpad = self.scratchpad.replace(to_string(self.current_data).strip().strip(),'Masked due to limited length. Make sure the data has been written in Notebook.')
@@ -328,7 +329,7 @@ class ReactAgent:
                     self.json_log[-1]['state'] = f'Illegal args. Other Error'
 
             elif action_type == 'AccommodationSearch':
-
+                print("\n\nAccommodationSearch action reached\n", flush=True)
                 try:
                     if validate_city_format(action_arg, self.city_set):
                         self.scratchpad = self.scratchpad.replace(to_string(self.current_data).strip().strip(),'Masked due to limited length. Make sure the data has been written in Notebook.')
@@ -350,7 +351,7 @@ class ReactAgent:
                     self.json_log[-1]['state'] = f'Illegal args. Other Error'
 
             elif action_type == 'RestaurantSearch':
-
+                print("\n\nRestaurantSearch action reached\n", flush=True)
                 try:
                     if validate_city_format(action_arg, self.city_set):
                         self.scratchpad = self.scratchpad.replace(to_string(self.current_data).strip().strip(),'Masked due to limited length. Make sure the data has been written in Notebook.')
@@ -374,6 +375,7 @@ class ReactAgent:
                     self.json_log = f'Illegal args. Other Error'
                     
             elif action_type == "CitySearch":
+                print("\n\nCitySearch action reached\n", flush=True)
                 try:
                     self.scratchpad = self.scratchpad.replace(to_string(self.current_data).strip(),'Masked due to limited length. Make sure the data has been written in Notebook.')
                     # self.current_data = self.tools['cities'].run(action_arg)
@@ -397,7 +399,7 @@ class ReactAgent:
 
 
             elif action_type == 'GoogleDistanceMatrix':
-
+                print("\n\n GoogleDistanceMatrix action reached",flush=True)
                 try:
                     self.scratchpad = self.scratchpad.replace(to_string(self.current_data).strip(),'Masked due to limited length. Make sure the data has been written in Notebook.')
                     self.current_data = self.tools['googleDistanceMatrix'].run(action_arg.split(', ')[0],action_arg.split(', ')[1],action_arg.split(', ')[2])
@@ -415,6 +417,7 @@ class ReactAgent:
             
             
             elif action_type == 'NotebookWrite':
+                print("\n\nNotebookWrite action reached\n", flush=True)
                 try:
                     self.scratchpad = self.scratchpad.replace(to_string(self.current_data).strip(),'Masked due to limited length. Make sure the data has been written in Notebook.')
                     self.current_observation = str(self.tools['notebook'].write(self.current_data, action_arg))
@@ -431,13 +434,13 @@ class ReactAgent:
             
 
             elif action_type == "Planner":
-                
+                print("\n\nPlanner action reached\n", flush=True)
                 self.current_observation = str(self.tools['planner'].run(str(self.tools['notebook'].list_all()),action_arg))
                 self.scratchpad  +=  self.current_observation
                 self.answer = self.current_observation
                 self.__reset_record()
                 self.json_log[-1]['state'] = f'Successful'
-                print("SUCCESSFUL STATE REACHED", flush=True)
+                print("\n\nSUCCESSFUL STATE REACHED\n\n", flush=True)
 
             else:
                 print("\n\nInvalid Action, ", "Attempted Action: " + str(action_type), "\n\n", flush=True)
