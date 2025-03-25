@@ -146,11 +146,11 @@ class ReactAgent:
             stop_list = ['\n']
             from agents.local_model import LocalModel 
             # /scratch/gpfs/ca2992/models/DeepSeek-R1-Distill-Llama-8B
-            self.llm.name = "/scratch/gpfs/ca2992/models/QwQ-32B"
-            self.llm = LocalModel(model_path=self.llm.name)  
+            name = "/scratch/gpfs/ca2992/models/QwQ-32B"
+            self.llm = LocalModel(model_path=name) 
+            self.llm.name=name 
             print("Managed LLM: ", self.llm.name)
             self.max_token_length = 30000
-
 
         self.illegal_early_stop_patience = illegal_early_stop_patience
 
