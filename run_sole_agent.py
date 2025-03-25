@@ -20,7 +20,7 @@ def main():
         if final_plan is not None:
             break
         iterations += 1
-        if iterations > 10:
+        if iterations > 2:
             print("\n\ntoo many iterations, check agent\n\n", flush=True)
             break
     
