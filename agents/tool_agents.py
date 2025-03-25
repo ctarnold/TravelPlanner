@@ -147,7 +147,7 @@ class ReactAgent:
             from agents.local_model import LocalModel 
             # /scratch/gpfs/ca2992/models/DeepSeek-R1-Distill-Llama-8B
             self.llm = LocalModel(model_path="/scratch/gpfs/ca2992/models/QwQ-32b")  
-            self.llm.name = "/scratch/gpfs/ca2992/models/QwQ-32b"
+            self.llm.name = "/scratch/gpfs/ca2992/models/QwQ-32B"
             print("Managed LLM: ", self.llm.name)
             self.max_token_length = 30000
 
