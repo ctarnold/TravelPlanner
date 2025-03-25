@@ -81,7 +81,7 @@ class LocalModel:
             with torch.no_grad():
                 outputs = self.model.generate(input_ids, 
                                             max_new_tokens=max_length, 
-                                            # pad_token_id=self.tokenizer.pad_token_id,
+                                            pad_token_id=self.tokenizer.pad_token_id,
                                             stopping_criteria=stopping_criteria_list
             )
         except Exception as e:

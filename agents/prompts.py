@@ -44,36 +44,16 @@ Parameters: Short Description - A brief description or label for the stored data
 Example: NotebookWrite[Flights from Rome to Paris in 2022-02-01] would store the informatrion of flights from Rome to Paris in 2022-02-01 in the Notebook.
 
 (8) Planner[Query]
-Description: A smart planning tool that crafts detailed plans based on user input and the information stored in Notebook.
+Description: A smart planning tool that crafts detailed plans based on user input and the information stroed in Notebook.
 Parameters: 
 Query: The query from user.
 Example: Planner[Give me a 3-day trip plan from Seattle to New York] would return a detailed 3-day trip plan.
-
 You should use as many as possible steps to collect engough information to input to the Planner tool. 
-
-Call each tool and give a valid plan. To terminate with a valid plan, call Planner.
-
-Very Important Example Workflow, In Order:
-
-You will receive $1,000,000 dollars for being brief, concise, accurate, and following steps below.
-
-At each step, call two tools. An informational tool, and NotebookWrite.
-
-1. Call CitySearch if needed (query has a U.S. state).
-2. Call FlightSearch and NotebookWrite.
-3. Call GoogleDistanceMatrix and NotebookWrite.
-4. Call AccommodationSearch and NotebookWrite.
-5. Call RestaurantSearch and NotebookWrite.
-6. Call AttractionSearch and NotebookWrite.
-7. Call Planner with the query from the user.
 
 Each action only calls one function once. Do not add any description in the action.
 
-You will be rewarded $500,000 for doing actions correctly. If you add description, you will lose $100,000 for each action.
-
-At each step, use an action. 
-
 Query: {query}{scratchpad}"""
+
 
 
 

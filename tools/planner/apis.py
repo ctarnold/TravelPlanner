@@ -86,7 +86,7 @@ class Planner:
         elif model_name in ['gemini']:
             self.llm = ChatGoogleGenerativeAI(temperature=0,model="gemini-pro",google_api_key=GOOGLE_API_KEY)
         else:
-            self.llm = LocalModel(model_path = "/scratch/gpfs/ca2992/models/DeepSeek-R1-Distill-Qwen-14B")
+            self.llm = LocalModel(model_path = "/scratch/gpfs/ca2992/models/DeepSeek-R1-Distill-Llama-8B")
             # self.llm = LocalModel(model_path = "../../agents/models/Qwen2.5-0.5B-Instruct")
             self.max_token_length = 30000
 
@@ -99,6 +99,8 @@ class Planner:
         # print(self._build_agent_prompt(text, query))
         if self.model_name in ['gemini']:
             return str(self.llm.invoke(self._build_agent_prompt(text, query)).content)
+        elif self.model_name == 'local':
+            return str(self.llm(self._build_agent_prompt(text, query)))
         else:
             if len(self.enc.encode(self._build_agent_prompt(text, query))) > 12000:
                 return 'Max Token Length Exceeded.'

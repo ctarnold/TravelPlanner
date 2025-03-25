@@ -30,6 +30,7 @@ from tqdm import tqdm
 import argparse
 from datasets import load_dataset
 import os
+from agents.local_model import LocalModel 
 
 OPENAI_API_KEY = ""
 
@@ -146,14 +147,13 @@ class ReactAgent:
 
         else: # fall back to attempt on local model
             stop_list = ['\n']
-            from agents.local_model import LocalModel 
-            # /scratch/gpfs/ca2992/models/DeepSeek-R1-Distill-Llama-14B
              # /scratch/gpfs/ca2992/models/DeepSeek-R1-Distill-Qwen-14B
+             # /scratch/gpfs/ca2992/models/DeepSeek-R1-Distill-Llama-8B
              # "/scratch/gpfs/ca2992/models/QwQ-32B"
              # local machine:
              # C:\Users\chris\OneDrive\Desktop\SeniorThesisCode\agents\models\Qwen2.5-0.5B-Instruct
              # ../../agents/models/Qwen2.5-0.5B-Instruct
-            name = "/scratch/gpfs/ca2992/models/DeepSeek-R1-Distill-Qwen-14B"
+            name = "/scratch/gpfs/ca2992/models/DeepSeek-R1-Distill-Llama-8B"
             self.llm = LocalModel(model_path=name) 
             self.llm.name=name 
             print("Managed LLM: ", self.llm.name)
@@ -440,7 +440,7 @@ class ReactAgent:
                 print("SUCCESSFUL STATE REACHED", flush=True)
 
             else:
-                print("\n\nInvalid Action, ", str(action_type), "\n\n", flush=True)
+                print("\n\nInvalid Action, ", "Attempted Action: " + str(action_type), "\n\n", flush=True)
                 self.retry_record['invalidAction'] += 1
                 self.current_observation = 'Invalid Action. Valid Actions are  FlightSearch[Departure City, Destination City, Date] / ' \
                                    'AccommodationSearch[City] /  RestaurantSearch[City] / NotebookWrite[Short Description] / AttractionSearch[City] / CitySearch[State] / GoogleDistanceMatrix[Origin, Destination, Mode] and Planner[Query].'
@@ -456,11 +456,9 @@ class ReactAgent:
             # rite(f'Observation {self.step_n}: ' + self.current_observation+'\n')
             self.json_log[-1]['observation'] = self.current_observation
             
-
         self.step_n += 1
 
         # 
-
         if action_type and action_type == 'Planner' and self.retry_record['planner']==0:
             print("Planner action is successful. We stop here.", flush=True)
             self.finished = True
@@ -484,6 +482,7 @@ class ReactAgent:
                 iterations = 0
                 return request
             except:
+                print("\n\nException caught in prompt agent.\n\n", flush=True)
                 iterations+=1
                 catch_openai_api_error()
                 # print(self._build_agent_prompt())
