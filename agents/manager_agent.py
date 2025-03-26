@@ -46,7 +46,7 @@ class ManagerAgent:
         prompt = prompt + "Give Feedback: \n"
 
         evaluation = self.llm(prompt)
-        self.react_agent.__reset_agent()
+        # self.react_agent.__reset_agent()
 
         print(evaluation, "\n\n", flush = True)
         return evaluation
