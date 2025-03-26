@@ -73,7 +73,7 @@ class ReactAgent:
                 #  logs_path = '../logs/',
                 # clusters: '/scratch/gpfs/ca2992/TravelData/database/background/citySet.txt'
                 # local '../../database/database/background/citySet.txt'
-                 city_file_path = '../../database/database/background/citySet.txt'
+                 city_file_path = '/scratch/gpfs/ca2992/TravelData/database/background/citySet.txt'
                  ) -> None: 
 
         self.answer = None # init to None
@@ -154,7 +154,7 @@ class ReactAgent:
              # C:\Users\chris\OneDrive\Desktop\SeniorThesisCode\agents\models\Qwen2.5-0.5B-Instruct
              # ../../agents/models/Qwen2.5-0.5B-Instruct
              # "/scratch/gpfs/ca2992/models/Llama-3.1-8B-Instruct"
-            name = "../../agents/models/Qwen2.5-0.5B-Instruct"
+            name = "/scratch/gpfs/ca2992/models/Llama-3.1-8B-Instruct"
             self.llm = LocalModel(model_path=name) 
             self.llm.name=name 
             print("Managed LLM: ", self.llm.name)
