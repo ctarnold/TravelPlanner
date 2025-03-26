@@ -479,6 +479,7 @@ class ReactAgent:
                 if self.react_name == 'gemini':
                     request = format_step(self.llm.invoke(self._build_agent_prompt(),stop=['\n']).content)
                 elif self.react_name == 'local':
+                    print("\n\nPrompting Local model\n\n", flush=True)
                     request = format_step(self.llm(prompt = prompt, stop_list=['\n'], max_length=256))
                 elif isinstance(self.llm, ChatOpenAI):
                     request = format_step(self.llm([HumanMessage(content=self._build_agent_prompt())]).content)

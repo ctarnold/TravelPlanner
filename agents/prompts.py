@@ -73,7 +73,8 @@ When you have enough information to call Planner to complete the plan, do
 so as your FINAL tool call!
 
 Example:
-Plan me a trip from Rome to Paris.
+Query: Plan me a trip from Rome to Paris.
+Scratchpad: 
 
 Output:
 FlightSearch[Rome, Paris, 2022-02-01]
@@ -104,7 +105,8 @@ already in your context window.
 
 At the end, you will call Planner[Query] to complete the plan.
 
-Query: {query}{scratchpad}"""
+Query: {query}
+Scratchpad: {scratchpad}"""
 
 
 
