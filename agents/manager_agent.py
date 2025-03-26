@@ -99,6 +99,8 @@ class ManagerAgent:
                 print("\n\n used new plan \n\n", flush=True)
                 plan = new_plan
                 json = new_json
+            else:
+                print("\n\n new plan empty \n\n", flush=True)
 
         print("\nManagerAgent finished.")
         return plan, str(json)
