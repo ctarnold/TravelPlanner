@@ -78,14 +78,24 @@ Plan me a trip from Rome to Paris.
 Output:
 FlightSearch[Rome, Paris, 2022-02-01]
 
+After running FlightSearch.
+Example:
+Query: Plan me a trip from Rome to Paris.
+Scratchpad: Flights are for $500 dollars.
+NotebookWrite[Flights from Rome to Paris in 2022-02-01, for $500].
+
 
 In the following case you would have run FlightSearch, and now you come back
 for more information.
 Example, with added context:
 Query: Plan me a trip from Rome to Paris.
-Scratchpad: Flights secured and cost $500 dollars.
+Scratchpad: Flights secured and cost $500 dollars, written in Notebook.
 
 Output: AccommodationSearch[Paris]
+
+You would keep iterating, calling ONE tool at a time.
+
+Your output should be ONE LINE of ONE TOOL.
 
 End Examples.
 
