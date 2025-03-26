@@ -68,7 +68,7 @@ class LocalModel:
                 model=self.model,
                 tokenizer= self.tokenizer,
                 device_map=self.device,
-                max_new_tokens = 10,
+                max_new_tokens = 15,
                 do_sample=True,
                 return_full_text=False,
                 top_k=10,
@@ -86,9 +86,10 @@ class LocalModel:
             raise  
 
 
-    def __call__(self, prompt, max_length=256, stop_list = ['\n', 'Action', 'Thought', ']']):
+    def __call__(self, prompt, max_length=256, stop_list = ['\n', 'Action', 'Thought']):
         try:
            response = self.hugging_face_llm.invoke(prompt, stop=stop_list)
+           
            return response
         except Exception as e:
             print(f"Error generating output: {e}", flush=True)
