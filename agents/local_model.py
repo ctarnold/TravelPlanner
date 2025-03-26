@@ -104,6 +104,7 @@ class LocalModel:
         if self.mode == 'tool_calling':
             stop_list.append('Action')
             stop_list.append('Thought')
+            stop_list.append('Done')
         try:
            response = self.hugging_face_llm.invoke(prompt, stop=stop_list)
            
