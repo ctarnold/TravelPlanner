@@ -82,6 +82,11 @@ Example output in action mode:
 
 FlightSearch[Paris, New York, 2022-10-01]
 
+Your action should come at the beginning of your response. Valid actions are:
+
+FlightSearch[Departure City, Destination City, Date] / AccommodationSearch[City] /  RestaurantSearch[City] / NotebookWrite[Short Description] / AttractionSearch[City] / CitySearch[State] / GoogleDistanceMatrix[Origin, Destination, Mode] and Planner[Query].
+
+
 Query: {query}
 Scratchpad: {scratchpad}"""
 

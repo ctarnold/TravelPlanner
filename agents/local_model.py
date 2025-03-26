@@ -1,5 +1,9 @@
+# https://medium.com/towards-agi/how-to-load-local-models-in-langchain-for-your-projects-596e3dff32be
+# https://medium.com/@decodingchris/how-to-use-langchain-with-huggingface-e2fd6c971b2b
+from langchain.llms import HuggingFacePipeline
 import torch
-from transformers import AutoModelForCausalLM, AutoTokenizer
+import transformers
+from transformers import AutoModelForCausalLM, AutoTokenizer, pipeline
 from transformers import StoppingCriteria, StoppingCriteriaList
 
 class StopWordsCriteria(StoppingCriteria):
@@ -26,7 +30,7 @@ class LocalModel:
     # cluster directory: /scratch/gpfs/ca2992/models/QwQ-32B
     # For compute clusters
     def __init__(self, model_path="/scratch/gpfs/ca2992/models/DeepSeek-R1-Distill-Llama-8B"):  
-        print("Loading LocalModel...")
+        print("Loading LocalModel...", flush=True)
         self.name = model_path
         self.device = "cuda" if torch.cuda.is_available() else "cpu"
         print(f"Using device: {self.device}")
@@ -58,37 +62,37 @@ class LocalModel:
                 model_path,
                 **model_kwargs
             )
+
+            pipe = transformers.pipeline(
+                "text-generation",
+                model=self.model,
+                tokenizer= self.tokenizer,
+                device_map="auto",
+                max_new_tokens = 512,
+                do_sample=True,
+                return_full_text=False,
+                top_k=10,
+                num_return_sequences=1,
+                eos_token_id=self.tokenizer.eos_token_id
+            )
+
+            # https://stackoverflow.com/questions/76772509/llama-2-7b-hf-repeats-context-of-question-directly-from-input-prompt-cuts-off-w
             self.model.eval() # sets model to do inference
+            # llm = HuggingFacePipeline.from_model_id(model_id=model_path, task="text-generation")
+            self.hugging_face_llm = HuggingFacePipeline(pipeline=pipe, model_kwargs={'temperature':0.1})
             print("LocalModel loaded.")
         except Exception as e:
             print(f"Error loading model: {e}")
             raise  
 
 
-    def __call__(self, prompt, max_length=30000, stop_list = ['\n']):
+    def __call__(self, prompt, max_length=256, stop_list = ['\n']):
         try:
-            input_ids = self.tokenizer(prompt, return_tensors="pt").input_ids.to(self.device)
-            
-            # input_ids = self.tokenizer(prompt)
-            stopping_criteria_list = StoppingCriteriaList()
-
-            # encodes each of the values in the stop list.
-            stop_token_ids = [self.tokenizer.encode(w)[0] for w in stop_list]
-            stopping_criteria_list.append(StopWordsCriteria(stop_token_ids))
-            
-            # TODO: changed max_new_tokens to max_length. validate if this was right.
-            print("Generating output...", flush=True)
-            with torch.no_grad():
-                outputs = self.model.generate(input_ids, 
-                                            max_new_tokens=max_length, 
-                                            pad_token_id=self.tokenizer.pad_token_id,
-                                            stopping_criteria=stopping_criteria_list
-            )
+           response = self.hugging_face_llm.invoke(prompt, stop=stop_list)
+           return response
         except Exception as e:
             print(f"Error generating output: {e}", flush=True)
             return
-
-        return self.tokenizer.decode(outputs[0], skip_special_tokens=True)
 
     #Alternative predict method
     #def predict(self, prompt, max_length=256):
@@ -98,3 +102,4 @@ class LocalModel:
     #        outputs = self.model.generate(input_ids, max_length=max_length)
     #
     #    return self.tokenizer.decode(outputs[0], skip_special_tokens=True)
+    # """
