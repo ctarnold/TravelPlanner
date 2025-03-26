@@ -249,6 +249,8 @@ class ReactAgent:
             self.scratchpad += "No feedback from the environment due to the null action. Please make sure your action does not start with [Thought, Action, Observation]."
         
         else:
+            action = get_first_response(action)
+            print("\n\nFirst response ", action, "\n\n", flush=True)
             action_type, action_arg = parse_action(action)
             
             if action_type != "Planner":
@@ -555,6 +557,9 @@ class ReactAgent:
 ### String Stuff ###
 gpt2_enc = tiktoken.encoding_for_model("text-davinci-003")
 
+def get_first_response(string):
+    response = string.split(']')[0] + ']'
+    return response
 
 def parse_action(string):
     pattern = r'^(\w+)\[(.+)\]$'
