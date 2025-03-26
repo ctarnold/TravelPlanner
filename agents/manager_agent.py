@@ -94,7 +94,10 @@ class ManagerAgent:
         for i in range(self.max_iterations):
             evaluations = self.evaluate_plan(str(plan))
 
-            plan, json = self.refine_plan(plan, evaluations)
+            new_plan, new_json = self.refine_plan(plan, evaluations)
+            if new_plan is not None and len(new_plan) != 0:
+                plan = new_plan
+                json = new_json
 
         print("\nManagerAgent finished.")
         return plan, str(json)
