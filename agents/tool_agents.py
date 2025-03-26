@@ -249,6 +249,7 @@ class ReactAgent:
             self.scratchpad += "No feedback from the environment due to the null action. Please make sure your action does not start with [Thought, Action, Observation]."
         
         else:
+            print("\n\n Action input: ", action, "\n\n", flush=True)
             action = get_first_response(action)
             print("\n\nFirst response ", action, "\n\n", flush=True)
             action_type, action_arg = parse_action(action)

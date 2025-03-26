@@ -29,7 +29,7 @@ class LocalModel:
     # cluster directory: /scratch/gpfs/ca2992/models/DeepSeek-R1-Distill-Llama-8B
     # cluster directory: /scratch/gpfs/ca2992/models/QwQ-32B
     # For compute clusters
-    def __init__(self, model_path="/scratch/gpfs/ca2992/models/DeepSeek-R1-Distill-Llama-8B"):  
+    def __init__(self, model_path="/scratch/gpfs/ca2992/models/DeepSeek-R1-Distill-Llama-8B", mode = 'tool_calling'):  
         print("Loading LocalModel...", flush=True)
         self.name = model_path
         self.device = "cuda" if torch.cuda.is_available() else "cpu"
@@ -62,19 +62,33 @@ class LocalModel:
                 model_path,
                 **model_kwargs
             )
-
-            pipe = transformers.pipeline(
-                "text-generation",
-                model=self.model,
-                tokenizer= self.tokenizer,
-                device_map=self.device,
-                max_new_tokens = 20,
-                do_sample=True,
-                return_full_text=False,
-                top_k=10,
-                num_return_sequences=1,
-                eos_token_id=self.tokenizer.eos_token_id
-            )
+            self.mode = mode
+            if (self.mode == 'tool_calling'):
+                pipe = transformers.pipeline(
+                    "text-generation",
+                    model=self.model,
+                    tokenizer= self.tokenizer,
+                    device_map=self.device,
+                    max_new_tokens = 20,
+                    do_sample=True,
+                    return_full_text=False,
+                    top_k=10,
+                    num_return_sequences=1,
+                    eos_token_id=self.tokenizer.eos_token_id
+                )
+            else:
+                pipe = transformers.pipeline(
+                    "text-generation",
+                    model=self.model,
+                    tokenizer= self.tokenizer,
+                    device_map=self.device,
+                    max_new_tokens = 1024,
+                    do_sample=True,
+                    return_full_text=False,
+                    top_k=10,
+                    num_return_sequences=1,
+                    eos_token_id=self.tokenizer.eos_token_id
+                )
 
             # https://stackoverflow.com/questions/76772509/llama-2-7b-hf-repeats-context-of-question-directly-from-input-prompt-cuts-off-w
             self.model.eval() # sets model to do inference
@@ -86,7 +100,10 @@ class LocalModel:
             raise  
 
 
-    def __call__(self, prompt, max_length=256, stop_list = ['\n', 'Action', 'Thought']):
+    def __call__(self, prompt, max_length=256, stop_list = ['\n']):
+        if self.mode == 'tool_calling':
+            stop_list.append('Action')
+            stop_list.append('Thought')
         try:
            response = self.hugging_face_llm.invoke(prompt, stop=stop_list)
            
