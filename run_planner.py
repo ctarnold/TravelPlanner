@@ -12,7 +12,7 @@ def main():
     manager = ManagerAgent(query = query, tools=tools_list)
     final_plan, json = manager.run(query)
     print("Final Plan:", final_plan)
-    print("JSON:", json)
+    # print("JSON:", json)
 
 if __name__ == "__main__":
     main()

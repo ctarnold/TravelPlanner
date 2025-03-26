@@ -15,6 +15,7 @@ class ManagerAgent:
         """
         self.query = query
         self.llm = LocalModel(model_path="/scratch/gpfs/ca2992/models/DeepSeek-R1-Distill-Llama-8B")
+        self.llm.setMode("Manager")
         self.react_agent = ReactAgent(
             args=None,
             tools=tools,
