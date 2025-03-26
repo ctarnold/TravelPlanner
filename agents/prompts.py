@@ -131,6 +131,8 @@ Accommodation: -
 
 ***** Example Ends *****
 
+When extracting restaurants and accommodations, make sure to get their proper name from your information!!!
+
 Given information: {text}
 Query: {query}
 Travel Plan:"""

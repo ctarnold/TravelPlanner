@@ -85,7 +85,7 @@ class LocalModel:
                     max_new_tokens = 512,
                     do_sample=True,
                     return_full_text=False,
-                    top_k=20,
+                    top_k=10,
                     num_return_sequences=1,
                     eos_token_id=self.tokenizer.eos_token_id
                 )
