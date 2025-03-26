@@ -86,7 +86,7 @@ class LocalModel:
             raise  
 
 
-    def __call__(self, prompt, max_length=256, stop_list = ['\n']):
+    def __call__(self, prompt, max_length=256, stop_list = ['\n', 'Action', 'Thought']):
         try:
            response = self.hugging_face_llm.invoke(prompt, stop=stop_list)
            return response
