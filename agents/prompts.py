@@ -56,6 +56,22 @@ Be brief and very concise.
 
 Each action only calls one function once. Do not add any description in the action.
 
+Your output should be one of the following, and only one of the following. 
+Add just the action, with no commentary:
+
+FlightSearch[Departure City, Destination City, Date]
+GoogleDistanceMatrix[Origin, Destination, Mode]
+AccommodationSearch[City]
+RestaurantSearch[City]
+AttractionSearch[City]
+CitySearch[State]
+NotebookWrite[Short Description]
+Planner[Query]
+
+When you call one of the tools, the output will be saved to your context.
+When you have enough information to call Planner to complete the plan, do
+so as your FINAL tool call!
+
 Query: {query}{scratchpad}"""
 
 
