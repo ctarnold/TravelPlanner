@@ -445,7 +445,7 @@ class ReactAgent:
 
             else:
                 print("\n\nInvalid Action, ", "Attempted Action: " + str(action_type) + " " + str(action_arg), "\n\n", flush=True)
-                print("\n\n Action: ", action, "\n\n", flush=True)
+                print("\n\n Action: ", action, "\n Action Ended \n", flush=True)
                 self.retry_record['invalidAction'] += 1
                 self.current_observation = 'Invalid Action. Valid Actions are  FlightSearch[Departure City, Destination City, Date] / ' \
                                    'AccommodationSearch[City] /  RestaurantSearch[City] / NotebookWrite[Short Description] / AttractionSearch[City] / CitySearch[State] / GoogleDistanceMatrix[Origin, Destination, Mode] and Planner[Query].'
