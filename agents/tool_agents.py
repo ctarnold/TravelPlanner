@@ -479,15 +479,15 @@ class ReactAgent:
                 if self.react_name == 'gemini':
                     request = format_step(self.llm.invoke(self._build_agent_prompt(),stop=['\n']).content)
                 elif self.react_name == 'local':
-                    request = format_step(self.llm(prompt = prompt, stop_list=['\n'], max_length=256).content)
+                    request = format_step(self.llm(prompt = prompt, stop_list=['\n'], max_length=256))
                 elif isinstance(self.llm, ChatOpenAI):
                     request = format_step(self.llm([HumanMessage(content=self._build_agent_prompt())]).content)
                 else:
                     print("WARNING: NO MODEL FOUND")
                 iterations = 0
                 return request
-            except:
-                print("\n\nException caught in prompt agent.\n\n", flush=True)
+            except Exception as e:
+                print("\n\nException caught in prompt agent.\n\n", str(e), flush=True)
                 iterations+=1
                 catch_openai_api_error()
                 # print(self._build_agent_prompt())
