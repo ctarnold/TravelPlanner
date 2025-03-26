@@ -72,6 +72,28 @@ When you call one of the tools, the output will be saved to your context.
 When you have enough information to call Planner to complete the plan, do
 so as your FINAL tool call!
 
+Example:
+Plan me a trip from Rome to Paris.
+
+Output:
+FlightSearch[Rome, Paris, 2022-02-01]
+
+
+In the following case you would have run FlightSearch, and now you come back
+for more information.
+Example, with added context:
+Query: Plan me a trip from Rome to Paris.
+Scratchpad: Flights secured and cost $500 dollars.
+
+Output: AccommodationSearch[Paris]
+
+End Examples.
+
+Notice how, at each iteration, you output ONLY one tool, using the observations 
+already in your context window.
+
+At the end, you will call Planner[Query] to complete the plan.
+
 Query: {query}{scratchpad}"""
 
 
