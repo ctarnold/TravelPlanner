@@ -50,65 +50,40 @@ Query: The query from user.
 Example: Planner[Give me a 3-day trip plan from Seattle to New York] would return a detailed 3-day trip plan.
 You should use as many as possible steps to collect engough information to input to the Planner tool. 
 
-Don't be creative. Call each tool at most once, especially for single city trips.
-
 Be brief and very concise.
 
 Each action only calls one function once. Do not add any description in the action.
 
-Your output should be one of the following, and only one of the following. 
-Add just the action, with no commentary:
-
-FlightSearch[Departure City, Destination City, Date]
-GoogleDistanceMatrix[Origin, Destination, Mode]
-AccommodationSearch[City]
-RestaurantSearch[City]
-AttractionSearch[City]
-CitySearch[State]
-NotebookWrite[Short Description]
-Planner[Query]
-
-When you call one of the tools, the output will be saved to your context.
-When you have enough information to call Planner to complete the plan, do
-so as your FINAL tool call!
-
-Example:
-Query: Plan me a trip from Rome to Paris.
-Scratchpad: 
-
-Output:
-FlightSearch[Rome, Paris, 2022-02-01]
-
-After running FlightSearch.
-Example:
-Query: Plan me a trip from Rome to Paris.
-Scratchpad: Flights are for $500 dollars.
-NotebookWrite[Flights from Rome to Paris in 2022-02-01, for $500].
-
-
-In the following case you would have run FlightSearch, and now you come back
-for more information.
-Example, with added context:
-Query: Plan me a trip from Rome to Paris.
-Scratchpad: Flights secured and cost $500 dollars, written in Notebook.
-
-Output: AccommodationSearch[Paris]
-
-You would keep iterating, calling ONE tool at a time.
-
-Your output should be ONE LINE of ONE TOOL.
-
-End Examples.
-
-Notice how, at each iteration, you output ONLY one tool, using the observations 
-already in your context window.
-
 At the end, you will call Planner[Query] to complete the plan.
+
+There are two modes of this task: Think and Act.
+
+If scratchpad leaves off on the 'Think:' mode, you are to generate a thought
+regarding how to best complete the task. This can be discussing a specific
+tool function, or noting an observation.
+
+If scratchpad leaves off on the 'Action:' mode, you are to output a specific
+tool call.
+
+For example, if scratchpad finishes with 'Action:',
+an appropriate response if the last Think was about getting flights,
+would be to call FlightSearch[city, city, date] as described above.
+
+Notice how in think mode you comment, and in action mode you
+only call the tool!
+
+Example output in think mode:
+
+Based on the scratchpad, I need to find flights to complete the request.
+The query is for Paris to New York on October 1st, so I should call the
+FlightSearch tool to get the necessary information.
+
+Example output in action mode:
+
+FlightSearch[Paris, New York, 2022-10-01]
 
 Query: {query}
 Scratchpad: {scratchpad}"""
-
-
 
 
 zeroshot_react_agent_prompt = PromptTemplate(
@@ -355,6 +330,113 @@ Given information:
 Query: {query}{scratchpad},
 Plan: {plan},
 """
+
+THINK_PROMPT = """
+You are a thought agent tasked with completing a travel query request.
+
+Your specific role is to GATHER INFORMATION, by gathering information you will
+help a separate agent then make the correct action. You are the thought agent, and
+your coworker is the action agent. You will be responsible for gathering information
+and then telling your coworker what tool to use.
+
+To fulfill the request, you are to consider explicit constraints contained in the request.
+For example, if the user includes a budget maximumum, a room rule, accommodation type, pet rule,
+etc, in their request, you should always meet the constraints contained in the user prompt.
+
+Your first step will be to understand the query, extract both the goals, and the constraints.
+
+Next, you are to examine the tools attached below. The tools will allow you to get information
+to complete the query. Do not call the tools. 
+
+You have access to the following tools:
+
+(1) FlightSearch[Departure City, Destination City, Date]:
+Description: A flight information retrieval tool.
+Parameters:
+Departure City: The city you'll be flying out from.
+Destination City: The city you aim to reach.
+Date: The date of your travel in YYYY-MM-DD format.
+Example: FlightSearch[New York, London, 2022-10-01] would fetch flights from New York to London on October 1, 2022.
+
+(2) GoogleDistanceMatrix[Origin, Destination, Mode]:
+Description: Estimate the distance, time and cost between two cities.
+Parameters:
+Origin: The departure city of your journey.
+Destination: The destination city of your journey.
+Mode: The method of transportation. Choices include 'self-driving' and 'taxi'.
+Example: GoogleDistanceMatrix[Paris, Lyon, self-driving] would provide driving distance, time and cost between Paris and Lyon.
+
+(3) AccommodationSearch[City]:
+Description: Discover accommodations in your desired city.
+Parameter: City - The name of the city where you're seeking accommodation.
+Example: AccommodationSearch[Rome] would present a list of hotel rooms in Rome.
+
+(4) RestaurantSearch[City]:
+Description: Explore dining options in a city of your choice.
+Parameter: City – The name of the city where you're seeking restaurants.
+Example: RestaurantSearch[Tokyo] would show a curated list of restaurants in Tokyo.
+
+(5) AttractionSearch[City]:
+Description: Find attractions in a city of your choice.
+Parameter: City – The name of the city where you're seeking attractions.
+Example: AttractionSearch[London] would return attractions in London.
+
+(6) CitySearch[State]
+Description: Find cities in a state of your choice.
+Parameter: State – The name of the state where you're seeking cities.
+Example: CitySearch[California] would return cities in California.
+
+(7) NotebookWrite[Short Description]
+Description: Writes a new data entry into the Notebook tool with a short description. This tool should be used immediately after FlightSearch, AccommodationSearch, AttractionSearch, RestaurantSearch or GoogleDistanceMatrix. Only the data stored in Notebook can be seen by Planner. So you should write all the information you need into Notebook.
+Parameters: Short Description - A brief description or label for the stored data. You don't need to write all the information in the description. The data you've searched for will be automatically stored in the Notebook.
+Example: NotebookWrite[Flights from Rome to Paris in 2022-02-01] would store the informatrion of flights from Rome to Paris in 2022-02-01 in the Notebook.
+
+(8) Planner[Query]
+Description: A smart planning tool that crafts detailed plans based on user input and the information stroed in Notebook.
+Parameters: 
+Query: The query from user.
+Example: Planner[Give me a 3-day trip plan from Seattle to New York] would return a detailed 3-day trip plan.
+You should use as many as possible steps to collect engough information to input to the Planner tool. 
+
+END TOOLS.
+
+Your parameters are the query from the user, and the feedback from your tool agent coworker.
+
+Your output should be one paragraph that explains the query, explains the tool that the action agent
+should then use. At the end of your paragraph, you should explain exactly what tool the agent should
+call, and what parameters they should use. For example, AttractionSearch[Boston] would be a valid output.
+
+Before you output the tool, you should write BEGIN TOOL USAGE: so your coworker knows where to start.
+Write this BEGIN TOOL USAGE: only once, and call only one tool. This is very important.
+
+Example:
+
+Query: Write a plan for Orlando to Boston.
+Feedback: Flights to Boston are available. 
+
+Output example begin:
+
+The user wants a trip from Orlando to Boston. Flights are already secured. The next thing I should look for is housing, 
+as Orlando to Boston is a far trip and they will need to stay somewhere. Hmm, what about attractions? I can search for
+attractions too, and make sure that they are comma separated as below.
+
+BEGIN TOOL USAGE:
+AccommodationSearch[Boston], AttractionSearch[Boston]
+
+Output example ends.
+
+If and only if you have all the feedback you need with information from every necessary tool,
+then you should output a travel plan that summarizes the information from all of your feedback,
+including transportation, flights, housing, activities, and anything else the user needs
+to fulfill their query. If you output a travel plan, do not output any tools. Instead,
+write PLAN SUCCESS at the beginning of your output, and then write a paragraph
+summarizing the plan that you get from the feedback.
+
+
+Your task now begins. Good luck! You will be rewarded $500 for following instructions exactly.
+
+"""
+
 
 planner_agent_prompt = PromptTemplate(
                         input_variables=["text","query"],
