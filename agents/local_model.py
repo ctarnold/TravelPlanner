@@ -111,6 +111,10 @@ class LocalModel:
         except Exception as e:
             print(f"Error generating output: {e}", flush=True)
             return
+    
+    def setMode(self, mode: str):
+        print("\nMode set to ", mode, "\n")
+        self.mode = mode
 
     #Alternative predict method
     #def predict(self, prompt, max_length=256):

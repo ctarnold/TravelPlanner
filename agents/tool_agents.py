@@ -199,6 +199,7 @@ class ReactAgent:
         self.json_log.append({"step": self.step_n, "thought":"",
                               "action": "", "observation": "", "state":""})
 
+        self.acting_mode = False
         self.scratchpad += f'\nThought {self.step_n}:'
         self.scratchpad += ' ' + self.prompt_agent()
 
@@ -208,6 +209,7 @@ class ReactAgent:
 
 
         # Act
+        self.acting_mode = True
         self.scratchpad += f'\nAction {self.step_n}:'
         action = self.prompt_agent()
 
@@ -483,6 +485,10 @@ class ReactAgent:
                 if self.react_name == 'gemini':
                     request = format_step(self.llm.invoke(self._build_agent_prompt(),stop=['\n']).content)
                 elif self.react_name == 'local':
+                    if self.acting_mode:
+                        mode = 'tool_calling'   
+                    mode = 'planning'
+                    self.llm.setMode(mode)
                     print("\n\nPrompting Local model\n\n", flush=True)
                     request = format_step(self.llm(prompt = prompt, stop_list=['\n'], max_length=256))
                 elif isinstance(self.llm, ChatOpenAI):
