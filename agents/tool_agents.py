@@ -439,7 +439,8 @@ class ReactAgent:
 
             elif action_type == "Planner":
                 print("\n\nPlanner action reached\n", flush=True)
-                self.current_observation = str(self.tools['planner'].run(str(self.tools['notebook'].list_all()),action_arg))
+                # self.current_observation = str(self.tools['planner'].run(str(self.tools['notebook'].list_all()),action_arg))
+                self.current_observation = str(self.tools['planner'].run(str(self.scratchpad),action_arg))
                 self.scratchpad  +=  self.current_observation
                 self.answer = self.current_observation
                 self.__reset_record()

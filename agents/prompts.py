@@ -48,8 +48,8 @@ Description: A smart planning tool that crafts detailed plans based on user inpu
 Parameters: 
 Query: The query from user.
 Example: Planner[Give me a 3-day trip plan from Seattle to New York] would return a detailed 3-day trip plan.
-You should use as many as possible steps to collect engough information to input to the Planner tool. 
-
+You should use as many as possible steps to collect enough information to input to the Planner tool. 
+When you call the planner, you should also include the information, substituting query for the original task.
 Be brief and very concise.
 
 Each action only calls one function once. Do not add any description in the action.
@@ -86,6 +86,7 @@ Your action should come at the beginning of your response. Valid actions are:
 
 FlightSearch[Departure City, Destination City, Date] / AccommodationSearch[City] /  RestaurantSearch[City] / NotebookWrite[Short Description] / AttractionSearch[City] / CitySearch[State] / GoogleDistanceMatrix[Origin, Destination, Mode] and Planner[Query].
 
+When you call Planner[Query], you need to substitute Query for the original prompt!
 
 Query: {query}
 Scratchpad: {scratchpad}"""
