@@ -67,7 +67,7 @@ class ManagerAgent:
         refinement_prompt = refinement_prompt + "Here is the feedback you should iterate on: " + feedback
 
         print("\nREFINING PLAN\n", flush = True)
-        refined_plan, refined_scratch, json = self.react_agent.run(refinement_prompt, reset=True) # Do I want true or false? True new agent, false keeps mems+ context.
+        refined_plan, refined_scratch, json = self.react_agent.run(refinement_prompt, reset=False) # Do I want true or false? True new agent, false keeps mems+ context.
         
         return refined_plan, refined_scratch, str(json)
 
