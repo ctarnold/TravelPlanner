@@ -129,13 +129,10 @@ Lunch: Olive Tree Cafe, Charlotte
 Dinner: Kylin Skybar, Charlotte
 Accommodation: -
 
-Done
-
 ***** Example Ends *****
 
 When extracting restaurants and accommodations, make sure to get their proper name from your information!!!
 Be very careful about flights, you will be graded on extracting an accurate flight number.
-Also, terminate your plan by saying Done at the end of the last day.
 
 Given information: {text}
 Query: {query}
