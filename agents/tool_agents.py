@@ -486,8 +486,9 @@ class ReactAgent:
                     request = format_step(self.llm.invoke(self._build_agent_prompt(),stop=['\n']).content)
                 elif self.react_name == 'local':
                     if self.acting_mode:
-                        mode = 'tool_calling'   
-                    mode = 'planning'
+                        mode = 'tool_calling'  
+                    else: 
+                        mode = 'planning'
                     self.llm.setMode(mode)
                     print("\n\nPrompting Local model\n\n", flush=True)
                     request = format_step(self.llm(prompt = prompt, stop_list=['\n'], max_length=256))
