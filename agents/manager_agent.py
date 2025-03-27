@@ -63,7 +63,7 @@ class ManagerAgent:
         refinement_prompt = f"Current plan:\n{plan}\n\nImprove the plan for the included query based on the attached feedback. Do not change aspects outside of the feedback.\n" + "query: \n" + self.query + "\nfeedback:\n "
         refinement_prompt = refinement_prompt + feedback
         print("\nREFINING PLAN\n", flush = True)
-        refined_plan, _, json = self.react_agent.run(refinement_prompt, reset=False) # Do I want true or false? True new agent, false keeps mems+ context.
+        refined_plan, _, json = self.react_agent.run(refinement_prompt, reset=True) # Do I want true or false? True new agent, false keeps mems+ context.
         
         return refined_plan, str(json)
 
