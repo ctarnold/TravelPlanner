@@ -74,6 +74,7 @@ class ReactAgent:
                 #  logs_path = '../logs/',
                 # clusters: '/scratch/gpfs/ca2992/TravelData/database/background/citySet.txt'
                 # local '../../database/database/background/citySet.txt'
+                
                  city_file_path = '../../database/database/background/citySet.txt'
                  ) -> None: 
 
@@ -186,7 +187,11 @@ class ReactAgent:
 
         # print("logs will be stored in " + self.log_path)
 
-        self.city_set = self.load_city(city_set_path=city_file_path)
+        try:
+            self.city_set = self.load_city(city_set_path=city_file_path)
+        except:
+            city_file_path= '/scratch/gpfs/ca2992/TravelData/database/background/citySet.txt'
+            self.city_set = self.load_city(city_set_path=city_file_path)
 
         self.enc = tiktoken.encoding_for_model("gpt-3.5-turbo")
 
