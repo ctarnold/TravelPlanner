@@ -78,6 +78,18 @@ class LocalModel:
                     num_return_sequences=1,
                     eos_token_id=self.tokenizer.eos_token_id
                 )
+            self.eval_pipe = transformers.pipeline(
+                    "text-generation",
+                    model=self.model,
+                    tokenizer= self.tokenizer,
+                    device_map=self.device,
+                    max_new_tokens = 1024,
+                    do_sample=True,
+                    return_full_text=False,
+                    top_k=30, # sample for some less likely tokens when in the manager step.
+                    num_return_sequences=1,
+                    eos_token_id=self.tokenizer.eos_token_id
+                )
             self.tool_pipe = transformers.pipeline(
                     "text-generation",
                     model=self.model,
@@ -93,7 +105,7 @@ class LocalModel:
             
             self.large_hf = HuggingFacePipeline(pipeline=self.large_pipe, model_kwargs={'temperature':0.1})
             self.tool_hf = HuggingFacePipeline(pipeline=self.tool_pipe, model_kwargs={'temperature':0.1})
-
+            self.eval_pipe = HuggingFacePipeline(pipeline = self.eval_pipe, model_kwargs={'temperature': 0.1})
             # https://stackoverflow.com/questions/76772509/llama-2-7b-hf-repeats-context-of-question-directly-from-input-prompt-cuts-off-w
             
             # llm = HuggingFacePipeline.from_model_id(model_id=model_path, task="text-generation")
@@ -110,6 +122,9 @@ class LocalModel:
                 stop_list.append('Action')
                 stop_list.append('Thought')
                 response = self.tool_hf.invoke(prompt, stop=stop_list)
+            elif self.mode == 'eval':
+                stop_list = ['\n']
+                response = self.eval_pipe.invoke(prompt, stop=stop_list)
             else:
                 stop_list = ['\n']
                 response = self.large_hf.invoke(prompt, stop=stop_list)
