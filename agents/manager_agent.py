@@ -49,7 +49,7 @@ class ManagerAgent:
         evaluation = self.llm(prompt)
         # self.react_agent.__reset_agent()
 
-        print(evaluation, "\n\n", flush = True)
+        print("\nEvaluation: ", evaluation, "\n\n", flush = True)
         return evaluation
 
     def refine_plan(self, plan: str, feedback: str) -> tuple[str, str]:
