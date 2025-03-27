@@ -107,7 +107,6 @@ class LocalModel:
             stop_list.append('Thought')
         if self.mode == 'planning':
             stop_list = ['\n']
-            stop_list.append('Done')
         try:
            response = self.hugging_face_llm.invoke(prompt, stop=stop_list)
            
