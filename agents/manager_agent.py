@@ -45,6 +45,7 @@ class ManagerAgent:
 
         prompt = prompt + "Give Feedback: \n"
 
+        self.llm.setMode("eval")
         evaluation = self.llm(prompt)
         # self.react_agent.__reset_agent()
 
