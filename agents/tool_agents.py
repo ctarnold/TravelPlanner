@@ -19,6 +19,7 @@ from langchain.schema import (
     SystemMessage
 ) 
 from .prompts import zeroshot_react_agent_prompt
+from .prompts import refinement_prompt
 from utils.func import load_line_json_data, save_file
 import sys
 import json
@@ -73,7 +74,7 @@ class ReactAgent:
                 #  logs_path = '../logs/',
                 # clusters: '/scratch/gpfs/ca2992/TravelData/database/background/citySet.txt'
                 # local '../../database/database/background/citySet.txt'
-                 city_file_path = '/scratch/gpfs/ca2992/TravelData/database/background/citySet.txt'
+                 city_file_path = '../../database/database/background/citySet.txt'
                  ) -> None: 
 
         self.answer = None # init to None
@@ -85,6 +86,9 @@ class ReactAgent:
 
         if self.mode == 'zero_shot':
             self.agent_prompt = zeroshot_react_agent_prompt
+        
+        self.refinement_prompt = refinement_prompt
+        self.feedback = ""
 
         self.json_log = []
 
@@ -155,9 +159,14 @@ class ReactAgent:
              # ../../agents/models/Qwen2.5-0.5B-Instruct
              # "/scratch/gpfs/ca2992/models/Llama-3.1-8B-Instruct"
              #  Llama-3.1-8B-Instruct-travelplanner-SFT
-            name = "/scratch/gpfs/ca2992/models/Llama-3.1-8B-Instruct"
-            self.llm = LocalModel(model_path=name) 
-            self.llm.name=name 
+            try:
+                name = "../../agents/models/Qwen2.5-0.5B-Instruct"
+                self.llm = LocalModel(model_path=name) 
+                self.llm.name=name 
+            except:
+                name = "/scratch/gpfs/ca2992/models/Llama-3.1-8B-Instruct"
+                self.llm = LocalModel(model_path=name) 
+                self.llm.name=name 
             print("Managed LLM: ", self.llm.name)
             self.max_token_length = 30000
 
@@ -479,6 +488,16 @@ class ReactAgent:
             return 
 
     # TODO: Refinement or Eval agent does NOT need build_agent_prompt. Change this!!!
+    # TODO: Refinement does need build_agent_prompt, it'll just iterate over
+    # on top of itself. it needs to step somehow. I'll see what it outputs
+    # but this is not good.
+    # Other thoughts, CAN use langchain, but need to modify the prompt
+    # template for the refinement mode.
+    # This would be a modification of build_agent_prompt()
+    # and perhaps an additional prompt in prompts.py
+    def set_name(self, name: str):
+        self.react_name = name
+        print("\nset name to " + name, "\n", flush=True)
     def prompt_agent(self) -> str:
         iterations = 0
         while True:
@@ -488,9 +507,24 @@ class ReactAgent:
                     request = format_step(self.llm.invoke(self._build_agent_prompt(),stop=['\n']).content)
                 elif self.react_name == 'local':
                     print("\n\nPrompting Local model\n\n", flush=True)
-                    if (self.llm.mode == "refinement"):
-                        request = format_step(self.llm(prompt = self.query, stop_list=['\n']))
-                    elif self.acting_mode:
+                    if self.acting_mode:
+                        mode = 'tool_calling'  
+                        self.llm.setMode(mode)
+                        request = format_step(self.llm(prompt = prompt, stop_list=['\n']))
+                    else: 
+                        mode = 'planning'
+                        self.llm.setMode(mode)
+                        request = format_step(self.llm(prompt = prompt, stop_list=['\n']))
+                elif self.react_name == 'refinement':
+                    queryArray = self.query.split("###")
+                    self.scratchpad = self.scratchpad + queryArray[2]
+                    feedback = queryArray[1]
+                    query = queryArray[0]
+                    self.query = query
+                    self.feedback = feedback
+                    prompt = self._build_agent_prompt()
+
+                    if self.acting_mode:
                         mode = 'tool_calling'  
                         self.llm.setMode(mode)
                         request = format_step(self.llm(prompt = prompt, stop_list=['\n']))
@@ -516,12 +550,26 @@ class ReactAgent:
                 print("WARNING: The agent is stuck. Please check the agent.", flush = True)
                 break
             
-
+    # OR, you could build_agent_prompt in the refinement agent and still skip?
+    # No, you need iterative reasoning in this file.
+    # self.react_agent(query)
+    # biggest difficulty is passing in the scratchpad and not having
+    # context blow up on itself. 
+    # Can pass query = (user query + scratchpad), and string
+    # parse it in here IFF mode is refinement and set
+    # scratchpad initially to supplied scratchpad.
     def _build_agent_prompt(self) -> str:
+        if self.react_name == 'refinement':
+            return self.refinement_prompt.format(
+                query = self.query,
+                scratchpad=self.scratchpad,
+                feedback=self.feedback
+            )
         if self.mode == "zero_shot":
             return self.agent_prompt.format(
                 query=self.query,
                 scratchpad=self.scratchpad)
+
 
     def is_finished(self) -> bool:
         return self.finished

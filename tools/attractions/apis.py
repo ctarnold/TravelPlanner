@@ -7,8 +7,11 @@ from utils.func import extract_before_parenthesis
 class Attractions:
     def __init__(self, path="/scratch/gpfs/ca2992/TravelData/database/attractions/attractions.csv"):
         self.path = path
-        # self.path = '../../database/database/attractions/attractions.csv'
-        self.data = pd.read_csv(self.path).dropna()[['Name','Latitude','Longitude','Address','Phone','Website',"City"]]
+        try:
+            self.data = pd.read_csv(self.path).dropna()[['Name','Latitude','Longitude','Address','Phone','Website',"City"]]
+        except:
+            self.path = '../../database/database/attractions/attractions.csv'
+            self.data = pd.read_csv(self.path).dropna()[['Name','Latitude','Longitude','Address','Phone','Website',"City"]]
         print("Attractions loaded.")
 
     def load_db(self):

@@ -6,8 +6,12 @@ from utils.func import extract_before_parenthesis
 class Accommodations:
     def __init__(self, path="/scratch/gpfs/ca2992/TravelData/database/accommodations/clean_accommodations_2022.csv"):
         self.path = path
-        # self.path = '../../database/database/accommodations/clean_accommodations_2022.csv'
-        self.data = pd.read_csv(self.path).dropna()[['NAME','price','room type', 'house_rules', 'minimum nights', 'maximum occupancy', 'review rate number', 'city']]
+        
+        try:
+            self.data = pd.read_csv(self.path).dropna()[['NAME','price','room type', 'house_rules', 'minimum nights', 'maximum occupancy', 'review rate number', 'city']]
+        except:
+            self.path = '../../database/database/accommodations/clean_accommodations_2022.csv'
+            self.data = pd.read_csv(self.path).dropna()[['NAME','price','room type', 'house_rules', 'minimum nights', 'maximum occupancy', 'review rate number', 'city']]
         print("Accommodations loaded.")
 
     def load_db(self):

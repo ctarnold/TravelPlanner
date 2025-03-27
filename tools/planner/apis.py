@@ -86,11 +86,15 @@ class Planner:
         elif model_name in ['gemini']:
             self.llm = ChatGoogleGenerativeAI(temperature=0,model="gemini-pro",google_api_key=GOOGLE_API_KEY)
         else:
-            # self.llm = LocalModel(model_path = "/scratch/gpfs/ca2992/models/DeepSeek-R1-Distill-Llama-8B")
-            self.llm = LocalModel(model_path = "/scratch/gpfs/ca2992/models/Llama-3.1-8B-Instruct", mode="planning")
             # self.llm = LocalModel(model_path = "../../agents/models/Qwen2.5-0.5B-Instruct")
             # self.llm = LocalModel(model_path = "/scratch/gpfs/ca2992/models/Llama-3.1-8B-Instruct-travelplanner-SFT")
             # self.llm = LocalModel(model_path = "/scratch/gpfs/ca2992/models/QwQ-32B")
+            # self.llm = LocalModel(model_path = "/scratch/gpfs/ca2992/models/DeepSeek-R1-Distill-Llama-8B")
+            try:
+                self.llm = LocalModel(model_path = "/scratch/gpfs/ca2992/models/Llama-3.1-8B-Instruct", mode="planning")
+            except:
+                self.llm = LocalModel(model_path = "../../agents/models/Qwen2.5-0.5B-Instruct")
+            
             self.llm.setMode("planner")
             self.max_token_length = 30000
 

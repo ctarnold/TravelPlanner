@@ -113,6 +113,130 @@ zeroshot_react_agent_prompt = PromptTemplate(
                         template=ZEROSHOT_REACT_INSTRUCTION,
                         )
 
+REFINEMENT_INSTRUCTION = """
+
+Current plan:\n{plan}\n\nImprove the plan for the included query based on the attached feedback. Do not change aspects outside of the feedback.
+
+FEEDBACK: {feedback}
+
+
+ORIGINAL TASK BELOW:
+
+Collect information for a query plan using interleaving 'Thought', 'Action', and 'Observation' steps. Ensure you gather valid information related to transportation, dining, attractions, and accommodation. All information should be written in Notebook, which will then be input into the Planner tool. Note that the nested use of tools is prohibited. 'Thought' can reason about the current situation, and 'Action' can have 8 different types:
+(1) FlightSearch[Departure City, Destination City, Date]:
+Description: A flight information retrieval tool.
+Parameters:
+Departure City: The city you'll be flying out from.
+Destination City: The city you aim to reach.
+Date: The date of your travel in YYYY-MM-DD format.
+Example: FlightSearch[New York, London, 2022-10-01] would fetch flights from New York to London on October 1, 2022.
+
+(2) GoogleDistanceMatrix[Origin, Destination, Mode]:
+Description: Estimate the distance, time and cost between two cities.
+Parameters:
+Origin: The departure city of your journey.
+Destination: The destination city of your journey.
+Mode: The method of transportation. Choices include 'self-driving' and 'taxi'.
+Example: GoogleDistanceMatrix[Paris, Lyon, self-driving] would provide driving distance, time and cost between Paris and Lyon.
+
+(3) AccommodationSearch[City]:
+Description: Discover accommodations in your desired city.
+Parameter: City - The name of the city where you're seeking accommodation.
+Example: AccommodationSearch[Rome] would present a list of hotel rooms in Rome.
+
+(4) RestaurantSearch[City]:
+Description: Explore dining options in a city of your choice.
+Parameter: City – The name of the city where you're seeking restaurants.
+Example: RestaurantSearch[Tokyo] would show a curated list of restaurants in Tokyo.
+
+(5) AttractionSearch[City]:
+Description: Find attractions in a city of your choice.
+Parameter: City – The name of the city where you're seeking attractions.
+Example: AttractionSearch[London] would return attractions in London.
+
+(6) CitySearch[State]
+Description: Find cities in a state of your choice.
+Parameter: State – The name of the state where you're seeking cities.
+Example: CitySearch[California] would return cities in California.
+
+(7) NotebookWrite[Short Description]
+Description: Writes a new data entry into the Notebook tool with a short description. This tool should be used immediately after FlightSearch, AccommodationSearch, AttractionSearch, RestaurantSearch or GoogleDistanceMatrix. Only the data stored in Notebook can be seen by Planner. So you should write all the information you need into Notebook.
+Parameters: Short Description - A brief description or label for the stored data. You don't need to write all the information in the description. The data you've searched for will be automatically stored in the Notebook.
+Example: NotebookWrite[Flights from Rome to Paris in 2022-02-01] would store the informatrion of flights from Rome to Paris in 2022-02-01 in the Notebook.
+
+(8) Planner[Query]
+Description: A smart planning tool that crafts detailed plans based on user input and the information stored in Notebook.
+Parameters: 
+Query: The query from user.
+Example: Planner[Trip 3-days Seattle to New York] would return a detailed 3-day trip plan.
+You should use as many as possible steps to collect enough information to input to the Planner tool. 
+When you call the planner, the observations from previous tool calls will be implied for you.
+
+Each action only calls one function once. Do not add any description in the action.
+
+At the end, you will call Planner[Query] to complete the plan.
+
+There are two modes of this task: Think and Act.
+
+If scratchpad leaves off on the 'Think:' mode, you are to generate a thought
+regarding how to best complete the task. This can be discussing a specific
+tool function, or noting an observation.
+
+If scratchpad leaves off on the 'Action:' mode, you are to output a specific
+tool call.
+
+For example, if scratchpad finishes with 'Action:',
+an appropriate response if the last Think was about getting flights,
+would be to call FlightSearch[city, city, date] as described above.
+
+Notice how in think mode you comment, and in action mode you
+only call the tool!
+
+In think mode you are to view the scratchpad and comment explicitly
+on what the tool agent should call.
+
+Example output in think mode:
+
+Based on the scratchpad, I still need to find flights to complete the request.
+The query is for Paris to New York on October 1st, so I should call the
+FlightSearch tool to get the necessary information. Call the tool
+FlightSearch[Paris, New York, 2022-10-01]. 
+
+Example output in action mode:
+
+FlightSearch[Paris, New York, 2022-10-01]
+
+Example output in think mode:
+
+Based on the scratchpad, I already found flights. Do I have accommodations?
+No, I still need to do that. I should call the tool AccommodationSearch[City]
+to get the information. Where is my query trip to? Oh, Seattle. Let's search
+for Seattle. AccommodationSearch[Seattle].
+
+Example output in action mode:
+
+AccommodationSearch[Seattle]
+
+These examples are relative to the query, modify as needed.
+
+In action mode your action should come at the beginning of your response. Valid actions are:
+
+FlightSearch[Departure City, Destination City, Date] / AccommodationSearch[City] /  RestaurantSearch[City] / NotebookWrite[Short Description] / AttractionSearch[City] / CitySearch[State] / GoogleDistanceMatrix[Origin, Destination, Mode] and Planner[Query].
+
+When you call Planner[Query], you need to substitute Query for a brief explanation of the original prompt!
+
+
+
+Query: {query}
+Scratchpad: {scratchpad}
+"""
+
+refinement_prompt = PromptTemplate(
+    input_variables = ["query", "scratchpad", "plan", "feedbackk"],
+    template = REFINEMENT_INSTRUCTION
+)
+
+
 PLANNER_INSTRUCTION = """You are a proficient planner. Based on the provided information and query, please give me a detailed plan, including specifics such as flight numbers (e.g., F0123456), restaurant names, and accommodation names. Note that all the information in your plan should be derived from the provided data. You must adhere to the format given in the example. Additionally, all details should align with commonsense. The symbol '-' indicates that information is unnecessary. For example, in the provided sample, you do not need to plan after returning to the departure city. When you travel to two cities in one day, you should note it in the 'Current City' section as in the example (i.e., from A to B).
 
 ***** Example *****

@@ -7,7 +7,11 @@ class Restaurants:
     def __init__(self, path="/scratch/gpfs/ca2992/TravelData/database/restaurants/clean_restaurant_2022.csv"):
         self.path = path
         # self.path = "../../database/database/restaurants/clean_restaurant_2022.csv"
-        self.data = pd.read_csv(self.path).dropna()[['Name','Average Cost','Cuisines','Aggregate Rating','City']]
+        try:
+            self.data = pd.read_csv(self.path).dropna()[['Name','Average Cost','Cuisines','Aggregate Rating','City']]
+        except:
+            self.path = "../../database/database/restaurants/clean_restaurant_2022.csv"
+            self.data = pd.read_csv(self.path).dropna()[['Name','Average Cost','Cuisines','Aggregate Rating','City']]
         print("Restaurants loaded.")
 
     def load_db(self):
