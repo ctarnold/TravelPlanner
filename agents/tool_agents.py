@@ -478,6 +478,7 @@ class ReactAgent:
             self.step_n += 1
             return 
 
+    # TODO: Refinement or Eval agent does NOT need build_agent_prompt. Change this!!!
     def prompt_agent(self) -> str:
         iterations = 0
         while True:
@@ -486,13 +487,17 @@ class ReactAgent:
                 if self.react_name == 'gemini':
                     request = format_step(self.llm.invoke(self._build_agent_prompt(),stop=['\n']).content)
                 elif self.react_name == 'local':
-                    if self.acting_mode:
+                    print("\n\nPrompting Local model\n\n", flush=True)
+                    if (self.llm.mode == "refinement"):
+                        request = format_step(self.llm(prompt = self.query, stop_list=['\n']))
+                    elif self.acting_mode:
                         mode = 'tool_calling'  
+                        self.llm.setMode(mode)
+                        request = format_step(self.llm(prompt = prompt, stop_list=['\n']))
                     else: 
                         mode = 'planning'
-                    self.llm.setMode(mode)
-                    print("\n\nPrompting Local model\n\n", flush=True)
-                    request = format_step(self.llm(prompt = prompt, stop_list=['\n'], max_length=256))
+                        self.llm.setMode(mode)
+                        request = format_step(self.llm(prompt = prompt, stop_list=['\n']))
                 elif isinstance(self.llm, ChatOpenAI):
                     request = format_step(self.llm([HumanMessage(content=self._build_agent_prompt())]).content)
                 else:

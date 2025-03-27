@@ -63,9 +63,12 @@ class ManagerAgent:
         
         refinement_prompt = f"Current plan:\n{plan}\n\nImprove the plan for the included query based on the attached feedback. Do not change aspects outside of the feedback.\n"
         refinement_prompt = refinement_prompt + "query: \n" + self.query 
-        refinement_prompt = refinement_prompt + "\nThis is your scratchpad, work done by a previous agent: " + scratchpad + " \n"
-        refinement_prompt = refinement_prompt + "Here is the feedback you should iterate on: " + feedback
+        # If not resetting agent, don't need to re-include scratchpad.
+        # refinement_prompt = refinement_prompt + "\nThis is your scratchpad, work done by a previous agent: " + scratchpad + " \n"
+        refinement_prompt = refinement_prompt + "\nHere is the feedback you should iterate on: " + feedback
+        refinement_prompt += "Now attach a better plan to follow: "
 
+        self.react_agent.llm.setMode("refinement")
         print("\nREFINING PLAN\n", flush = True)
         refined_plan, refined_scratch, json = self.react_agent.run(refinement_prompt, reset=False) # Do I want true or false? True new agent, false keeps mems+ context.
         
