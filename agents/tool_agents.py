@@ -155,7 +155,7 @@ class ReactAgent:
              # ../../agents/models/Qwen2.5-0.5B-Instruct
              # "/scratch/gpfs/ca2992/models/Llama-3.1-8B-Instruct"
              #  Llama-3.1-8B-Instruct-travelplanner-SFT
-            name = "/scratch/gpfs/ca2992/models/Llama-3.1-8B-Instruct-travelplanner-SFT"
+            name = "/scratch/gpfs/ca2992/models/Llama-3.1-8B-Instruct"
             self.llm = LocalModel(model_path=name) 
             self.llm.name=name 
             print("Managed LLM: ", self.llm.name)
