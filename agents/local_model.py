@@ -62,9 +62,23 @@ class LocalModel:
                 model_path,
                 **model_kwargs
             )
+          
             self.mode = mode
-            if (self.mode == 'tool_calling'):
-                pipe = transformers.pipeline(
+            self.model.eval() # sets model to do inference
+            
+            self.large_pipe = transformers.pipeline(
+                    "text-generation",
+                    model=self.model,
+                    tokenizer= self.tokenizer,
+                    device_map=self.device,
+                    max_new_tokens = 512,
+                    do_sample=True,
+                    return_full_text=False,
+                    top_k=30, # sample for some less likely tokens when in the manager step.
+                    num_return_sequences=1,
+                    eos_token_id=self.tokenizer.eos_token_id
+                )
+            self.tool_pipe = transformers.pipeline(
                     "text-generation",
                     model=self.model,
                     tokenizer= self.tokenizer,
@@ -76,24 +90,13 @@ class LocalModel:
                     num_return_sequences=1,
                     eos_token_id=self.tokenizer.eos_token_id
                 )
-            else:
-                pipe = transformers.pipeline(
-                    "text-generation",
-                    model=self.model,
-                    tokenizer= self.tokenizer,
-                    device_map=self.device,
-                    max_new_tokens = 512,
-                    do_sample=True,
-                    return_full_text=False,
-                    top_k=10,
-                    num_return_sequences=1,
-                    eos_token_id=self.tokenizer.eos_token_id
-                )
+            
+            self.large_hf = HuggingFacePipeline(pipeline=self.large_pipe, model_kwargs={'temperature':0.1})
+            self.tool_hf = HuggingFacePipeline(pipeline=self.tool_pipe, model_kwargs={'temperature':0.1})
 
             # https://stackoverflow.com/questions/76772509/llama-2-7b-hf-repeats-context-of-question-directly-from-input-prompt-cuts-off-w
-            self.model.eval() # sets model to do inference
+            
             # llm = HuggingFacePipeline.from_model_id(model_id=model_path, task="text-generation")
-            self.hugging_face_llm = HuggingFacePipeline(pipeline=pipe, model_kwargs={'temperature':0.1})
             print("LocalModel loaded.")
         except Exception as e:
             print(f"Error loading model: {e}")
@@ -102,11 +105,13 @@ class LocalModel:
 
     def __call__(self, prompt, max_length=256, stop_list = ['\n']):
         if self.mode == 'tool_calling':
+            self.hugging_face_llm = self.tool_hf
             stop_list = ['\n']
             stop_list.append('Action')
             stop_list.append('Thought')
-        if self.mode == 'planning':
+        else:
             stop_list = ['\n']
+            self.hugging_face_llm = self.large_hf
         try:
            response = self.hugging_face_llm.invoke(prompt, stop=stop_list)
            
