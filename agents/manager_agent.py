@@ -28,7 +28,7 @@ class ManagerAgent:
         print("\n Manager LLM: ", self.llm.name)
         self.max_iterations = max_iterations
         
-    def evaluate_plan(self, plan: str, scratchpad: str) -> str:  # Changed return type to Dict[str, str]
+    def evaluate_plan(self, plan: str, scratchpad: str) -> str: 
         """
         Evaluates the plan against the criteria and returns feedback.
         """
@@ -43,7 +43,7 @@ class ManagerAgent:
 
         prompt = prompt + "If it is vague whether a criterion is met, prompt your agent to double-check on its next run while planning. \n"
 
-        prompt = prompt + "Please see the following scratch work by a previous agent, including data and tools called. " + scratchpad + "\n"
+        prompt = prompt + "Please see the following scratch work by a previous agent, including data and tools called. Scratchpad: " + scratchpad + "\n"
 
         prompt = prompt + "Give Feedback: \n"
 
@@ -53,7 +53,7 @@ class ManagerAgent:
         print("\nEvaluation: ", evaluation, "\n\n", flush = True)
         return evaluation
 
-    def refine_plan(self, plan: str, feedback: str) -> tuple[str, str]:
+    def refine_plan(self, plan: str, feedback: str, scratchpad:str) -> tuple[str, str, str]:
         """
         Refines the plan based on feedback by re-prompting the ReactAgent.
         """
@@ -61,8 +61,11 @@ class ManagerAgent:
             print("potential error in agent, no feedback by manager.")
             return plan
         
-        refinement_prompt = f"Current plan:\n{plan}\n\nImprove the plan for the included query based on the attached feedback. Do not change aspects outside of the feedback.\n" + "query: \n" + self.query + "\nfeedback:\n "
-        refinement_prompt = refinement_prompt + feedback
+        refinement_prompt = f"Current plan:\n{plan}\n\nImprove the plan for the included query based on the attached feedback. Do not change aspects outside of the feedback.\n"
+        refinement_prompt = refinement_prompt + "query: \n" + self.query 
+        refinement_prompt = refinement_prompt + "\nThis is your scratchpad, work done by a previous agent: " + scratchpad + " \n"
+        refinement_prompt = refinement_prompt + "Here is the feedback you should iterate on: " + feedback
+
         print("\nREFINING PLAN\n", flush = True)
         refined_plan, refined_scratch, json = self.react_agent.run(refinement_prompt, reset=True) # Do I want true or false? True new agent, false keeps mems+ context.
         
@@ -94,7 +97,7 @@ class ManagerAgent:
         
         print("\nEvaluating Plan with ", self.max_iterations, " iterations.")
         for i in range(self.max_iterations):
-            evaluations = self.evaluate_plan(str(plan))
+            evaluations = self.evaluate_plan(plan = str(plan), scratchpad=scratchpad)
 
             new_plan, new_scratch, new_json = self.refine_plan(plan, evaluations, scratchpad)
             if new_plan is not None and len(new_plan) != 0:
