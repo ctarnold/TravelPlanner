@@ -91,6 +91,7 @@ class Planner:
             # self.llm = LocalModel(model_path = "../../agents/models/Qwen2.5-0.5B-Instruct")
             # self.llm = LocalModel(model_path = "/scratch/gpfs/ca2992/models/Llama-3.1-8B-Instruct-travelplanner-SFT")
             self.llm = LocalModel(model_path = "/scratch/gpfs/ca2992/models/QwQ-32B")
+            self.llm.setMode("planner")
             self.max_token_length = 30000
 
 

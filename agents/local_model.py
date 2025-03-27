@@ -83,7 +83,7 @@ class LocalModel:
                     model=self.model,
                     tokenizer= self.tokenizer,
                     device_map=self.device,
-                    max_new_tokens = 40,
+                    max_new_tokens = 30,
                     do_sample=True,
                     return_full_text=False,
                     top_k=10,
@@ -104,18 +104,16 @@ class LocalModel:
 
 
     def __call__(self, prompt, max_length=256, stop_list = ['\n']):
-        if self.mode == 'tool_calling':
-            self.hugging_face_llm = self.tool_hf
-            stop_list = ['\n']
-            stop_list.append('Action')
-            stop_list.append('Thought')
-        else:
-            stop_list = ['\n']
-            self.hugging_face_llm = self.large_hf
         try:
-           response = self.hugging_face_llm.invoke(prompt, stop=stop_list)
-           
-           return response
+            if self.mode == 'tool_calling':
+                stop_list = ['\n']
+                stop_list.append('Action')
+                stop_list.append('Thought')
+                response = self.tool_hf.invoke(prompt, stop=stop_list)
+            else:
+                stop_list = ['\n']
+                response = self.large_hf.invoke(prompt, stop=stop_list)
+            return response
         except Exception as e:
             print(f"Error generating output: {e}", flush=True)
             return
@@ -123,13 +121,3 @@ class LocalModel:
     def setMode(self, mode: str):
         print("\nMode set to ", mode, "\n")
         self.mode = mode
-
-    #Alternative predict method
-    #def predict(self, prompt, max_length=256):
-    #    input_ids = self.tokenizer(prompt, return_tensors="pt").input_ids.to(self.device)
-    #
-    #    with torch.no_grad():
-    #        outputs = self.model.generate(input_ids, max_length=max_length)
-    #
-    #    return self.tokenizer.decode(outputs[0], skip_special_tokens=True)
-    # """

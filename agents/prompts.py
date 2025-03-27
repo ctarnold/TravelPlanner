@@ -47,10 +47,9 @@ Example: NotebookWrite[Flights from Rome to Paris in 2022-02-01] would store the
 Description: A smart planning tool that crafts detailed plans based on user input and the information stroed in Notebook.
 Parameters: 
 Query: The query from user.
-Example: Planner[Give me a 3-day trip plan from Seattle to New York] would return a detailed 3-day trip plan.
+Example: Planner[Trip 3-days Seattle to New York] would return a detailed 3-day trip plan.
 You should use as many as possible steps to collect enough information to input to the Planner tool. 
-When you call the planner, you should also include the information, substituting query for the original task.
-Be brief and very concise.
+When you call the planner, the observations from previous tool calls will be implied for you.
 
 Each action only calls one function once. Do not add any description in the action.
 
@@ -72,21 +71,38 @@ would be to call FlightSearch[city, city, date] as described above.
 Notice how in think mode you comment, and in action mode you
 only call the tool!
 
+In think mode you are to view the scratchpad and comment explicitly
+on what the tool agent should call.
+
 Example output in think mode:
 
-Based on the scratchpad, I need to find flights to complete the request.
+Based on the scratchpad, I still need to find flights to complete the request.
 The query is for Paris to New York on October 1st, so I should call the
-FlightSearch tool to get the necessary information.
+FlightSearch tool to get the necessary information. Call the tool
+FlightSearch[Paris, New York, 2022-10-01]. 
 
 Example output in action mode:
 
 FlightSearch[Paris, New York, 2022-10-01]
 
-Your action should come at the beginning of your response. Valid actions are:
+Example output in think mode:
+
+Based on the scratchpad, I already found flights. Do I have accommodations?
+No, I still need to do that. I should call the tool AccommodationSearch[City]
+to get the information. Where is my query trip to? Oh, Seattle. Let's search
+for Seattle. AccommodationSearch[Seattle].
+
+Example output in action mode:
+
+AccommodationSearch[Seattle]
+
+These examples are relative to the query, modify as needed.
+
+In action mode your action should come at the beginning of your response. Valid actions are:
 
 FlightSearch[Departure City, Destination City, Date] / AccommodationSearch[City] /  RestaurantSearch[City] / NotebookWrite[Short Description] / AttractionSearch[City] / CitySearch[State] / GoogleDistanceMatrix[Origin, Destination, Mode] and Planner[Query].
 
-When you call Planner[Query], you need to substitute Query for the original prompt!
+When you call Planner[Query], you need to substitute Query for a brief explanation of the original prompt!
 
 Query: {query}
 Scratchpad: {scratchpad}"""
@@ -133,6 +149,8 @@ Accommodation: -
 
 When extracting restaurants and accommodations, make sure to get their proper name from your information!!!
 Be very careful about flights, you will be graded on extracting an accurate flight number.
+
+Your response ends after the last accommodation section on the a
 
 Given information: {text}
 Query: {query}
