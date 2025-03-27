@@ -28,7 +28,7 @@ class ManagerAgent:
         print("\n Manager LLM: ", self.llm.name)
         self.max_iterations = max_iterations
         
-    def evaluate_plan(self, plan: str) -> str:  # Changed return type to Dict[str, str]
+    def evaluate_plan(self, plan: str, scratchpad: str) -> str:  # Changed return type to Dict[str, str]
         """
         Evaluates the plan against the criteria and returns feedback.
         """
@@ -43,11 +43,12 @@ class ManagerAgent:
 
         prompt = prompt + "If it is vague whether a criterion is met, prompt your agent to double-check on its next run while planning. \n"
 
+        prompt = prompt + "Please see the following scratch work by a previous agent, including data and tools called. " + scratchpad + "\n"
+
         prompt = prompt + "Give Feedback: \n"
 
         self.llm.setMode("eval")
         evaluation = self.llm(prompt)
-        # self.react_agent.__reset_agent()
 
         print("\nEvaluation: ", evaluation, "\n\n", flush = True)
         return evaluation
@@ -63,9 +64,9 @@ class ManagerAgent:
         refinement_prompt = f"Current plan:\n{plan}\n\nImprove the plan for the included query based on the attached feedback. Do not change aspects outside of the feedback.\n" + "query: \n" + self.query + "\nfeedback:\n "
         refinement_prompt = refinement_prompt + feedback
         print("\nREFINING PLAN\n", flush = True)
-        refined_plan, _, json = self.react_agent.run(refinement_prompt, reset=True) # Do I want true or false? True new agent, false keeps mems+ context.
+        refined_plan, refined_scratch, json = self.react_agent.run(refinement_prompt, reset=True) # Do I want true or false? True new agent, false keeps mems+ context.
         
-        return refined_plan, str(json)
+        return refined_plan, refined_scratch, str(json)
 
     def run(self, query: str) -> tuple[str, str]:
         """
@@ -73,13 +74,13 @@ class ManagerAgent:
         """
         print("\nRunning ManagerAgent...", flush = True)
         print("\nQuery:", query + "\n")
-        plan, _, json = self.react_agent.run(query)
+        plan, scratchpad, json = self.react_agent.run(query)
 
         iterations = 1
         while plan == None:
                 print("Entering loop with iterations: ", iterations, flush = True)
                 iterations += 1
-                plan, _, json  = self.react_agent.run(query)
+                plan, scratchpad, json  = self.react_agent.run(query)
         print("\nInitial Plan: ", plan, flush = True)
         print("\n After ", iterations, " iterations.", plan, flush = True)
 
@@ -95,10 +96,11 @@ class ManagerAgent:
         for i in range(self.max_iterations):
             evaluations = self.evaluate_plan(str(plan))
 
-            new_plan, new_json = self.refine_plan(plan, evaluations)
+            new_plan, new_scratch, new_json = self.refine_plan(plan, evaluations, scratchpad)
             if new_plan is not None and len(new_plan) != 0:
                 print("\n\n used new plan \n\n", flush=True)
                 plan = new_plan
+                scratchpad = scratchpad + new_scratch
                 json = new_json
             else:
                 print("\n\n new plan empty \n\n", flush=True)
