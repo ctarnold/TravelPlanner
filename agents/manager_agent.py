@@ -18,7 +18,8 @@ class ManagerAgent:
         try:
             self.llm = LocalModel(model_path="../../agents/models/Qwen2.5-0.5B-Instruct") 
         except:
-            self.llm = LocalModel(model_path = "/scratch/gpfs/ca2992/models/QwQ-32B")
+            self.llm = "/scratch/gpfs/ca2992/models/Llama-3.1-8B-Instruct"
+            # self.llm = LocalModel(model_path = "/scratch/gpfs/ca2992/models/QwQ-32B")
             # self.llm = LocalModel(model_path="/scratch/gpfs/ca2992/models/DeepSeek-R1-Distill-Llama-8B", mode="manager")
         self.react_agent = ReactAgent(
             args=None,
