@@ -90,6 +90,7 @@ class ReactAgent:
         
         self.refinement_prompt = refinement_prompt
         self.feedback = ""
+        self.tool_pad = ""
 
         self.json_log = []
 
@@ -306,7 +307,8 @@ class ReactAgent:
                         self.scratchpad = self.scratchpad.replace(to_string(self.current_data).strip(),'Masked due to limited length. Make sure the data has been written in Notebook.')
                         self.current_data = self.tools['flights'].run(action_arg.split(', ')[0], action_arg.split(', ')[1], action_arg.split(', ')[2])
                         self.current_observation = str(to_string(self.current_data))
-                        self.scratchpad += self.current_observation 
+                        self.scratchpad += self.current_observation
+                        self.tool_pad += ("\nFLIGHT DATA: \n" + self.current_observation )
                         self.__reset_record()
                         self.json_log[-1]['state'] = f'Successful'
 
@@ -337,6 +339,7 @@ class ReactAgent:
                         self.current_data = self.tools['attractions'].run(action_arg)
                         self.current_observation = to_string(self.current_data).strip('\n').strip()
                         self.scratchpad += self.current_observation
+                        self.tool_pad += ("\n ATTRACTION DATA: \n" + self.current_observation )
                         self.__reset_record()
                         self.json_log[-1]['state'] = f'Successful'
                 except ValueError as e:
@@ -359,6 +362,7 @@ class ReactAgent:
                         self.current_data = self.tools['accommodations'].run(action_arg)
                         self.current_observation = to_string(self.current_data).strip('\n').strip()
                         self.scratchpad += self.current_observation
+                        self.tool_pad += ("\n ACCOMMODATION DATA: \n" + self.current_observation )
                         self.__reset_record()
                         self.json_log[-1]['state'] = f'Successful'
                 except ValueError as e :
@@ -381,6 +385,7 @@ class ReactAgent:
                         self.current_data = self.tools['restaurants'].run(action_arg)
                         self.current_observation = to_string(self.current_data).strip()
                         self.scratchpad += self.current_observation
+                        self.tool_pad += ("\n RESTAURANT DATA: \n" + self.current_observation )
                         self.__reset_record()
                         self.json_log[-1]['state'] = f'Successful'
 
@@ -404,6 +409,7 @@ class ReactAgent:
                     # self.current_data = self.tools['cities'].run(action_arg)
                     self.current_observation = to_string(self.tools['cities'].run(action_arg)).strip()
                     self.scratchpad += self.current_observation
+                    self.tool_pad += ("\n CITY DATA: \n" + self.current_observation )
                     self.__reset_record()
                     self.json_log[-1]['state'] = f'Successful'
 
@@ -428,6 +434,7 @@ class ReactAgent:
                     self.current_data = self.tools['googleDistanceMatrix'].run(action_arg.split(', ')[0],action_arg.split(', ')[1],action_arg.split(', ')[2])
                     self.current_observation =  to_string(self.current_data)
                     self.scratchpad += self.current_observation 
+                    self.tool_pad += ("\n GoogleDistanceMatrix DATA: \n" + self.current_observation )
                     self.__reset_record()
                     self.json_log[-1]['state'] = f'Successful'
 
@@ -459,7 +466,7 @@ class ReactAgent:
             elif action_type == "Planner":
                 print("\n\nPlanner action reached\n", flush=True)
                 # self.current_observation = str(self.tools['planner'].run(str(self.tools['notebook'].list_all()),action_arg))
-                self.current_observation = str(self.tools['planner'].run(str(self.scratchpad),action_arg))
+                self.current_observation = str(self.tools['planner'].run(str(self.tool_pad),action_arg))
                 self.scratchpad  +=  self.current_observation
                 self.answer = self.current_observation
                 self.__reset_record()
