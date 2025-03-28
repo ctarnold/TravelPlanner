@@ -93,7 +93,8 @@ Example output in action mode:
 
 FlightSearch[New York, Paris, 2022-10-05] 
 
-To get a return trip shown above is important.
+To get a return trip shown above is important. When you call FlightSearch tool,
+always call it again reversed for the end of the trip.
 
 Example output in think mode:
 
@@ -286,17 +287,17 @@ Attraction: Books Monument, Charlotte.
 Lunch: Olive Tree Cafe, Charlotte
 Dinner: Kylin Skybar, Charlotte
 Accommodation: -
-PLAN COMPLETE
 ***** Example Ends *****
 
 When extracting restaurants and accommodations, make sure to get their proper name from your information!!!
 Be very careful about flights, you will be graded on extracting an accurate flight number.
 
 Your response ends after the last accommodation section on the final day.
-When your plan is COMPLETE after the last day do not write anything more! You are done!
 
 You will be paid $1,000,000 for focusing on matching the information exactly,
 including flights, varying restaurants, and having a dynamic fast changing plan.
+
+Return your plan in a JSON format for eval.
 
 Given information: {text}
 Query: {query}
