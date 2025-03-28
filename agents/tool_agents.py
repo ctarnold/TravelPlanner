@@ -215,6 +215,7 @@ class ReactAgent:
                               "action": "", "observation": "", "state":""})
 
         self.acting_mode = False
+        # Idea! Have self.tool_pad for only having tool call results
         self.scratchpad += f'\nThought {self.step_n}:'
         self.scratchpad += ' ' + self.prompt_agent()
 
