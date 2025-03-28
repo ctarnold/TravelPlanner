@@ -91,7 +91,7 @@ class Planner:
             # self.llm = LocalModel(model_path = "/scratch/gpfs/ca2992/models/QwQ-32B")
             # self.llm = LocalModel(model_path = "/scratch/gpfs/ca2992/models/DeepSeek-R1-Distill-Llama-8B")
             try:
-                self.llm = LocalModel(model_path = "/scratch/gpfs/ca2992/models/Llama-3.1-70B-Instruct")
+                self.llm = LocalModel(model_path = "/scratch/gpfs/ca2992/models/Llama-3.3-70B-Instruct")
                 # self.llm = LocalModel(model_path = "/scratch/gpfs/ca2992/models/QwQ-32B")
                 # self.llm = LocalModel(model_path = "/scratch/gpfs/ca2992/models/Llama-3.1-8B-Instruct", mode="planning")
             except:
