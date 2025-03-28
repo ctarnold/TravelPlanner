@@ -89,6 +89,12 @@ Example output in action mode:
 
 FlightSearch[Paris, New York, 2022-10-01]
 
+Example output in action mode:
+
+FlightSearch[New York, Paris, 2022-10-05] 
+
+To get a return trip shown above is important.
+
 Example output in think mode:
 
 Based on the scratchpad, I already found flights. Do I have accommodations?
@@ -99,6 +105,10 @@ for Seattle. AccommodationSearch[Seattle].
 Example output in action mode:
 
 AccommodationSearch[Seattle]
+
+Example output in action mode, if a trip to Seattle:
+
+RestaurantSearch[Seattle]
 
 These examples are relative to the query, modify as needed.
 
