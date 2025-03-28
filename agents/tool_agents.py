@@ -634,7 +634,7 @@ class ReactAgent:
         return city_set
 
 ### String Stuff ###
-gpt2_enc = tiktoken.encoding_for_model("text-davinci-003")
+# gpt2_enc = tiktoken.encoding_for_model("text-davinci-003")
 
 def get_first_response(string):
     response = string.split(']')[0] + ']'
