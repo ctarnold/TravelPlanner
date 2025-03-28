@@ -86,7 +86,7 @@ class LocalModel:
                     model=self.model,
                     tokenizer= self.tokenizer,
                     device_map=self.device,
-                    max_new_tokens = 1024,
+                    max_new_tokens = 512,
                     do_sample=True,
                     return_full_text=False,
                     top_k=30, # sample for some less likely tokens when in the manager step.
@@ -106,10 +106,25 @@ class LocalModel:
                     num_return_sequences=1,
                     eos_token_id=self.tokenizer.eos_token_id
                 )
+            self.planner_pipe = transformers.pipeline(
+                    "text-generation",
+                    torch_dtype=torch.bfloat16,
+                    model=self.model,
+                    tokenizer= self.tokenizer,
+                    device_map=self.device,
+                    max_new_tokens = 1024,
+                    do_sample=True,
+                    return_full_text=False,
+                    top_k=10,
+                    num_return_sequences=1,
+                    eos_token_id=self.tokenizer.eos_token_id
+                )
+
             print("\nAll Transformers Pipelines Initialized\n", flush=True)
             self.large_hf = HuggingFacePipeline(pipeline=self.large_pipe, model_kwargs={'temperature':0.1})
             self.tool_hf = HuggingFacePipeline(pipeline=self.tool_pipe, model_kwargs={'temperature':0.1})
-            self.eval_pipe = HuggingFacePipeline(pipeline = self.eval_pipe, model_kwargs={'temperature': 0.1})
+            self.eval_hf = HuggingFacePipeline(pipeline = self.eval_pipe, model_kwargs={'temperature': 0.1})
+            self.plan_hf = HuggingFacePipeline(pipeline = self.planner_pipe, model_kwargs={'temperature': 0.1})
             print("\nHF Pipelines Initialized\n", flush=True)
             # https://stackoverflow.com/questions/76772509/llama-2-7b-hf-repeats-context-of-question-directly-from-input-prompt-cuts-off-w
             
@@ -129,10 +144,10 @@ class LocalModel:
                 response = self.tool_hf.invoke(prompt, stop=stop_list)
             elif self.mode == 'eval':
                 stop_list = ['\n']
-                response = self.eval_pipe.invoke(prompt, stop=stop_list)
+                response = self.eval_hf.invoke(prompt, stop=stop_list)
             elif self.mode == 'planner_tool':
                 stop_list = ['\n']
-                response = self.eval_pipe.invoke(prompt, stop=stop_list)
+                response = self.plan_hf.invoke(prompt, stop=stop_list)
             else:
                 stop_list = ['\n']
                 response = self.large_hf.invoke(prompt, stop=stop_list)
