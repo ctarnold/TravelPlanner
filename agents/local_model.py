@@ -68,6 +68,7 @@ class LocalModel:
             
             self.large_pipe = transformers.pipeline(
                     "text-generation",
+                    torch_dtype=torch.bfloat16,
                     model=self.model,
                     tokenizer= self.tokenizer,
                     device_map=self.device,
@@ -80,6 +81,7 @@ class LocalModel:
                 )
             self.eval_pipe = transformers.pipeline(
                     "text-generation",
+                    torch_dtype=torch.bfloat16,
                     model=self.model,
                     tokenizer= self.tokenizer,
                     device_map=self.device,
@@ -92,6 +94,7 @@ class LocalModel:
                 )
             self.tool_pipe = transformers.pipeline(
                     "text-generation",
+                    torch_dtype=torch.bfloat16,
                     model=self.model,
                     tokenizer= self.tokenizer,
                     device_map=self.device,
