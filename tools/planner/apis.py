@@ -99,7 +99,7 @@ class Planner:
             except:
                 self.llm = LocalModel(model_path = "../../agents/models/Qwen2.5-0.5B-Instruct")
             
-            self.llm.setMode("planner")
+            self.llm.setMode('planner_tool')
             # self.max_token_length = 30000
 
 
