@@ -157,5 +157,5 @@ class LocalModel:
             return
     
     def setMode(self, mode: str):
-        print("\nMode set to ", mode, "\n", flush = True)
         self.mode = mode
+        print("\nMode set to ", mode, "\n", flush = True)
