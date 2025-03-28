@@ -297,8 +297,6 @@ Your response ends after the last accommodation section on the final day.
 You will be paid $1,000,000 for focusing on matching the information exactly,
 including flights, varying restaurants, and having a dynamic fast changing plan.
 
-Return your plan in a JSON format for eval.
-
 Given information: {text}
 Query: {query}
 Travel Plan:"""
