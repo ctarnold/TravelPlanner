@@ -232,7 +232,7 @@ Scratchpad: {scratchpad}
 """
 
 refinement_prompt = PromptTemplate(
-    input_variables = ["query", "scratchpad", "plan", "feedbackk"],
+    input_variables = ["query", "scratchpad", "plan", "feedback"],
     template = REFINEMENT_INSTRUCTION
 )
 

@@ -66,6 +66,7 @@ class ManagerAgent:
         
         refinement_prompt = self.query + " ###"
         refinement_prompt += (feedback + " ###")
+        refinement_prompt += (plan + " ###")
         refinement_prompt += (scratchpad)
         
         """""

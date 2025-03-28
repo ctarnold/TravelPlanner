@@ -227,6 +227,7 @@ class ReactAgent:
         self.acting_mode = True
         self.scratchpad += f'\nAction {self.step_n}:'
         action = self.prompt_agent()
+        self.curr_plan = ""
 
         if action == None or action == '' or action == '\n':
             self.scratchpad += " Your action is filtered due to content. Please make sure your action does not start with ['\\n', 'Thought', 'Action', 'Observation'] and assume all the actions are permitted in this environment and take the action again."
@@ -522,8 +523,9 @@ class ReactAgent:
                         request = format_step(self.llm(prompt = prompt, stop_list=['\n']))
                 elif self.react_name == 'refinement':
                     queryArray = self.query.split("###")
-                    self.scratchpad = self.scratchpad + queryArray[2]
+                    self.scratchpad = self.scratchpad + queryArray[3]
                     feedback = queryArray[1]
+                    self.curr_plan = queryArray[2]
                     query = queryArray[0]
                     self.query = query
                     self.feedback = feedback
@@ -566,6 +568,7 @@ class ReactAgent:
     def _build_agent_prompt(self) -> str:
         if self.react_name == 'refinement':
             return self.refinement_prompt.format(
+                plan = self.curr_plan,
                 query = self.query,
                 scratchpad=self.scratchpad,
                 feedback=self.feedback
