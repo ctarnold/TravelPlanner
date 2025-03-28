@@ -659,7 +659,7 @@ def format_step(step: str) -> str:
     return step.strip('\n').strip().replace('\n', '')
 
 
-
+"""""
 def truncate_scratchpad(scratchpad: str, n_tokens: int = 1600, tokenizer=gpt2_enc) -> str:
     lines = scratchpad.split('\n')
     observations = filter(lambda x: x.startswith('Observation'), lines)
@@ -669,7 +669,7 @@ def truncate_scratchpad(scratchpad: str, n_tokens: int = 1600, tokenizer=gpt2_en
         ind = lines.index(largest_observation)
         lines[ind] = largest_observation.split(':')[0] + ': [truncated wikipedia excerpt]'
     return '\n'.join(lines)
-
+"""
 
 def normalize_answer(s):
     def remove_articles(text):
