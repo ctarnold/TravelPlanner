@@ -100,7 +100,7 @@ class Planner:
                 self.llm = LocalModel(model_path = "../../agents/models/Qwen2.5-0.5B-Instruct")
             
             self.llm.setMode("planner")
-            self.max_token_length = 30000
+            # self.max_token_length = 30000
 
 
         print(f"PlannerAgent {model_name} loaded.")
