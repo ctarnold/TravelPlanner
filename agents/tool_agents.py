@@ -556,7 +556,7 @@ class ReactAgent:
             except Exception as e:
                 print("\n\nException caught in prompt agent.\n\n", str(e), flush=True)
                 iterations+=1
-                catch_openai_api_error()
+                catch_openai_api_error() # TODO: Can this be openai error?
                 # print(self._build_agent_prompt())
                 # # print(len(self.enc.encode(self._build_agent_prompt())))
                 self.scratchpad = "An error was made. Please try again. Call each tool once and give a valid plan. To terminate with a plan, call Planner."

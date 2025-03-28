@@ -1,6 +1,6 @@
 # https://medium.com/towards-agi/how-to-load-local-models-in-langchain-for-your-projects-596e3dff32be
 # https://medium.com/@decodingchris/how-to-use-langchain-with-huggingface-e2fd6c971b2b
-from langchain.llms import HuggingFacePipeline
+from langchain_community.llms import HuggingFacePipeline
 import torch
 import transformers
 from transformers import AutoModelForCausalLM, AutoTokenizer, pipeline
