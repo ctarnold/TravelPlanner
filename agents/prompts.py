@@ -119,6 +119,8 @@ Current plan:\n{plan}\n\nImprove the plan for the included query based on the at
 
 FEEDBACK: {feedback}
 
+Your goal is to make the plan as different as possible based on the attached feedback. Vary the restaurants,
+make sure the flights are accurate, make sure the query is satisifed exactly for the user.
 
 ORIGINAL TASK BELOW:
 
@@ -268,13 +270,17 @@ Attraction: Books Monument, Charlotte.
 Lunch: Olive Tree Cafe, Charlotte
 Dinner: Kylin Skybar, Charlotte
 Accommodation: -
-
+PLAN COMPLETE
 ***** Example Ends *****
 
 When extracting restaurants and accommodations, make sure to get their proper name from your information!!!
 Be very careful about flights, you will be graded on extracting an accurate flight number.
 
-Your response ends after the last accommodation section on the a
+Your response ends after the last accommodation section on the final day.
+When your plan is COMPLETE after the last day do not write anything more! You are done!
+
+You will be paid $1,000,000 for focusing on matching the information exactly,
+including flights, varying restaurants, and having a dynamic fast changing plan.
 
 Given information: {text}
 Query: {query}

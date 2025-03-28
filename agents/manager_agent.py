@@ -47,6 +47,8 @@ class ManagerAgent:
 
         prompt = prompt + "If it is vague whether a criterion is met, prompt your agent to double-check on its next run while planning. \n"
 
+        prompt += " Try to critique at least something to send it back for review! Make sure the plan called works with the Scratchpad. If the agent hallucinated numbers, places, let them know. \n"
+        
         prompt = prompt + "Please see the following scratch work by a previous agent, including data and tools called. Scratchpad: " + scratchpad + "\n"
 
         prompt = prompt + "Give Feedback: \n"
