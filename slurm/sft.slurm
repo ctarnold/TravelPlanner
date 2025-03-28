@@ -15,4 +15,5 @@ module load anaconda3/2024.6
 module load cudatoolkit/12.8
 conda activate thesis
 
+export CUDA_LAUNCH_BLOCKING=1
 python ../run_planner.py
