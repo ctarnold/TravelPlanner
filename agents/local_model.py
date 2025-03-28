@@ -79,6 +79,7 @@ class LocalModel:
                     num_return_sequences=1,
                     eos_token_id=self.tokenizer.eos_token_id
                 )
+            print("\nLarge Pipeline Initialized\n", flush=True)
             self.eval_pipe = transformers.pipeline(
                     "text-generation",
                     torch_dtype=torch.bfloat16,
@@ -105,10 +106,11 @@ class LocalModel:
                     num_return_sequences=1,
                     eos_token_id=self.tokenizer.eos_token_id
                 )
-            
+            print("\nAll Transformers Pipelines Initialized\n", flush=True)
             self.large_hf = HuggingFacePipeline(pipeline=self.large_pipe, model_kwargs={'temperature':0.1})
             self.tool_hf = HuggingFacePipeline(pipeline=self.tool_pipe, model_kwargs={'temperature':0.1})
             self.eval_pipe = HuggingFacePipeline(pipeline = self.eval_pipe, model_kwargs={'temperature': 0.2})
+            print("\nHF Pipelines Initialized\n", flush=True)
             # https://stackoverflow.com/questions/76772509/llama-2-7b-hf-repeats-context-of-question-directly-from-input-prompt-cuts-off-w
             
             # llm = HuggingFacePipeline.from_model_id(model_id=model_path, task="text-generation")
