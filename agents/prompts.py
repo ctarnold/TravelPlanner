@@ -346,13 +346,15 @@ Dinner: Kylin Skybar, Charlotte
 Accommodation: -
 ***** Example Ends *****
 
+Notice the accommodation is the same each day.
+
 When extracting restaurants and accommodations, make sure to get their proper name from your information!!!
 Be very careful about flights, you will be graded on extracting an accurate flight number.
 
 Your response ends after the last accommodation section on the final day.
 
 Focus on matching the information exactly,
-including flights, varying restaurants, and having a dynamic fast changing plan.
+including flights, varying restaurants, and having a dynamic changing plan.
 
 Given information: {text}
 Query: {query}
