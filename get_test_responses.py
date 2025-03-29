@@ -32,7 +32,9 @@ def run_slice_and_write(agent: ManagerAgent, index):
         dict = {}
         dict[request] = plan
         results.append(dict)
-        agent.reset_agent()
+        # Clean the agent to remove any wasted context/memory
+        # Might slow things down
+        agent = ManagerAgent(query = "", tools= tools_list)
     with open(file_str, mode = "a+") as f:
         for item in results:
             print("###\n", file = f)

@@ -112,7 +112,7 @@ These examples are relative to the query, modify as needed.
 
 In action mode your action should come at the beginning of your response. Valid actions are:
 
-FlightSearch[Departure City, Destination City, Date] / AccommodationSearch[City] /  RestaurantSearch[City] / NotebookWrite[Short Description] / AttractionSearch[City] / CitySearch[State] / GoogleDistanceMatrix[Origin, Destination, Mode] and Planner[Query].
+FlightSearch[Departure City, Destination City, Date] / AccommodationSearch[City] /  RestaurantSearch[City] / AttractionSearch[City] / CitySearch[State] / GoogleDistanceMatrix[Origin, Destination, Mode] and Planner[Query].
 
 When you call Planner[Query], you need to substitute Query for a brief explanation of the original prompt!
 
