@@ -21,6 +21,10 @@ class ManagerAgent:
             self.llm = LocalModel(model_path="/scratch/gpfs/ca2992/models/Llama-3.1-8B-Instruct")
             # self.llm = LocalModel(model_path = "/scratch/gpfs/ca2992/models/QwQ-32B")
             # self.llm = LocalModel(model_path="/scratch/gpfs/ca2992/models/DeepSeek-R1-Distill-Llama-8B", mode="manager")
+        self.react_llm_name = react_llm_name
+        self.planner_llm_name = planner_llm_name
+        self.max_iterations = max_iterations
+        self.tools = tools
         self.react_agent = ReactAgent(
             args=None,
             tools=tools,
@@ -32,6 +36,16 @@ class ManagerAgent:
         print("\nReact LLM: ", react_llm_name)
         print("\n Manager LLM: ", self.llm.name)
         self.max_iterations = max_iterations
+    
+    def reset_agent(self):
+        self.query = ""
+        self.react_agent = ReactAgent(
+            args=None,
+            tools=self.tools,
+            react_llm_name=self.react_llm_name,
+            planner_llm_name=self.planner_llm_name,
+            max_steps=30
+        ) 
         
     def evaluate_plan(self, plan: str, scratchpad: str) -> str: 
         """
@@ -94,7 +108,7 @@ class ManagerAgent:
         Runs the manager agent to generate and refine a travel plan.
         """
         print("\nRunning ManagerAgent...", flush = True)
-        print("\nQuery:", query + "\n")
+        # print("\nQuery:", query + "\n")
         plan, scratchpad, json = self.react_agent.run(query)
 
         iterations = 1

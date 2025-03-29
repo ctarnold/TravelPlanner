@@ -1,0 +1,58 @@
+# https://www.geeksforgeeks.org/reading-csv-files-in-python/
+# https://stackoverflow.com/questions/1624883/alternative-way-to-split-a-list-into-groups-of-n
+import pandas as pd
+from agents.manager_agent import ManagerAgent
+import sys
+
+# Read specific columns from CSV file
+columns = ['query']  # Replace with your column names
+df = pd.read_csv('../../eval/travelplanner/test.csv', usecols=columns)
+
+tools_list = ["notebook", "flights", "attractions", "accommodations",
+                  "restaurants", "googleDistanceMatrix", "planner", "cities"]
+
+# Display the DataFrame with specific columns
+
+queries = df['query']
+queries = df['query'][0:49]
+
+n = 5
+sets = [queries[i:i + n] for i in range(0, len(queries), n)]
+
+print(sets[0])
+
+dir = '/scratch/gpfs/ca2992/EvalData/'
+
+def run_slice_and_write(agent: ManagerAgent, index):
+    file_str = dir + "/out_" + str(index) +".txt"
+    results = []
+    for i in range(len(sets[index])):
+        request = sets[index][i]
+        plan, _ = agent.run(request)
+        dict = {}
+        dict[request] = plan
+        results.append(dict)
+        agent.reset_agent()
+    with open(file_str, mode = "a+") as f:
+        for item in results:
+            print("###\n", file = f)
+            print(item + " \n", file = f)
+
+def main(args):
+    agent = ManagerAgent(query = "", tools_list= tools_list)
+    run_slice_and_write(agent, args[0])
+
+if __name__ == "__main__":
+    main(sys.args)
+
+file_str = dir + "testing"
+dict = {}
+dict["request"] = "plan"
+results = []
+results.append(dict)
+with open(file_str, mode = "w") as f:
+      print("\n", f)
+with open(file_str, mode = "a+") as f:
+        for item in results:
+            print("###\n", file = f)
+            print(str(item) + " \n", file = f)

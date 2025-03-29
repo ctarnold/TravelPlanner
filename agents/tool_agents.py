@@ -285,25 +285,25 @@ class ReactAgent:
                 if pending_action in self.retry_record:
                     if self.retry_record[pending_action] + 1 > self.max_retries:
                         action_type = 'Planner'
-                        print(f"{pending_action} early stop due to {self.max_retries} max retries.")
+                        # print(f"{pending_action} early stop due to {self.max_retries} max retries.")
                         # self.log_file.write(f"{pending_action} early stop due to {self.max_retries} max retries.")
                         self.json_log[-1]['state'] = f"{pending_action} early stop due to {self.max_retries} max retries."
                         self.finished = True
-                        print("\n\nNO ANSWER GIVEN ACTION TYPE\n\n", str(pending_action), "\n\n", flush = True)
+                        # print("\n\nNO ANSWER GIVEN ACTION TYPE\n\n", str(pending_action), "\n\n", flush = True)
                         return  # may return here with no answer
                     
                 elif pending_action not in self.retry_record:
                     if self.retry_record['invalidAction'] + 1 > self.max_retries:
                         action_type = 'Planner'
-                        print(f"invalidAction Early stop due to {self.max_retries} max retries.")
+                        # print(f"invalidAction Early stop due to {self.max_retries} max retries.")
                         # self.log_file.write(f"invalidAction early stop due to {self.max_retries} max retries.")
                         self.json_log[-1]['state'] = f"invalidAction early stop due to {self.max_retries} max retries."
                         self.finished = True
-                        print("\n\nNO ANSWER GIVEN ACTION TYPE 2\n\n", flush = True)
+                        # # print("\n\nNO ANSWER GIVEN ACTION TYPE 2\n\n", flush = True)
                         return  # may return here with no answer
 
             if action_type == 'FlightSearch':
-                print("\n\nFlightSearch action reached\n", flush=True)
+                # print("\n\nFlightSearch action reached\n", flush=True)
                 try:
                     if validate_date_format(action_arg.split(', ')[2]) and validate_city_format(action_arg.split(', ')[0],self.city_set ) and validate_city_format(action_arg.split(', ')[1],self.city_set):
                         self.scratchpad = self.scratchpad.replace(to_string(self.current_data).strip(),'Masked due to limited length. Make sure the data has been written in Notebook.')
@@ -327,14 +327,14 @@ class ReactAgent:
                     self.json_log[-1]['state'] = f'Illegal args. City Error'
 
                 except Exception as e:
-                    print(e)
+                    # print(e)
                     self.retry_record['flights'] += 1
                     self.current_observation = f'Illegal Flight Search. Please try again.'
                     self.scratchpad += f'Illegal Flight Search. Please try again.'
                     self.json_log[-1]['state'] = f'Illegal args. Other Error'
 
             elif action_type == 'AttractionSearch':
-                print("\n\nAttractionSearch action reached\n", flush=True)
+                # print("\n\nAttractionSearch action reached\n", flush=True)
                 try:
                     if validate_city_format(action_arg, self.city_set):
                         self.scratchpad = self.scratchpad.replace(to_string(self.current_data).strip().strip(),'Masked due to limited length. Make sure the data has been written in Notebook.')
@@ -350,14 +350,14 @@ class ReactAgent:
                     self.scratchpad += str(e)
                     self.json_log[-1]['state'] = f'Illegal args. City Error'
                 except Exception as e:
-                    print(e)
+                    # print(e)
                     self.retry_record['attractions'] += 1
                     self.current_observation = f'Illegal Attraction Search. Please try again.'
                     self.scratchpad += f'Illegal Attraction Search. Please try again.'
                     self.json_log[-1]['state'] = f'Illegal args. Other Error'
 
             elif action_type == 'AccommodationSearch':
-                print("\n\nAccommodationSearch action reached\n", flush=True)
+                # print("\n\nAccommodationSearch action reached\n", flush=True)
                 try:
                     if validate_city_format(action_arg, self.city_set):
                         self.scratchpad = self.scratchpad.replace(to_string(self.current_data).strip().strip(),'Masked due to limited length. Make sure the data has been written in Notebook.')
@@ -373,14 +373,14 @@ class ReactAgent:
                     self.scratchpad += str(e)
                     self.json_log[-1]['state'] = f'Illegal args. City Error'
                 except Exception as e:
-                    print(e)
+                    # print(e)
                     self.retry_record['accommodations'] += 1
                     self.current_observation = f'Illegal Accommodation Search. Please try again.'
                     self.scratchpad += f'Illegal Accommodation Search. Please try again.'
                     self.json_log[-1]['state'] = f'Illegal args. Other Error'
 
             elif action_type == 'RestaurantSearch':
-                print("\n\nRestaurantSearch action reached\n", flush=True)
+                # print("\n\nRestaurantSearch action reached\n", flush=True)
                 try:
                     if validate_city_format(action_arg, self.city_set):
                         self.scratchpad = self.scratchpad.replace(to_string(self.current_data).strip().strip(),'Masked due to limited length. Make sure the data has been written in Notebook.')
@@ -398,14 +398,14 @@ class ReactAgent:
                     self.json_log[-1]['state'] = f'Illegal args. City Error'
 
                 except Exception as e:
-                    print(e)
+                    # print(e)
                     self.retry_record['restaurants'] += 1
                     self.current_observation = f'Illegal Restaurant Search. Please try again.'
                     self.scratchpad += f'Illegal Restaurant Search. Please try again.'
                     self.json_log = f'Illegal args. Other Error'
                     
             elif action_type == "CitySearch":
-                print("\n\nCitySearch action reached\n", flush=True)
+                # print("\n\nCitySearch action reached\n", flush=True)
                 try:
                     self.scratchpad = self.scratchpad.replace(to_string(self.current_data).strip(),'Masked due to limited length. Make sure the data has been written in Notebook.')
                     # self.current_data = self.tools['cities'].run(action_arg)
@@ -422,7 +422,7 @@ class ReactAgent:
                     self.json_log[-1]['state'] = f'Illegal args. State Error'
 
                 except Exception as e:
-                    print(e)
+                    # print(e)
                     self.retry_record['cities'] += 1
                     self.current_observation = f'Illegal City Search. Please try again.'
                     self.scratchpad += f'Illegal City Search. Please try again.'
@@ -430,7 +430,7 @@ class ReactAgent:
 
 
             elif action_type == 'GoogleDistanceMatrix':
-                print("\n\n GoogleDistanceMatrix action reached",flush=True)
+                # print("\n\n GoogleDistanceMatrix action reached",flush=True)
                 try:
                     self.scratchpad = self.scratchpad.replace(to_string(self.current_data).strip(),'Masked due to limited length. Make sure the data has been written in Notebook.')
                     self.current_data = self.tools['googleDistanceMatrix'].run(action_arg.split(', ')[0],action_arg.split(', ')[1],action_arg.split(', ')[2])
@@ -441,7 +441,7 @@ class ReactAgent:
                     self.json_log[-1]['state'] = f'Successful'
 
                 except Exception as e:
-                    print(e)
+                    # print(e)
                     self.retry_record['googleDistanceMatrix'] += 1
                     self.current_observation = f'Illegal GoogleDistanceMatrix. Please try again.'
                     self.scratchpad += f'Illegal GoogleDistanceMatrix. Please try again.'
@@ -449,7 +449,7 @@ class ReactAgent:
             
             
             elif action_type == 'NotebookWrite':
-                print("\n\nNotebookWrite action reached\n", flush=True)
+                # print("\n\nNotebookWrite action reached\n", flush=True)
                 try:
                     self.scratchpad = self.scratchpad.replace(to_string(self.current_data).strip(),'Masked due to limited length. Make sure the data has been written in Notebook.')
                     self.current_observation = str(self.tools['notebook'].write(self.current_data, action_arg))
@@ -458,7 +458,7 @@ class ReactAgent:
                     self.json_log[-1]['state'] = f'Successful'
 
                 except Exception as e:
-                    print(e)
+                    # print(e)
                     self.retry_record['notebook'] += 1
                     self.current_observation = f'{e}'
                     self.scratchpad += f'{e}'
@@ -466,18 +466,18 @@ class ReactAgent:
             
 
             elif action_type == "Planner":
-                print("\n\nPlanner action reached\n", flush=True)
+                # print("\n\nPlanner action reached\n", flush=True)
                 # self.current_observation = str(self.tools['planner'].run(str(self.tools['notebook'].list_all()),action_arg))
                 self.current_observation = str(self.tools['planner'].run(str(self.tool_pad),action_arg))
                 self.scratchpad  +=  self.current_observation
                 self.answer = self.current_observation
                 self.__reset_record()
                 self.json_log[-1]['state'] = f'Successful'
-                print("\n\nSUCCESSFUL STATE REACHED\n\n", flush=True)
+                # print("\n\nSUCCESSFUL STATE REACHED\n\n", flush=True)
 
             else:
-                print("\n\nInvalid Action, ", "Attempted Action: " + str(action_type) + " " + str(action_arg), "\n\n", flush=True)
-                print("\n\n Action: ", action, "\n Action Ended \n", flush=True)
+                # print("\n\nInvalid Action, ", "Attempted Action: " + str(action_type) + " " + str(action_arg), "\n\n", flush=True)
+                # print("\n\n Action: ", action, "\n Action Ended \n", flush=True)
                 self.retry_record['invalidAction'] += 1
                 self.current_observation = 'Invalid Action. Valid Actions are  FlightSearch[Departure City, Destination City, Date] / ' \
                                    'AccommodationSearch[City] /  RestaurantSearch[City] / NotebookWrite[Short Description] / AttractionSearch[City] / CitySearch[State] / GoogleDistanceMatrix[Origin, Destination, Mode] and Planner[Query].'
@@ -485,11 +485,11 @@ class ReactAgent:
                 self.json_log[-1]['state'] = f'invalidAction'
 
         if action == None or action == '' or action == '\n':
-            print(f'Observation {self.step_n}: ' + "No feedback from the environment due to the null action.")
+            # print(f'Observation {self.step_n}: ' + "No feedback from the environment due to the null action.")
             # write(f'Observation {self.step_n}: ' + "Your action is filtered due to content. Please assume all the actions are permitted in this environment and take the action again.")
             self.json_log[-1]['observation'] = "No feedback from the environment due to the null action."
         else:
-            print(f'Observation {self.step_n}: ' + self.current_observation+'\n')
+            # print(f'Observation {self.step_n}: ' + self.current_observation+'\n')
             # rite(f'Observation {self.step_n}: ' + self.current_observation+'\n')
             self.json_log[-1]['observation'] = self.current_observation
             
@@ -497,7 +497,7 @@ class ReactAgent:
 
         # 
         if action_type and action_type == 'Planner' and self.retry_record['planner']==0:
-            print("Planner action is successful. We stop here.", flush=True)
+            # print("Planner action is successful. We stop here.", flush=True)
             self.finished = True
             self.answer = self.current_observation
             self.step_n += 1
@@ -513,7 +513,7 @@ class ReactAgent:
     # and perhaps an additional prompt in prompts.py
     def set_name(self, name: str):
         self.react_name = name
-        print("\nset name to " + name, "\n", flush=True)
+        # print("\nset name to " + name, "\n", flush=True)
     def prompt_agent(self) -> str:
         iterations = 0
         while True:
@@ -522,7 +522,7 @@ class ReactAgent:
                 if self.react_name == 'gemini':
                     request = format_step(self.llm.invoke(self._build_agent_prompt(),stop=['\n']).content)
                 elif self.react_name == 'local':
-                    print("\n\nPrompting Local model\n\n", flush=True)
+                    # print("\n\nPrompting Local model\n\n", flush=True)
                     if self.acting_mode:
                         mode = 'tool_calling'  
                         self.llm.setMode(mode)
@@ -552,19 +552,20 @@ class ReactAgent:
                 elif isinstance(self.llm, ChatOpenAI):
                     request = format_step(self.llm([HumanMessage(content=self._build_agent_prompt())]).content)
                 else:
-                    print("WARNING: NO MODEL FOUND")
+                    # print("WARNING: NO MODEL FOUND")
+                    print("")
                 iterations = 0
                 return request
             except Exception as e:
-                print("\n\nException caught in prompt agent.\n\n", str(e), flush=True)
+                # # print("\n\nException caught in prompt agent.\n\n", str(e), flush=True)
                 iterations+=1
                 catch_openai_api_error() # TODO: Can this be openai error?
-                # print(self._build_agent_prompt())
-                # # print(len(self.enc.encode(self._build_agent_prompt())))
+                # # print(self._build_agent_prompt())
+                # # # print(len(self.enc.encode(self._build_agent_prompt())))
                 self.scratchpad = "An error was made. Please try again. Call each tool once and give a valid plan. To terminate with a plan, call Planner."
                 time.sleep(1)
             if iterations >= 10:
-                print("WARNING: The agent is stuck. Please check the agent.", flush = True)
+                # print("WARNING: The agent is stuck. Please check the agent.", flush = True)
                 break
     
     def reset_tool_history(self):
@@ -806,5 +807,5 @@ if __name__ == '__main__':
             with open(os.path.join(f'{args.output_dir}/{args.set_type}/generated_plan_{number}.json'), 'w') as f:
                 json.dump(result, f, indent=4)
         
-    print(cb)
+    # print(cb)
 
