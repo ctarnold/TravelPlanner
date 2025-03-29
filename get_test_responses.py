@@ -40,7 +40,7 @@ def run_slice_and_write(agent: ManagerAgent, index):
 
 def main(args):
     agent = ManagerAgent(query = "", tools= tools_list)
-    run_slice_and_write(agent, args[0])
+    run_slice_and_write(agent, int(args[0]))
 
 # TODO: AttributeError: module 'sys' has no attribute 'args'
 if __name__ == "__main__":
