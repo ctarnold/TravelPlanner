@@ -3,7 +3,7 @@ from langchain.prompts import PromptTemplate
 
 ZEROSHOT_REACT_INSTRUCTION = """
 
-IMPORTANT. MILLION DOLLAR REWARD: Make sure the scratchpad has accommodations, restaurants, and flights or driving before calling planner!
+IMPORTANT: Make sure the scratchpad has accommodations, restaurants, and flights or driving before calling planner!
 
 Collect information for a query plan using interleaving 'Thought', 'Action', and 'Observation' steps. Ensure you gather valid information related to transportation, dining, attractions, and accommodation. All information should be written in Notebook, which will then be input into the Planner tool. Note that the nested use of tools is prohibited. 'Thought' can reason about the current situation, and 'Action' can have 8 different types:
 (1) FlightSearch[Departure City, Destination City, Date]:
@@ -119,12 +119,29 @@ FlightSearch[Departure City, Destination City, Date] / AccommodationSearch[City]
 
 When you call Planner[Query], you need to substitute Query for a brief explanation of the original prompt!
 
+You should work on completing your Tool History prior to calling Planner.
+Example Complete Tool History:
+
+CitySearch[State] (Only if needed!)
+FlightSearch[Departure City, Destination City, Start Date]
+FlightSearch[Destination City, Departure City, End Date]
+GoogleDistanceMatrix[Origin, Destination, Mode]
+AccommodationSearch[City]
+RestaurantSearch[City]
+Planner[Query]
+
+This tool history is an example of historical outputs. For example,
+if your history only has one FlightSearch, call the reverse flight search.
+
+If you alreadu have two flights, call one of the remaining tools.
+
+Tool History: {tool_history}
 Query: {query}
 Scratchpad: {scratchpad}"""
 
 
 zeroshot_react_agent_prompt = PromptTemplate(
-                        input_variables=["query", "scratchpad"],
+                        input_variables=["query", "scratchpad", "tool_history"],
                         template=ZEROSHOT_REACT_INSTRUCTION,
                         )
 
@@ -256,7 +273,7 @@ refinement_prompt = PromptTemplate(
 
 PLANNER_INSTRUCTION = """You are a proficient planner. Based on the provided information and query, please give me a detailed plan, including specifics such as flight numbers, restaurant names, and accommodation names. Note that all the information in your plan should be derived from the provided data. You must adhere to the format given in the example. Additionally, all details should align with commonsense. The symbol '-' indicates that information is unnecessary. For example, in the provided sample, you do not need to plan after returning to the departure city. When you travel to two cities in one day, you should note it in the 'Current City' section as in the example (i.e., from A to B).
 
-Here is your previous information, that will contain flights and restaurant names. FOR YOUR PLAN YOU SHOULD LOOK HERE. $1,000,000 REWARD FOLLOWING: {text}
+Here is your previous information, that will contain flights and restaurant names. INFORMATION FOR YOUR PLAN. YOU SHOULD LOOK HERE: {text}
 
 ***** Example *****
 Query: Could you create a travel plan for 7 people from Ithaca to Charlotte spanning 3 days, from March 8th to March 14th, 2022, with a budget of $30,200?
@@ -294,7 +311,7 @@ Be very careful about flights, you will be graded on extracting an accurate flig
 
 Your response ends after the last accommodation section on the final day.
 
-You will be paid $1,000,000 for focusing on matching the information exactly,
+Focus on matching the information exactly,
 including flights, varying restaurants, and having a dynamic fast changing plan.
 
 Given information: {text}

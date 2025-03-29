@@ -90,7 +90,8 @@ class ReactAgent:
         
         self.refinement_prompt = refinement_prompt
         self.feedback = ""
-        self.tool_pad = ""
+        self.tool_pad = "" # history of the results of tools
+        self.tool_history = "" # history of which tools are called
 
         self.json_log = []
 
@@ -271,6 +272,7 @@ class ReactAgent:
         else:
             print("\n\n Action input: ", action, "\n\n", flush=True)
             action = get_first_response(action)
+            tool_history += (action + '\n')
             print("\n\nFirst response ", action, "\n\n", flush=True)
             action_type, action_arg = parse_action(action)
             
@@ -583,6 +585,7 @@ class ReactAgent:
             )
         if self.mode == "zero_shot":
             return self.agent_prompt.format(
+                tool_history = self.tool_history
                 query=self.query,
                 scratchpad=self.scratchpad)
 
