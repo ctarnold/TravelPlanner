@@ -272,7 +272,7 @@ class ReactAgent:
         else:
             print("\n\n Action input: ", action, "\n\n", flush=True)
             action = get_first_response(action)
-            tool_history += (action + '\n')
+            self.tool_history += (action + '\n')
             print("\n\nFirst response ", action, "\n\n", flush=True)
             action_type, action_arg = parse_action(action)
             
