@@ -3,7 +3,8 @@ from langchain.prompts import PromptTemplate
 
 ZEROSHOT_REACT_INSTRUCTION = """
 
-IMPORTANT: Make sure the scratchpad has accommodations, restaurants, and flights or driving before calling planner!
+This is your query: {query}. See the destination city and departure city.
+Use flights for both cities, and use all other tools using the destination city.
 
 Collect information for a query plan using interleaving 'Thought', 'Action', and 'Observation' steps. Ensure you gather valid information related to transportation, dining, attractions, and accommodation. All information should be written in Notebook, which will then be input into the Planner tool. Note that the nested use of tools is prohibited. 'Thought' can reason about the current situation, and 'Action' can have 8 different types:
 (1) FlightSearch[Departure City, Destination City, Date]:
