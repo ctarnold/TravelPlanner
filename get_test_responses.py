@@ -24,7 +24,7 @@ print(sets[0])
 dir = '/scratch/gpfs/ca2992/EvalData/'
 
 def run_slice_and_write(agent: ManagerAgent, index):
-    file_str = dir + "/out_" + str(index) +".txt"
+    file_str = dir + "out_" + str(index) +".txt"
     results = []
     for i in range(len(sets[index])):
         request = sets[index][i]
@@ -35,10 +35,12 @@ def run_slice_and_write(agent: ManagerAgent, index):
         # Clean the agent to remove any wasted context/memory
         # Might slow things down
         agent = ManagerAgent(query = "", tools= tools_list)
-    with open(file_str, mode = "a+") as f:
-        for item in results:
-            print("###\n", file = f)
-            print(item + " \n", file = f)
+        if i % 3 == 0: # save some cpu mem
+            with open(file_str, mode = "a+") as f:
+                for item in results:
+                    print("###\n", file = f)
+                    print(item + " \n", file = f)
+            results = []
 
 def main(args):
     print(args[1], flush=True)
