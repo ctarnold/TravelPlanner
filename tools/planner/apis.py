@@ -94,8 +94,8 @@ class Planner:
             # DeepSeek-R1-Distill-Qwen-14B
             try:
                 # self.llm = LocalModel(model_path = "/scratch/gpfs/ca2992/models/Llama-3.3-70B-Instruct")
-                # self.llm = LocalModel(model_path = "/scratch/gpfs/ca2992/models/Llama-3.1-8B-Instruct-travelplanner-SFT")
-                self.llm = LocalModel(model_path = "/scratch/gpfs/ca2992/models/Llama-3.1-8B-Instruct", mode="planning")
+                self.llm = LocalModel(model_path = "/scratch/gpfs/ca2992/models/Llama-3.1-8B-Instruct-travelplanner-SFT")
+                # self.llm = LocalModel(model_path = "/scratch/gpfs/ca2992/models/Llama-3.1-8B-Instruct", mode="planning")
             except:
                 self.llm = LocalModel(model_path = "../../agents/models/Qwen2.5-0.5B-Instruct")
             
