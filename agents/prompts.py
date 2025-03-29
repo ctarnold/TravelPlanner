@@ -155,7 +155,11 @@ make sure the flights are accurate, make sure the query is satisifed exactly for
 
 ORIGINAL TASK BELOW:
 
-Collect information for a query plan using interleaving 'Thought', 'Action', and 'Observation' steps. Ensure you gather valid information related to transportation, dining, attractions, and accommodation. All information should be written in Notebook, which will then be input into the Planner tool. Note that the nested use of tools is prohibited. 'Thought' can reason about the current situation, and 'Action' can have 8 different types:
+This is your query: {query}. See the destination city and departure city.
+Use flights for both cities, and use all other tools using the destination city.
+Complete your Tool History and then call Planner[Query], substituting Query.
+
+Collect information for a query plan using interleaving 'Thought', 'Action', and 'Observation' steps. Ensure you gather valid information related to transportation, dining, attractions, and accommodation. Note that the nested use of tools is prohibited. 'Thought' can reason about the current situation, and 'Action' can have 7 different types:
 (1) FlightSearch[Departure City, Destination City, Date]:
 Description: A flight information retrieval tool.
 Parameters:
@@ -172,17 +176,17 @@ Destination: The destination city of your journey.
 Mode: The method of transportation. Choices include 'self-driving' and 'taxi'.
 Example: GoogleDistanceMatrix[Paris, Lyon, self-driving] would provide driving distance, time and cost between Paris and Lyon.
 
-(3) AccommodationSearch[City]:
+(3) AccommodationSearch[Destination City]:
 Description: Discover accommodations in your desired city.
 Parameter: City - The name of the city where you're seeking accommodation.
 Example: AccommodationSearch[Rome] would present a list of hotel rooms in Rome.
 
-(4) RestaurantSearch[City]:
+(4) RestaurantSearch[Destination City]:
 Description: Explore dining options in a city of your choice.
 Parameter: City – The name of the city where you're seeking restaurants.
 Example: RestaurantSearch[Tokyo] would show a curated list of restaurants in Tokyo.
 
-(5) AttractionSearch[City]:
+(5) AttractionSearch[Destination City]:
 Description: Find attractions in a city of your choice.
 Parameter: City – The name of the city where you're seeking attractions.
 Example: AttractionSearch[London] would return attractions in London.
@@ -192,12 +196,7 @@ Description: Find cities in a state of your choice.
 Parameter: State – The name of the state where you're seeking cities.
 Example: CitySearch[California] would return cities in California.
 
-(7) NotebookWrite[Short Description]
-Description: Writes a new data entry into the Notebook tool with a short description. This tool should be used immediately after FlightSearch, AccommodationSearch, AttractionSearch, RestaurantSearch or GoogleDistanceMatrix. Only the data stored in Notebook can be seen by Planner. So you should write all the information you need into Notebook.
-Parameters: Short Description - A brief description or label for the stored data. You don't need to write all the information in the description. The data you've searched for will be automatically stored in the Notebook.
-Example: NotebookWrite[Flights from Rome to Paris in 2022-02-01] would store the informatrion of flights from Rome to Paris in 2022-02-01 in the Notebook.
-
-(8) Planner[Query]
+(7) Planner[Query]
 Description: A smart planning tool that crafts detailed plans based on user input and the information stored in Notebook.
 Parameters: 
 Query: The query from user.
@@ -239,6 +238,13 @@ Example output in action mode:
 
 FlightSearch[Paris, New York, 2022-10-01]
 
+Example output in action mode:
+
+FlightSearch[New York, Paris, 2022-10-05] 
+
+To get a return trip shown above is important. When you call FlightSearch tool,
+always call it again reversed for the end of the trip.
+
 Example output in think mode:
 
 Based on the scratchpad, I already found flights. Do I have accommodations?
@@ -250,6 +256,10 @@ Example output in action mode:
 
 AccommodationSearch[Seattle]
 
+Example output in action mode, if a trip to Seattle:
+
+RestaurantSearch[Seattle]
+
 These examples are relative to the query, modify as needed.
 
 In action mode your action should come at the beginning of your response. Valid actions are:
@@ -258,14 +268,30 @@ FlightSearch[Departure City, Destination City, Date] / AccommodationSearch[City]
 
 When you call Planner[Query], you need to substitute Query for a brief explanation of the original prompt!
 
+You should work on completing your Tool History prior to calling Planner.
+Example Complete Tool History:
 
+CitySearch[State] (Only if needed!)
+FlightSearch[Departure City, Destination City, Start Date]
+FlightSearch[Destination City, Departure City, End Date]
+GoogleDistanceMatrix[Origin, Destination, Mode]
+AccommodationSearch[City]
+RestaurantSearch[City]
+Planner[Query]
 
+This tool history is an example of historical outputs. For example,
+if your history only has one FlightSearch, call the reverse flight search.
+
+If you already have two flights, call one of the remaining tools.
+
+When you are ready, call Planner[Query]. It is important to terminate with Planner[Query] once Tool History is Complete.
+
+Tool History: {tool_history}
 Query: {query}
-Scratchpad: {scratchpad}
-"""
+Scratchpad: {scratchpad}"""
 
 refinement_prompt = PromptTemplate(
-    input_variables = ["query", "scratchpad", "plan", "feedback"],
+    input_variables = ["query", "scratchpad", "plan", "feedback", "tool_history"],
     template = REFINEMENT_INSTRUCTION
 )
 

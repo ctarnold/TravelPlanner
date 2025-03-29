@@ -83,6 +83,7 @@ class ManagerAgent:
         """""
         
         print("\nREFINING PLAN\n", flush = True)
+        self.react_agent.reset_tool_history()
         self.react_agent.set_name("refinement")
         refined_plan, refined_scratch, json = self.react_agent.run(refinement_prompt, reset=False) # Do I want true or false? True new agent, false keeps mems+ context.
         
@@ -102,7 +103,6 @@ class ManagerAgent:
                 iterations += 1
                 plan, scratchpad, json  = self.react_agent.run(query)
         print("\nInitial Plan: ", plan, flush = True)
-        print("\n After ", iterations, " iterations.", plan, flush = True)
 
         if (len(plan) == 0 and len(str(json)) == 0):
             print("ERROR: No initial plan generated. Exiting.", flush=True)

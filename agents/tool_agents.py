@@ -566,7 +566,9 @@ class ReactAgent:
             if iterations >= 10:
                 print("WARNING: The agent is stuck. Please check the agent.", flush = True)
                 break
-            
+    
+    def reset_tool_history(self):
+        self.tool_history = ""
     # OR, you could build_agent_prompt in the refinement agent and still skip?
     # No, you need iterative reasoning in this file.
     # self.react_agent(query)
@@ -581,7 +583,8 @@ class ReactAgent:
                 plan = self.curr_plan,
                 query = self.query,
                 scratchpad=self.scratchpad,
-                feedback=self.feedback
+                feedback=self.feedback,
+                tool_history = self.tool_history
             )
         if self.mode == "zero_shot":
             return self.agent_prompt.format(
