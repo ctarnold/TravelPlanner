@@ -16,7 +16,7 @@ tools_list = ["notebook", "flights", "attractions", "accommodations",
 queries = df['query']
 queries = df['query'][0:49]
 
-n = 5
+n = 4
 sets = [queries[i:i + n] for i in range(0, len(queries), n)]
 
 print(sets[0])
