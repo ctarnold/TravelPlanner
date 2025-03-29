@@ -6,7 +6,7 @@ import sys
 
 # Read specific columns from CSV file
 columns = ['query']  # Replace with your column names
-df = pd.read_csv('../../eval/travelplanner/test.csv', usecols=columns)
+df = pd.read_csv('/scratch/gpfs/ca2992/TravelPlanner/evaluation', usecols=columns)
 
 tools_list = ["notebook", "flights", "attractions", "accommodations",
                   "restaurants", "googleDistanceMatrix", "planner", "cities"]
