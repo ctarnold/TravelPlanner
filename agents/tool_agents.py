@@ -585,7 +585,7 @@ class ReactAgent:
             )
         if self.mode == "zero_shot":
             return self.agent_prompt.format(
-                tool_history = self.tool_history
+                tool_history = self.tool_history,
                 query=self.query,
                 scratchpad=self.scratchpad)
 

@@ -133,7 +133,7 @@ Planner[Query]
 This tool history is an example of historical outputs. For example,
 if your history only has one FlightSearch, call the reverse flight search.
 
-If you alreadu have two flights, call one of the remaining tools.
+If you already have two flights, call one of the remaining tools.
 
 Tool History: {tool_history}
 Query: {query}
