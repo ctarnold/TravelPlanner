@@ -5,8 +5,9 @@ ZEROSHOT_REACT_INSTRUCTION = """
 
 This is your query: {query}. See the destination city and departure city.
 Use flights for both cities, and use all other tools using the destination city.
+Complete your Tool History and then call Planner[Query], substituting Query.
 
-Collect information for a query plan using interleaving 'Thought', 'Action', and 'Observation' steps. Ensure you gather valid information related to transportation, dining, attractions, and accommodation. All information should be written in Notebook, which will then be input into the Planner tool. Note that the nested use of tools is prohibited. 'Thought' can reason about the current situation, and 'Action' can have 8 different types:
+Collect information for a query plan using interleaving 'Thought', 'Action', and 'Observation' steps. Ensure you gather valid information related to transportation, dining, attractions, and accommodation. Note that the nested use of tools is prohibited. 'Thought' can reason about the current situation, and 'Action' can have 7 different types:
 (1) FlightSearch[Departure City, Destination City, Date]:
 Description: A flight information retrieval tool.
 Parameters:
@@ -23,17 +24,17 @@ Destination: The destination city of your journey.
 Mode: The method of transportation. Choices include 'self-driving' and 'taxi'.
 Example: GoogleDistanceMatrix[Paris, Lyon, self-driving] would provide driving distance, time and cost between Paris and Lyon.
 
-(3) AccommodationSearch[City]:
+(3) AccommodationSearch[Destination City]:
 Description: Discover accommodations in your desired city.
 Parameter: City - The name of the city where you're seeking accommodation.
 Example: AccommodationSearch[Rome] would present a list of hotel rooms in Rome.
 
-(4) RestaurantSearch[City]:
+(4) RestaurantSearch[Destination City]:
 Description: Explore dining options in a city of your choice.
 Parameter: City – The name of the city where you're seeking restaurants.
 Example: RestaurantSearch[Tokyo] would show a curated list of restaurants in Tokyo.
 
-(5) AttractionSearch[City]:
+(5) AttractionSearch[Destination City]:
 Description: Find attractions in a city of your choice.
 Parameter: City – The name of the city where you're seeking attractions.
 Example: AttractionSearch[London] would return attractions in London.
@@ -43,12 +44,7 @@ Description: Find cities in a state of your choice.
 Parameter: State – The name of the state where you're seeking cities.
 Example: CitySearch[California] would return cities in California.
 
-(7) NotebookWrite[Short Description]
-Description: Writes a new data entry into the Notebook tool with a short description. This tool should be used immediately after FlightSearch, AccommodationSearch, AttractionSearch, RestaurantSearch or GoogleDistanceMatrix. Only the data stored in Notebook can be seen by Planner. So you should write all the information you need into Notebook.
-Parameters: Short Description - A brief description or label for the stored data. You don't need to write all the information in the description. The data you've searched for will be automatically stored in the Notebook.
-Example: NotebookWrite[Flights from Rome to Paris in 2022-02-01] would store the informatrion of flights from Rome to Paris in 2022-02-01 in the Notebook.
-
-(8) Planner[Query]
+(7) Planner[Query]
 Description: A smart planning tool that crafts detailed plans based on user input and the information stored in Notebook.
 Parameters: 
 Query: The query from user.
@@ -135,6 +131,8 @@ This tool history is an example of historical outputs. For example,
 if your history only has one FlightSearch, call the reverse flight search.
 
 If you already have two flights, call one of the remaining tools.
+
+When you are ready, call Planner[Query]. It is important to terminate with Planner[Query] once Tool History is Complete.
 
 Tool History: {tool_history}
 Query: {query}
@@ -271,6 +269,21 @@ refinement_prompt = PromptTemplate(
     template = REFINEMENT_INSTRUCTION
 )
 
+PLANNER_INSTRUCTION_SFT = """You are a proficient planner. Based on the provided information and query, please give me a detailed plan, including specifics such as flight numbers, restaurant names, and accommodation names. Note that all the information in your plan should be derived from the provided data. Additionally, all details should align with commonsense. The symbol '-' indicates that information is unnecessary. For example, in the provided sample, you do not need to plan after returning to the departure city. When you travel to two cities in one day, you should note it in the 'Current City' section as in the example (i.e., from A to B).
+
+When extracting restaurants and accommodations, make sure to get their proper name from your information!!!
+Be very careful about flights, you will be graded on extracting an accurate flight number.
+
+Format: For flights, include the details in the format "Flight Number: XXX, from [City A] to [City B]". For self-driven or taxi travel, use "self-driving/taxi, from [City A] to [City B]". If there is no travel between cities on that day, use "-".
+
+Your response ends after the last accommodation section on the final day.
+
+Focus on matching the information exactly,
+including flights, varying restaurants, and having a dynamic fast changing plan.
+
+Given information: {text}
+Query: {query}
+Travel Plan:"""
 
 PLANNER_INSTRUCTION = """You are a proficient planner. Based on the provided information and query, please give me a detailed plan, including specifics such as flight numbers, restaurant names, and accommodation names. Note that all the information in your plan should be derived from the provided data. You must adhere to the format given in the example. Additionally, all details should align with commonsense. The symbol '-' indicates that information is unnecessary. For example, in the provided sample, you do not need to plan after returning to the departure city. When you travel to two cities in one day, you should note it in the 'Current City' section as in the example (i.e., from A to B).
 
@@ -627,6 +640,10 @@ Your task now begins. Good luck! You will be rewarded $500 for following instruc
 
 """
 
+planner_agent_sft_prompt = planner_agent_prompt = PromptTemplate(
+                        input_variables=["text","query"],
+                        template = PLANNER_INSTRUCTION_SFT,
+                        )
 
 planner_agent_prompt = PromptTemplate(
                         input_variables=["text","query"],
