@@ -157,8 +157,6 @@ class ReactAgent:
 
         else: # fall back to attempt on local model
             stop_list = ['\n']
-             # /scratch/gpfs/ca2992/models/DeepSeek-R1-Distill-Qwen-14B
-             # /scratch/gpfs/ca2992/models/DeepSeek-R1-Distill-Llama-8B
              # "/scratch/gpfs/ca2992/models/QwQ-32B"
              # local machine:
              # C:\Users\chris\OneDrive\Desktop\SeniorThesisCode\agents\models\Qwen2.5-0.5B-Instruct
