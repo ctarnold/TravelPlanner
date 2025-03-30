@@ -37,7 +37,10 @@ OPENAI_API_KEY = ""
 
 pd.options.display.max_info_columns = 200
 
-os.environ['TIKTOKEN_CACHE_DIR'] = './tmp'
+tiktoken_cache_dir = '/scratch/gpfs/ca2992/TravelPlanner/tiktoken_cache'
+cache_key = '9b5ad71b2ce5302211f9c61530b329a4922fc6a4'
+os.environ['TIKTOKEN_CACHE_DIR'] = '/scratch/gpfs/ca2992/TravelPlanner/tiktoken_cache'
+assert os.path.exists(os.path.join(tiktoken_cache_dir, cache_key))
 
 actionMapping = {"FlightSearch":"flights","AttractionSearch":"attractions","GoogleDistanceMatrix":"googleDistanceMatrix","AccommodationSearch":"accommodation","RestaurantSearch":"restaurants","Planner":"planner","NotebookWrite":"notebook","CitySearch":"cities"}
 
@@ -195,7 +198,7 @@ class ReactAgent:
             city_file_path= '/scratch/gpfs/ca2992/TravelData/database/background/citySet.txt'
             self.city_set = self.load_city(city_set_path=city_file_path)
 
-        # self.enc = tiktoken.encoding_for_model("gpt-3.5-turbo")
+        self.enc = tiktoken.encoding_for_model("gpt-3.5-turbo")
 
         self.__reset_agent()
 
@@ -599,7 +602,7 @@ class ReactAgent:
 
     def is_halted(self) -> bool:
         return ((self.step_n > self.max_steps) or (
-                    len((self._build_agent_prompt())) > self.max_token_length)) and not self.finished
+                    len(self.enc.encode(self._build_agent_prompt())) > self.max_token_length)) and not self.finished
 
     # TODO: Validate if init to self.answer = None would help. 
     def __reset_agent(self) -> None:

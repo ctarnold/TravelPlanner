@@ -25,7 +25,6 @@ import argparse
 # OPENAI_API_KEY = os.environ['OPENAI_API_KEY']
 # GOOGLE_API_KEY = os.environ['GOOGLE_API_KEY']
 
-
 def catch_openai_api_error():
     error = sys.exc_info()[0]
     if error == openai.error.APIConnectionError:
