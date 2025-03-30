@@ -32,14 +32,13 @@ class LocalModel:
     def __init__(self, model_path="/scratch/gpfs/ca2992/models/DeepSeek-R1-Distill-Llama-8B", mode = 'tool_calling'):  
         print("Loading LocalModel...", flush=True)
         self.name = model_path
-        self.device = "cuda" if torch.cuda.is_available() else "cpu"
-        print(f"Using device: {self.device}")
+        print("\nCuda Available: \n", torch.cuda.is_available())
         try:
             self.tokenizer = AutoTokenizer.from_pretrained(model_path, trust_remote_code=True)
             # Enable flash attention if CUDA is available
             use_flash_attention = torch.cuda.is_available()
             model_kwargs = {
-                "torch_dtype": torch.bfloat16,  
+                "torch_dtype": torch.float16,  
                 "trust_remote_code": True,
                 "device_map": "auto",  
             }
@@ -68,37 +67,37 @@ class LocalModel:
             
             self.large_pipe = transformers.pipeline(
                     "text-generation",
-                    torch_dtype=torch.bfloat16,
+                    torch_dtype=torch.float16,
                     model=self.model,
                     tokenizer= self.tokenizer,
-                    device_map=self.device,
+                    device_map="auto",
                     max_new_tokens = 512,
                     do_sample=True,
                     return_full_text=False,
-                    top_k=30, # sample for some less likely tokens when in the manager step.
+                    top_k=10, 
                     num_return_sequences=1,
                     eos_token_id=self.tokenizer.eos_token_id
                 )
             print("\nLarge Pipeline Initialized\n", flush=True)
             self.eval_pipe = transformers.pipeline(
                     "text-generation",
-                    torch_dtype=torch.bfloat16,
+                    torch_dtype=torch.float16,
                     model=self.model,
                     tokenizer= self.tokenizer,
-                    device_map=self.device,
+                    device_map="auto",
                     max_new_tokens = 1024,
                     do_sample=True,
                     return_full_text=False,
-                    top_k=30, # sample for some less likely tokens when in the manager step.
+                    top_k=10, # sample for some less likely tokens when in the manager step.
                     num_return_sequences=1,
                     eos_token_id=self.tokenizer.eos_token_id
                 )
             self.tool_pipe = transformers.pipeline(
                     "text-generation",
-                    torch_dtype=torch.bfloat16,
+                    torch_dtype=torch.float16,
                     model=self.model,
                     tokenizer= self.tokenizer,
-                    device_map=self.device,
+                    device_map="auto",
                     max_new_tokens = 30,
                     do_sample=True,
                     return_full_text=False,
@@ -109,7 +108,7 @@ class LocalModel:
             print("\nAll Transformers Pipelines Initialized\n", flush=True)
             self.large_hf = HuggingFacePipeline(pipeline=self.large_pipe, model_kwargs={'temperature':0.1})
             self.tool_hf = HuggingFacePipeline(pipeline=self.tool_pipe, model_kwargs={'temperature':0.1})
-            self.eval_pipe = HuggingFacePipeline(pipeline = self.eval_pipe, model_kwargs={'temperature': 0.2})
+            self.eval_pipe = HuggingFacePipeline(pipeline = self.eval_pipe, model_kwargs={'temperature': 0.1})
             print("\nHF Pipelines Initialized\n", flush=True)
             # https://stackoverflow.com/questions/76772509/llama-2-7b-hf-repeats-context-of-question-directly-from-input-prompt-cuts-off-w
             
@@ -122,6 +121,8 @@ class LocalModel:
 
     def __call__(self, prompt, max_length=256, stop_list = []):
         try:
+            inputs = self.tokenizer(prompt, return_tensors="pt")
+            print(inputs["input_ids"], flush=True)
             if self.mode == 'tool_calling':
                 print("\ntool hf reached\n", flush=True)
                 # stop_list = ['\n']
