@@ -40,7 +40,7 @@ class LocalModel:
                 self.tokenizer.pad_token_id = self.tokenizer.eos_token_id
 
             # Enable flash attention if CUDA is available
-            # use_flash_attention = torch.cuda.is_available()
+            use_flash_attention = torch.cuda.is_available()
             model_kwargs = {
                 "torch_dtype": torch.float32,  
                 "trust_remote_code": True,
