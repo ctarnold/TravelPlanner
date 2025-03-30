@@ -36,6 +36,7 @@ class LocalModel:
         print(f"Using device: {self.device}")
         try:
             self.tokenizer = AutoTokenizer.from_pretrained(model_path, trust_remote_code=True)
+            self.tokenizer.pad_token = self.tokenizer.eos_token
             # Enable flash attention if CUDA is available
             use_flash_attention = torch.cuda.is_available()
             model_kwargs = {
@@ -51,13 +52,6 @@ class LocalModel:
                     print(f"Failed to enable flash attention 2: {e}")
                     use_flash_attention = False 
 
-            # self.model = AutoModelForCausalLM.from_pretrained(
-            #    model_path,
-            #    **model_kwargs
-            # ).to(self.device)
-
-            # TODO: Would sending to self.device work>
-            # Prev observed issues where auto offload to CPU caused issues.
             self.model = AutoModelForCausalLM.from_pretrained(
                 model_path,
                 **model_kwargs
