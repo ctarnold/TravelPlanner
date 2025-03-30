@@ -59,6 +59,7 @@ class LocalModel:
           
             self.mode = mode
             self.model.eval() # sets model to do inference
+            self.model.resize_token_embeddings(len(self.tokenizer))
             
             self.large_pipe = transformers.pipeline(
                     "text-generation",
@@ -147,6 +148,7 @@ class LocalModel:
                 response = self.large_hf.invoke(prompt, stop=stop_list)
             return response
         except Exception as e:
+            self.model.resize_token_embeddings(len(self.tokenizer))
             print(f"Error generating output: {e}", flush=True)
             return
     

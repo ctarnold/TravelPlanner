@@ -546,6 +546,7 @@ class ReactAgent:
                     else: 
                         mode = 'planning'
                         self.llm.setMode(mode)
+                        # TODO: Solve Cuda device-side assert error 
                         request = format_step(self.llm(prompt = prompt, stop_list=['\n']))
                 elif self.react_name == 'refinement':
                     queryArray = self.query.split("###")
