@@ -3,8 +3,8 @@
 from langchain_community.llms import HuggingFacePipeline
 import torch
 import transformers
-from transformers import AutoModelForCausalLM, AutoTokenizer, pipeline
-from transformers import StoppingCriteria, StoppingCriteriaList
+from transformers import AutoModelForCausalLM, AutoTokenizer
+from transformers import StoppingCriteria
 
 class StopWordsCriteria(StoppingCriteria):
     def __init__(self, stop_token_ids: list):
@@ -120,18 +120,21 @@ class LocalModel:
             raise  
 
 
-    def __call__(self, prompt, max_length=256, stop_list = ['\n']):
+    def __call__(self, prompt, max_length=256, stop_list = []):
         try:
             if self.mode == 'tool_calling':
-                stop_list = ['\n']
-                stop_list.append('Action')
-                stop_list.append('Thought')
+                print("\ntool hf reached\n", flush=True)
+                # stop_list = ['\n']
+                # stop_list.append('Action')
+                # stop_list.append('Thought')
                 response = self.tool_hf.invoke(prompt, stop=stop_list)
             elif self.mode == 'eval':
-                stop_list = ['\n']
+                print("\neval hf reached\n", flush=True)
+                # stop_list = ['\n']
                 response = self.eval_pipe.invoke(prompt, stop=stop_list)
             else:
-                stop_list = ['\n']
+                print("\nlarge hf reached\n", flush=True)
+                # stop_list = ['\n']
                 response = self.large_hf.invoke(prompt, stop=stop_list)
             return response
         except Exception as e:
