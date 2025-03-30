@@ -195,7 +195,7 @@ class ReactAgent:
             city_file_path= '/scratch/gpfs/ca2992/TravelData/database/background/citySet.txt'
             self.city_set = self.load_city(city_set_path=city_file_path)
 
-        self.enc = tiktoken.encoding_for_model("gpt-3.5-turbo")
+        # self.enc = tiktoken.encoding_for_model("gpt-3.5-turbo")
 
         self.__reset_agent()
 
@@ -599,7 +599,7 @@ class ReactAgent:
 
     def is_halted(self) -> bool:
         return ((self.step_n > self.max_steps) or (
-                    len(self.enc.encode(self._build_agent_prompt())) > self.max_token_length)) and not self.finished
+                    len((self._build_agent_prompt())) > self.max_token_length)) and not self.finished
 
     # TODO: Validate if init to self.answer = None would help. 
     def __reset_agent(self) -> None:
