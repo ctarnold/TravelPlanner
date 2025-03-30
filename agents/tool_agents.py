@@ -38,7 +38,7 @@ OPENAI_API_KEY = ""
 pd.options.display.max_info_columns = 200
 
 tiktoken_cache_dir = '/scratch/gpfs/ca2992/TravelPlanner/tiktoken_cache'
-cache_key = '9b5ad71b2ce5302211f9c61530b329a4922fc6a4.tiktoken'
+cache_key = '9b5ad71b2ce5302211f9c61530b329a4922fc6a4'
 os.environ['TIKTOKEN_CACHE_DIR'] = '/scratch/gpfs/ca2992/TravelPlanner/tiktoken_cache'
 assert os.path.exists(os.path.join(tiktoken_cache_dir, cache_key))
 
