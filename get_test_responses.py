@@ -47,6 +47,7 @@ def run_slice_and_write(agent: ManagerAgent, index):
             print(str(item) + " \n", file = f)
     results = []
 
+
 def main(args):
     print(args[1], flush=True)
     agent = ManagerAgent(query = "", tools= tools_list)
