@@ -44,7 +44,7 @@ def run_slice_and_write(agent: ManagerAgent, index):
     with open(file_str, mode = "a+") as f:
         for item in results:
             print("###\n", file = f)
-            print(item + " \n", file = f)
+            print(str(item) + " \n", file = f)
     results = []
 
 def main(args):
