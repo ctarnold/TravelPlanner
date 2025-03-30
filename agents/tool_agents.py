@@ -258,7 +258,7 @@ class ReactAgent:
         self.last_actions.append(action)
         self.last_action_type.append(action_type)
 
-        if (self.compare_action_types(self.last_action_type)):
+        if (self.compare_action_types()):
             print("\nStuck in type loop. \n", flush = True)
             return
 
@@ -656,7 +656,7 @@ class ReactAgent:
         for unit in lines:
             city_set.append(unit)
         return city_set
-    def compare_action_types(self.last_action_type):
+    def compare_action_types(self):
         if len(self.last_action_type == 3):
             return (self.last_action_type[0] == self.last_action_type[1]) and (self.last_action_type[0] == self.last_action_type[2])
         else:
