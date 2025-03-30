@@ -40,7 +40,7 @@ class LocalModel:
             # Enable flash attention if CUDA is available
             use_flash_attention = torch.cuda.is_available()
             model_kwargs = {
-                "torch_dtype": torch.bfloat16,  
+                "torch_dtype": torch.float16,  
                 "trust_remote_code": True,
                 "device_map": "auto",  
             }
