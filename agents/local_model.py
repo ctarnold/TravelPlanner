@@ -36,15 +36,17 @@ class LocalModel:
         print(f"Using device: {self.device}")
         try:
             self.tokenizer = AutoTokenizer.from_pretrained(model_path, trust_remote_code=True)
-           
+            if self.tokenizer.pad_token_id is None:
+                self.tokenizer.pad_token_id = self.tokenizer.eos_token_id
+
             # Enable flash attention if CUDA is available
             # use_flash_attention = torch.cuda.is_available()
             model_kwargs = {
-                "torch_dtype": torch.float16,  
+                "torch_dtype": torch.float32,  
                 "trust_remote_code": True,
                 "device_map": "auto",  
             }
-            """""
+            
             if use_flash_attention:
                 try:
                     model_kwargs["attn_implementation"] = "flash_attention_2"
@@ -52,7 +54,7 @@ class LocalModel:
                 except Exception as e:
                     print(f"Failed to enable flash attention 2: {e}")
                     use_flash_attention = False 
-            """""
+           
             self.model = AutoModelForCausalLM.from_pretrained(
                 model_path,
                 **model_kwargs
@@ -64,11 +66,11 @@ class LocalModel:
             
             self.large_pipe = transformers.pipeline(
                     "text-generation",
-                    torch_dtype=torch.float16,
+                    torch_dtype=torch.float32,
                     model=self.model,
                     tokenizer= self.tokenizer,
                     device_map='auto',
-                    max_new_tokens = 512,
+                    max_new_tokens = 256,
                     do_sample=True,
                     return_full_text=False,
                     top_k=30, # sample for some less likely tokens when in the manager step.
@@ -78,11 +80,11 @@ class LocalModel:
             print("\nLarge Pipeline Initialized\n", flush=True)
             self.eval_pipe = transformers.pipeline(
                     "text-generation",
-                    torch_dtype=torch.float16,
+                    torch_dtype=torch.float32,
                     model=self.model,
                     tokenizer= self.tokenizer,
                     device_map='auto',
-                    max_new_tokens = 512,
+                    max_new_tokens = 256,
                     do_sample=True,
                     return_full_text=False,
                     top_k=30, # sample for some less likely tokens when in the manager step.
@@ -91,7 +93,7 @@ class LocalModel:
                 )
             self.tool_pipe = transformers.pipeline(
                     "text-generation",
-                    torch_dtype=torch.float16,
+                    torch_dtype=torch.float32,
                     model=self.model,
                     tokenizer= self.tokenizer,
                     device_map='auto',
@@ -104,11 +106,11 @@ class LocalModel:
                 )
             self.planner_pipe = transformers.pipeline(
                     "text-generation",
-                    torch_dtype=torch.float16,
+                    torch_dtype=torch.float32,
                     model=self.model,
                     tokenizer= self.tokenizer,
                     device_map='auto',
-                    max_new_tokens = 512,
+                    max_new_tokens = 256,
                     do_sample=True,
                     return_full_text=False,
                     top_k=10,
