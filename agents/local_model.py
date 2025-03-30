@@ -63,7 +63,7 @@ class LocalModel:
             
             self.large_pipe = transformers.pipeline(
                     "text-generation",
-                    torch_dtype=torch.bfloat16,
+                    torch_dtype=torch.float16,
                     model=self.model,
                     tokenizer= self.tokenizer,
                     device_map='auto',
@@ -77,7 +77,7 @@ class LocalModel:
             print("\nLarge Pipeline Initialized\n", flush=True)
             self.eval_pipe = transformers.pipeline(
                     "text-generation",
-                    torch_dtype=torch.bfloat16,
+                    torch_dtype=torch.float16,
                     model=self.model,
                     tokenizer= self.tokenizer,
                     device_map='auto',
@@ -90,7 +90,7 @@ class LocalModel:
                 )
             self.tool_pipe = transformers.pipeline(
                     "text-generation",
-                    torch_dtype=torch.bfloat16,
+                    torch_dtype=torch.float16,
                     model=self.model,
                     tokenizer= self.tokenizer,
                     device_map='auto',
@@ -103,7 +103,7 @@ class LocalModel:
                 )
             self.planner_pipe = transformers.pipeline(
                     "text-generation",
-                    torch_dtype=torch.bfloat16,
+                    torch_dtype=torch.float16,
                     model=self.model,
                     tokenizer= self.tokenizer,
                     device_map='auto',
