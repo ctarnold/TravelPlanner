@@ -36,7 +36,7 @@ class LocalModel:
         print(f"Using device: {self.device}")
         try:
             self.tokenizer = AutoTokenizer.from_pretrained(model_path, trust_remote_code=True)
-            self.tokenizer.pad_token = self.tokenizer.eos_token
+           
             # Enable flash attention if CUDA is available
             use_flash_attention = torch.cuda.is_available()
             model_kwargs = {
@@ -59,7 +59,7 @@ class LocalModel:
           
             self.mode = mode
             self.model.eval() # sets model to do inference
-            self.model.resize_token_embeddings(len(self.tokenizer))
+            
             
             self.large_pipe = transformers.pipeline(
                     "text-generation",
