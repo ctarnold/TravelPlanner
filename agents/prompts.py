@@ -16,6 +16,7 @@ Destination City: The city you aim to reach.
 Date: The date of your travel in YYYY-MM-DD format.
 Example: FlightSearch[New York, London, 2022-10-01] would fetch flights from New York to London on October 1, 2022.
 
+
 (2) GoogleDistanceMatrix[Origin, Destination, Mode]:
 Description: Estimate the distance, time and cost between two cities.
 Parameters:
@@ -86,7 +87,11 @@ Example output in action mode:
 
 FlightSearch[Paris, New York, 2022-10-01]
 
-Example output in action mode:
+Example output in think mode:
+
+Get return trips. Call FlightSearch[New York, Paris, 2022-10-01]
+
+Example output in action mode (notice how the following is reversed from above to get return trip):
 
 FlightSearch[New York, Paris, 2022-10-05] 
 
@@ -112,7 +117,7 @@ These examples are relative to the query, modify as needed.
 
 In action mode your action should come at the beginning of your response. Valid actions are:
 
-FlightSearch[Departure City, Destination City, Date] / AccommodationSearch[City] /  RestaurantSearch[City] / AttractionSearch[City] / CitySearch[State] / GoogleDistanceMatrix[Origin, Destination, Mode] and Planner[Query].
+FlightSearch[Departure City, Destination City, Date] / AccommodationSearch[Destination City] /  RestaurantSearch[Destination City] / AttractionSearch[Destination City] / CitySearch[State] / GoogleDistanceMatrix[Origin, Destination, Mode] and Planner[Query].
 
 When you call Planner[Query], you need to substitute Query for a brief explanation of the original prompt!
 
@@ -120,7 +125,7 @@ You should work on completing your Tool History prior to calling Planner.
 Example Complete Tool History:
 
 CitySearch[State] (Only if needed!)
-FlightSearch[Departure City, Destination City, Start Date]
+FlightSearch[Departure City, Destination City, Start Date] (Call flights both ways).
 FlightSearch[Destination City, Departure City, End Date]
 GoogleDistanceMatrix[Origin, Destination, Mode]
 AccommodationSearch[City]
@@ -264,7 +269,7 @@ These examples are relative to the query, modify as needed.
 
 In action mode your action should come at the beginning of your response. Valid actions are:
 
-FlightSearch[Departure City, Destination City, Date] / AccommodationSearch[City] /  RestaurantSearch[City] / NotebookWrite[Short Description] / AttractionSearch[City] / CitySearch[State] / GoogleDistanceMatrix[Origin, Destination, Mode] and Planner[Query].
+FlightSearch[Departure City, Destination City, Date] / AccommodationSearch[City] /  RestaurantSearch[City] / AttractionSearch[City] / CitySearch[State] / GoogleDistanceMatrix[Origin, Destination, Mode] and Planner[Query].
 
 When you call Planner[Query], you need to substitute Query for a brief explanation of the original prompt!
 

@@ -32,8 +32,7 @@ def run_slice_and_write(agent: ManagerAgent, index):
         dict = {}
         dict[request] = plan
         results.append(dict)
-        # Clean the agent to remove any wasted context/memory
-        # Might slow things down
+        # Clean and reset the agent.
         agent = ManagerAgent(query = "", tools= tools_list)
         if i % 3 == 0: # save some cpu mem
             with open(file_str, mode = "a+") as f:

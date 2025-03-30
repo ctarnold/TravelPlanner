@@ -123,7 +123,7 @@ class LocalModel:
             print("\nAll Transformers Pipelines Initialized\n", flush=True)
             self.large_hf = HuggingFacePipeline(pipeline=self.large_pipe, model_kwargs={'temperature':0.1})
             self.tool_hf = HuggingFacePipeline(pipeline=self.tool_pipe, model_kwargs={'temperature':0.1})
-            self.eval_hf = HuggingFacePipeline(pipeline = self.eval_pipe, model_kwargs={'temperature': 0.1})
+            self.eval_hf = HuggingFacePipeline(pipeline = self.eval_pipe, model_kwargs={'temperature': 0.2})
             self.plan_hf = HuggingFacePipeline(pipeline = self.planner_pipe, model_kwargs={'temperature': 0.1})
             print("\nHF Pipelines Initialized\n", flush=True)
             # https://stackoverflow.com/questions/76772509/llama-2-7b-hf-repeats-context-of-question-directly-from-input-prompt-cuts-off-w
