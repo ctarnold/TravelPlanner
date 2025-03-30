@@ -186,6 +186,7 @@ class ReactAgent:
         # print(self.retry_record)
 
         self.last_actions = []
+        self.last_action_type= []
 
         # self.log_path = logs_path + datetime.now().strftime('%Y%m%d%H%M%S') + '.out'
         # self.log_file = open(self.log_path, 'a+')
@@ -240,12 +241,26 @@ class ReactAgent:
         else:
             self.scratchpad += ' ' + action
 
+        action_type, action_arg = parse_action(get_first_response(action))
+
 
         if len(self.last_actions) > 0 and self.last_actions[-1] != action:
             self.last_actions.clear()
 
+        
+        if len(self.last_action_type) > 0 and self.last_action_type[-1] != action_type:
+            self.last_action_type.clear()
+
+        if len(self.last_action_type) > 2:
+            self.last_action_type = self.last_action_type[1:]
+
         # refresh last_action list
         self.last_actions.append(action)
+        self.last_action_type.append(action_type)
+
+        if (self.compare_action_types(self.last_action_type)):
+            print("\nStuck in type loop. \n", flush = True)
+            return
 
         self.json_log[-1]['action'] = self.scratchpad.split('\n')[-1].replace(f'\nAction {self.step_n}:',"")
 
@@ -274,10 +289,8 @@ class ReactAgent:
         
         else:
             print("\n\n Action input: ", action, "\n\n", flush=True)
-            action = get_first_response(action)
             self.tool_history += (action + '\n')
             print("\n\nFirst response ", action, "\n\n", flush=True)
-            action_type, action_arg = parse_action(action)
             
             if action_type != "Planner":
                 if action_type in actionMapping:
@@ -615,6 +628,7 @@ class ReactAgent:
         self.current_observation = ''
         self.current_data = None
         self.last_actions = []
+        self.last_action_type = []
 
         if 'notebook' in self.tools:
             self.tools['notebook'].reset()
@@ -642,6 +656,15 @@ class ReactAgent:
         for unit in lines:
             city_set.append(unit)
         return city_set
+    def compare_action_types(self.last_action_type):
+        if len(self.last_action_type == 3):
+            return (self.last_action_type[0] == self.last_action_type[1]) and (self.last_action_type[0] == self.last_action_type[2])
+        else:
+            curr = self.last_action_type[0]
+            for val in self.last_action_type:
+                if val != curr:
+                    return False
+        return True
 
 ### String Stuff ###
 # gpt2_enc = tiktoken.encoding_for_model("text-davinci-003")

@@ -46,6 +46,10 @@ class ManagerAgent:
             planner_llm_name=self.planner_llm_name,
             max_steps=30
         ) 
+        try:
+            self.llm = LocalModel(model_path="../../agents/models/Qwen2.5-0.5B-Instruct") 
+        except:
+            self.llm = LocalModel(model_path="/scratch/gpfs/ca2992/models/Llama-3.1-8B-Instruct")
         
     def evaluate_plan(self, plan: str, scratchpad: str) -> str: 
         """
@@ -137,8 +141,8 @@ class ManagerAgent:
                 scratchpad = scratchpad + new_scratch
                 json = new_json
             else:
-                print("\n\n new plan empty \n\n", flush=True)
-
+                print("\n\n new plan empty resetting agent \n\n", flush=True)
+                self.reset_agent()
         print("\nManagerAgent finished.")
         return plan, str(json)
 
