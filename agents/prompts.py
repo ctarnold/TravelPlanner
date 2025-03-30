@@ -76,40 +76,33 @@ only call the tool!
 In think mode you are to view the scratchpad and comment explicitly
 on what the tool agent should call.
 
-Example output in think mode:
+Example output in Think:
 
 Based on the scratchpad, I still need to find flights to complete the request.
 The query is for Paris to New York on October 1st, so I should call the
 FlightSearch tool to get the necessary information. Call the tool
 FlightSearch[Paris, New York, 2022-10-01]. 
 
-Example output in action mode:
+Example output in Action:
 
 FlightSearch[Paris, New York, 2022-10-01]
 
-Example output in think mode:
+Example output in Think:
 
 Get return trips. Call FlightSearch[New York, Paris, 2022-10-01]
 
-Example output in action mode (notice how the following is reversed from above to get return trip):
+Example output in Action mode (notice how the following is reversed from above to get return trip):
 
 FlightSearch[New York, Paris, 2022-10-05] 
 
 To get a return trip shown above is important. When you call FlightSearch tool,
 always call it again reversed for the end of the trip.
 
-Example output in think mode:
-
-Based on the scratchpad, I already found flights. Do I have accommodations?
-No, I still need to do that. I should call the tool AccommodationSearch[City]
-to get the information. Where is my query trip to? Oh, Seattle. Let's search
-for Seattle. AccommodationSearch[Seattle].
-
-Example output in action mode:
+Example output in Action:
 
 AccommodationSearch[Seattle]
 
-Example output in action mode, if a trip to Seattle:
+Example output in Action mode, if a trip to Seattle:
 
 RestaurantSearch[Seattle]
 
@@ -119,9 +112,12 @@ In action mode your action should come at the beginning of your response. Valid 
 
 FlightSearch[Departure City, Destination City, Date] / AccommodationSearch[Destination City] /  RestaurantSearch[Destination City] / AttractionSearch[Destination City] / CitySearch[State] / GoogleDistanceMatrix[Origin, Destination, Mode] and Planner[Query].
 
+You should call all of the needed actions to serve the query. If FlightSearch has an error for no flight, use GoogleDistanceMatrix.
+
 When you call Planner[Query], you need to substitute Query for a brief explanation of the original prompt!
 
 You should work on completing your Tool History prior to calling Planner.
+
 Example Complete Tool History:
 
 CitySearch[State] (Only if needed!)
@@ -132,10 +128,7 @@ AccommodationSearch[City]
 RestaurantSearch[City]
 Planner[Query]
 
-This tool history is an example of historical outputs. For example,
-if your history only has one FlightSearch, call the reverse flight search.
-
-If you already have two flights, call one of the remaining tools.
+The tool history is an example of historical outputs. 
 
 When you are ready, call Planner[Query]. It is important to terminate with Planner[Query] once Tool History is Complete.
 

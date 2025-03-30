@@ -58,15 +58,3 @@ def main(args):
 # TODO: AttributeError: module 'sys' has no attribute 'args'
 if __name__ == "__main__":
     main(sys.argv)
-
-file_str = dir + "testing"
-dict = {}
-dict["request"] = "plan"
-results = []
-results.append(dict)
-with open(file_str, mode = "w") as f:
-      print("\n", f)
-with open(file_str, mode = "a+") as f:
-        for item in results:
-            print("###\n", file = f)
-            print(str(item) + " \n", file = f)
