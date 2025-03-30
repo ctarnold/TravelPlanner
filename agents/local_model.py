@@ -38,12 +38,13 @@ class LocalModel:
             self.tokenizer = AutoTokenizer.from_pretrained(model_path, trust_remote_code=True)
            
             # Enable flash attention if CUDA is available
-            use_flash_attention = torch.cuda.is_available()
+            # use_flash_attention = torch.cuda.is_available()
             model_kwargs = {
                 "torch_dtype": torch.float16,  
                 "trust_remote_code": True,
                 "device_map": "auto",  
             }
+            """""
             if use_flash_attention:
                 try:
                     model_kwargs["attn_implementation"] = "flash_attention_2"
@@ -51,7 +52,7 @@ class LocalModel:
                 except Exception as e:
                     print(f"Failed to enable flash attention 2: {e}")
                     use_flash_attention = False 
-
+            """""
             self.model = AutoModelForCausalLM.from_pretrained(
                 model_path,
                 **model_kwargs
