@@ -17,7 +17,7 @@ Date: The date of your travel in YYYY-MM-DD format.
 Example: FlightSearch[New York, London, 2022-10-01] would fetch flights from New York to London on October 1, 2022.
 
 
-(2) GoogleDistanceMatrix[Origin, Destination, Mode]:
+(2) GoogleDistanceMatrix[Departure City, Destination City, Mode]:
 Description: Estimate the distance, time and cost between two cities.
 Parameters:
 Origin: The departure city of your journey.
