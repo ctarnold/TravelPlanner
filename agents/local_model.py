@@ -105,13 +105,6 @@ class LocalModel:
 
     def __call__(self, prompt, max_length=256, stop_list = []):
         try:
-            inputs = self.tokenizer(prompt, return_tensors="pt")
-            print(inputs["input_ids"], flush=True)
-            for vector in inputs["input_ids"]:
-                for val in vector:
-                    if val.item() < 0:
-                        print(val.item(), flush=True)
-
             if self.mode == 'tool_calling':
                 print("\ntool hf reached\n", flush=True)
                 # stop_list = ['\n']
