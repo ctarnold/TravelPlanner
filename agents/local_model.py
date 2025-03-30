@@ -42,7 +42,7 @@ class LocalModel:
             # Enable flash attention if CUDA is available
             use_flash_attention = torch.cuda.is_available()
             model_kwargs = {
-                "torch_dtype": torch.float32,  
+                "torch_dtype": torch.bfloat16,  
                 "trust_remote_code": True,
                 "device_map": "auto",  
             }
@@ -66,34 +66,34 @@ class LocalModel:
             
             self.large_pipe = transformers.pipeline(
                     "text-generation",
-                    torch_dtype=torch.float32,
+                    torch_dtype=torch.bfloat16,
                     model=self.model,
                     tokenizer= self.tokenizer,
                     device_map='auto',
                     max_new_tokens = 256,
                     do_sample=True,
                     return_full_text=False,
-                    top_k=30, # sample for some less likely tokens when in the manager step.
+                    top_k=15, # sample for some less likely tokens when in the manager step.
                     num_return_sequences=1,
                     eos_token_id=self.tokenizer.eos_token_id
                 )
             print("\nLarge Pipeline Initialized\n", flush=True)
             self.eval_pipe = transformers.pipeline(
                     "text-generation",
-                    torch_dtype=torch.float32,
+                    torch_dtype=torch.bfloat16,
                     model=self.model,
                     tokenizer= self.tokenizer,
                     device_map='auto',
                     max_new_tokens = 256,
                     do_sample=True,
                     return_full_text=False,
-                    top_k=30, # sample for some less likely tokens when in the manager step.
+                    top_k=20, # sample for some less likely tokens when in the manager step.
                     num_return_sequences=1,
                     eos_token_id=self.tokenizer.eos_token_id
                 )
             self.tool_pipe = transformers.pipeline(
                     "text-generation",
-                    torch_dtype=torch.float32,
+                    torch_dtype=torch.bfloat16,
                     model=self.model,
                     tokenizer= self.tokenizer,
                     device_map='auto',
@@ -106,7 +106,7 @@ class LocalModel:
                 )
             self.planner_pipe = transformers.pipeline(
                     "text-generation",
-                    torch_dtype=torch.float32,
+                    torch_dtype=torch.bfloat16,
                     model=self.model,
                     tokenizer= self.tokenizer,
                     device_map='auto',
@@ -121,7 +121,7 @@ class LocalModel:
             print("\nAll Transformers Pipelines Initialized\n", flush=True)
             self.large_hf = HuggingFacePipeline(pipeline=self.large_pipe, model_kwargs={'temperature':0.1})
             self.tool_hf = HuggingFacePipeline(pipeline=self.tool_pipe, model_kwargs={'temperature':0.1})
-            self.eval_hf = HuggingFacePipeline(pipeline = self.eval_pipe, model_kwargs={'temperature': 0.3})
+            self.eval_hf = HuggingFacePipeline(pipeline = self.eval_pipe, model_kwargs={'temperature': 0.2})
             self.plan_hf = HuggingFacePipeline(pipeline = self.planner_pipe, model_kwargs={'temperature': 0.1})
             print("\nHF Pipelines Initialized\n", flush=True)
             # https://stackoverflow.com/questions/76772509/llama-2-7b-hf-repeats-context-of-question-directly-from-input-prompt-cuts-off-w
