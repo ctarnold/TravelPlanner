@@ -657,6 +657,8 @@ class ReactAgent:
             city_set.append(unit)
         return city_set
     def compare_action_types(self):
+        if len(self.last_action_type) < 3:
+            return False
         if len(self.last_action_type) == 3:
             return (self.last_action_type[0] == self.last_action_type[1]) and (self.last_action_type[0] == self.last_action_type[2])
         else:
