@@ -109,8 +109,9 @@ class LocalModel:
             print(inputs["input_ids"], flush=True)
             for vector in inputs["input_ids"]:
                 for val in vector:
-                    if val < 0:
-                        print(val, flush=True)
+                    for item in val:
+                        if item < 0:
+                            print(item, flush=True)
 
             if self.mode == 'tool_calling':
                 print("\ntool hf reached\n", flush=True)
