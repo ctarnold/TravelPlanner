@@ -36,9 +36,6 @@ class LocalModel:
         print(f"Using device: {self.device}")
         try:
             self.tokenizer = AutoTokenizer.from_pretrained(model_path, trust_remote_code=True)
-            if self.tokenizer.pad_token_id is None:
-                self.tokenizer.pad_token_id = self.tokenizer.eos_token_id
-
             # Enable flash attention if CUDA is available
             use_flash_attention = torch.cuda.is_available()
             model_kwargs = {
@@ -46,7 +43,6 @@ class LocalModel:
                 "trust_remote_code": True,
                 "device_map": "auto",  
             }
-            
             if use_flash_attention:
                 try:
                     model_kwargs["attn_implementation"] = "flash_attention_2"
@@ -54,7 +50,14 @@ class LocalModel:
                 except Exception as e:
                     print(f"Failed to enable flash attention 2: {e}")
                     use_flash_attention = False 
-           
+
+            # self.model = AutoModelForCausalLM.from_pretrained(
+            #    model_path,
+            #    **model_kwargs
+            # ).to(self.device)
+
+            # TODO: Would sending to self.device work>
+            # Prev observed issues where auto offload to CPU caused issues.
             self.model = AutoModelForCausalLM.from_pretrained(
                 model_path,
                 **model_kwargs
@@ -63,17 +66,16 @@ class LocalModel:
             self.mode = mode
             self.model.eval() # sets model to do inference
             
-            
             self.large_pipe = transformers.pipeline(
                     "text-generation",
                     torch_dtype=torch.bfloat16,
                     model=self.model,
                     tokenizer= self.tokenizer,
-                    device_map='auto',
-                    max_new_tokens = 256,
+                    device_map=self.device,
+                    max_new_tokens = 512,
                     do_sample=True,
                     return_full_text=False,
-                    top_k=15, # sample for some less likely tokens when in the manager step.
+                    top_k=30, # sample for some less likely tokens when in the manager step.
                     num_return_sequences=1,
                     eos_token_id=self.tokenizer.eos_token_id
                 )
@@ -83,11 +85,11 @@ class LocalModel:
                     torch_dtype=torch.bfloat16,
                     model=self.model,
                     tokenizer= self.tokenizer,
-                    device_map='auto',
-                    max_new_tokens = 256,
+                    device_map=self.device,
+                    max_new_tokens = 1024,
                     do_sample=True,
                     return_full_text=False,
-                    top_k=20, # sample for some less likely tokens when in the manager step.
+                    top_k=30, # sample for some less likely tokens when in the manager step.
                     num_return_sequences=1,
                     eos_token_id=self.tokenizer.eos_token_id
                 )
@@ -96,33 +98,18 @@ class LocalModel:
                     torch_dtype=torch.bfloat16,
                     model=self.model,
                     tokenizer= self.tokenizer,
-                    device_map='auto',
-                    max_new_tokens = 32,
+                    device_map=self.device,
+                    max_new_tokens = 30,
                     do_sample=True,
                     return_full_text=False,
                     top_k=10,
                     num_return_sequences=1,
                     eos_token_id=self.tokenizer.eos_token_id
                 )
-            self.planner_pipe = transformers.pipeline(
-                    "text-generation",
-                    torch_dtype=torch.bfloat16,
-                    model=self.model,
-                    tokenizer= self.tokenizer,
-                    device_map='auto',
-                    max_new_tokens = 256,
-                    do_sample=True,
-                    return_full_text=False,
-                    top_k=10,
-                    num_return_sequences=1,
-                    eos_token_id=self.tokenizer.eos_token_id
-                )
-
             print("\nAll Transformers Pipelines Initialized\n", flush=True)
             self.large_hf = HuggingFacePipeline(pipeline=self.large_pipe, model_kwargs={'temperature':0.1})
             self.tool_hf = HuggingFacePipeline(pipeline=self.tool_pipe, model_kwargs={'temperature':0.1})
-            self.eval_hf = HuggingFacePipeline(pipeline = self.eval_pipe, model_kwargs={'temperature': 0.2})
-            self.plan_hf = HuggingFacePipeline(pipeline = self.planner_pipe, model_kwargs={'temperature': 0.1})
+            self.eval_pipe = HuggingFacePipeline(pipeline = self.eval_pipe, model_kwargs={'temperature': 0.2})
             print("\nHF Pipelines Initialized\n", flush=True)
             # https://stackoverflow.com/questions/76772509/llama-2-7b-hf-repeats-context-of-question-directly-from-input-prompt-cuts-off-w
             
@@ -142,19 +129,15 @@ class LocalModel:
                 response = self.tool_hf.invoke(prompt, stop=stop_list)
             elif self.mode == 'eval':
                 stop_list = ['\n']
-                response = self.eval_hf.invoke(prompt, stop=stop_list)
-            elif self.mode == 'planner_tool':
-                stop_list = ['\n']
-                response = self.plan_hf.invoke(prompt, stop=stop_list)
+                response = self.eval_pipe.invoke(prompt, stop=stop_list)
             else:
                 stop_list = ['\n']
                 response = self.large_hf.invoke(prompt, stop=stop_list)
             return response
         except Exception as e:
-            self.model.resize_token_embeddings(len(self.tokenizer))
             print(f"Error generating output: {e}", flush=True)
             return
     
     def setMode(self, mode: str):
-        self.mode = mode
         print("\nMode set to ", mode, "\n", flush = True)
+        self.mode = mode
