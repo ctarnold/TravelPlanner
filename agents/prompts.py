@@ -22,7 +22,7 @@ Description: Estimate the distance, time and cost between two cities.
 Parameters:
 Origin: The departure city of your journey.
 Destination: The destination city of your journey.
-Mode: The method of transportation. Choices include 'self-driving' and 'taxi'.
+Mode: The method of transportation. Choices include 'self-driving' and 'taxi'. Use if flights not available or not desired.
 Example: GoogleDistanceMatrix[Paris, Lyon, self-driving] would provide driving distance, time and cost between Paris and Lyon.
 
 (3) AccommodationSearch[Destination City]:

@@ -26,8 +26,9 @@ dir = '/scratch/gpfs/ca2992/EvalData/'
 def run_slice_and_write(agent: ManagerAgent, index):
     file_str = dir + "out_" + str(index) +".txt"
     results = []
-    for i in range(len(sets[index])):
-        request = sets[index][i]
+    for val in (sets[index]):
+        request = val
+        print("\nrequest in eval\n", flush = True)
         plan, _ = agent.run(request)
         dict = {}
         dict[request] = plan
