@@ -99,7 +99,7 @@ class LocalModel:
                     model=self.model,
                     tokenizer= self.tokenizer,
                     device_map=self.device,
-                    max_new_tokens = 32,
+                    max_new_tokens = 33,
                     do_sample=True,
                     return_full_text=False,
                     top_k=10,

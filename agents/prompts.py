@@ -168,27 +168,27 @@ Destination City: The city you aim to reach.
 Date: The date of your travel in YYYY-MM-DD format.
 Example: FlightSearch[New York, London, 2022-10-01] would fetch flights from New York to London on October 1, 2022.
 
-(2) GoogleDistanceMatrix[Origin, Destination, Mode]:
+(2) GoogleDistanceMatrix[Departure City, Destination City, Mode]:
 Description: Estimate the distance, time and cost between two cities.
 Parameters:
-Origin: The departure city of your journey.
-Destination: The destination city of your journey.
+Departure City: The departure city of your journey.
+Destination City: The destination city of your journey.
 Mode: The method of transportation. Choices include 'self-driving' and 'taxi'.
 Example: GoogleDistanceMatrix[Paris, Lyon, self-driving] would provide driving distance, time and cost between Paris and Lyon.
 
 (3) AccommodationSearch[Destination City]:
 Description: Discover accommodations in your desired city.
-Parameter: City - The name of the city where you're seeking accommodation.
+Parameter: Destination City - The name of the city where you're seeking accommodation.
 Example: AccommodationSearch[Rome] would present a list of hotel rooms in Rome.
 
 (4) RestaurantSearch[Destination City]:
 Description: Explore dining options in a city of your choice.
-Parameter: City – The name of the city where you're seeking restaurants.
+Parameter: Destination City – The name of the city where you're seeking restaurants.
 Example: RestaurantSearch[Tokyo] would show a curated list of restaurants in Tokyo.
 
 (5) AttractionSearch[Destination City]:
 Description: Find attractions in a city of your choice.
-Parameter: City – The name of the city where you're seeking attractions.
+Parameter: Destination City – The name of the city where you're seeking attractions.
 Example: AttractionSearch[London] would return attractions in London.
 
 (6) CitySearch[State]
@@ -271,12 +271,12 @@ When you call Planner[Query], you need to substitute Query for a brief explanati
 You should work on completing your Tool History prior to calling Planner.
 Example Complete Tool History:
 
-CitySearch[State] (Only if needed!)
+CitySearch[State] (Only if needed! Do not call this if you are given cities.)
 FlightSearch[Departure City, Destination City, Start Date]
 FlightSearch[Destination City, Departure City, End Date]
-GoogleDistanceMatrix[Origin, Destination, Mode]
-AccommodationSearch[City]
-RestaurantSearch[City]
+GoogleDistanceMatrix[Departure City, Destination City, Mode]
+AccommodationSearch[Destination City]
+RestaurantSearch[Destination City]
 Planner[Query]
 
 This tool history is an example of historical outputs. For example,
@@ -284,7 +284,7 @@ if your history only has one FlightSearch, call the reverse flight search.
 
 If you already have two flights, call one of the remaining tools.
 
-When you are ready, call Planner[Query]. It is important to terminate with Planner[Query] once Tool History is Complete.
+When you are ready, call Planner[Query]. $1,000,000 goal: It is important to terminate with Planner[Query] once Tool History is Complete.
 
 Tool History: {tool_history}
 Query: {query}
