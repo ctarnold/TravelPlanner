@@ -17,14 +17,6 @@ class StopWordsCriteria(StoppingCriteria):
         return False
 
 class LocalModel:
-    # For local testing
-    # def __init__(self, model_path="../../agents/models/Qwen2.5-0.5B-Instruct", device="cpu"):  # Replace with your model path
-    #    print("Loading LocalModel...")
-    #    self.device = device
-    #    self.tokenizer = AutoTokenizer.from_pretrained(model_path, trust_remote_code=True)
-    #   self.model = AutoModelForCausalLM.from_pretrained(model_path, torch_dtype=torch.float16, trust_remote_code=True).to(self.device)
-    #    self.model.eval()
-    #    print("LocalModel loaded.")
     # consider using from HF: https://huggingface.co/deepseek-ai/DeepSeek-R1-Distill-Qwen-14B
     # cluster directory: /scratch/gpfs/ca2992/models/DeepSeek-R1-Distill-Llama-8B
     # cluster directory: /scratch/gpfs/ca2992/models/QwQ-32B
@@ -50,13 +42,6 @@ class LocalModel:
                     print(f"Failed to enable flash attention 2: {e}")
                     use_flash_attention = False 
 
-            # self.model = AutoModelForCausalLM.from_pretrained(
-            #    model_path,
-            #    **model_kwargs
-            # ).to(self.device)
-
-            # TODO: Would sending to self.device work>
-            # Prev observed issues where auto offload to CPU caused issues.
             self.model = AutoModelForCausalLM.from_pretrained(
                 model_path,
                 **model_kwargs
@@ -112,7 +97,6 @@ class LocalModel:
             print("\nHF Pipelines Initialized\n", flush=True)
             # https://stackoverflow.com/questions/76772509/llama-2-7b-hf-repeats-context-of-question-directly-from-input-prompt-cuts-off-w
             
-            # llm = HuggingFacePipeline.from_model_id(model_id=model_path, task="text-generation")
             print("LocalModel loaded.")
         except Exception as e:
             print(f"Error loading model: {e}")
@@ -123,6 +107,10 @@ class LocalModel:
         try:
             inputs = self.tokenizer(prompt, return_tensors="pt")
             print(inputs["input_ids"], flush=True)
+            for i in range(len(inputs["input_ids"])):
+                if inputs["input_ids"][i] < 0:
+                    print(i, "\n", inputs["input_ids"][i])
+
             if self.mode == 'tool_calling':
                 print("\ntool hf reached\n", flush=True)
                 # stop_list = ['\n']
