@@ -107,9 +107,10 @@ class LocalModel:
         try:
             inputs = self.tokenizer(prompt, return_tensors="pt")
             print(inputs["input_ids"], flush=True)
-            for i in range(len(inputs["input_ids"])):
-                if inputs["input_ids"][i] < 0:
-                    print(i, "\n", inputs["input_ids"][i])
+            for vector in inputs["input_ids"]:
+                for val in vector:
+                    if val < 0:
+                        print(val, flush=True)
 
             if self.mode == 'tool_calling':
                 print("\ntool hf reached\n", flush=True)
