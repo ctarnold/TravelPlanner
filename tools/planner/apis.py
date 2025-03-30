@@ -58,7 +58,7 @@ class Planner:
         self.agent_prompt = agent_prompt
         self.scratchpad: str = ''
         self.model_name = model_name
-        self.enc = tiktoken.encoding_for_model("gpt-3.5-turbo")
+        # self.enc = tiktoken.encoding_for_model("gpt-3.5-turbo")
 
         if model_name in  ['mistral-7B-32K']:
             self.llm = ChatOpenAI(temperature=0,
@@ -113,7 +113,7 @@ class Planner:
         elif self.model_name == 'local':
             return str(self.llm(self._build_agent_prompt(text, query)))
         else:
-            if len(self.enc.encode(self._build_agent_prompt(text, query))) > 12000:
+            if len(self._build_agent_prompt(text, query)) > 12000:
                 return 'Max Token Length Exceeded.'
             else:
                 return self.llm([HumanMessage(content=self._build_agent_prompt(text, query))]).content
