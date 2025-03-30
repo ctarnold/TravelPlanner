@@ -16,7 +16,7 @@ tools_list = ["notebook", "flights", "attractions", "accommodations",
 queries = df['query']
 queries = df['query'][0:49]
 
-n = 4
+n = 5
 sets = [queries[i:i + n] for i in range(0, len(queries), n)]
 
 print(sets[0])
@@ -39,7 +39,7 @@ def run_slice_and_write(agent: ManagerAgent, index):
             with open(file_str, mode = "a+") as f:
                 for item in results:
                     print("###\n", file = f)
-                    print(item + " \n", file = f)
+                    print(str(item) + " \n", file = f)
             results = []
     with open(file_str, mode = "a+") as f:
         for item in results:
