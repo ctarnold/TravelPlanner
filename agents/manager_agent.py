@@ -119,7 +119,7 @@ class ManagerAgent:
         print("\nRunning ManagerAgent...", flush = True)
         # print("\nQuery:", query + "\n")
         plan, scratchpad, _ = self.react_agent.run(query)
-
+        self.query = query
         iterations = 1
         while plan == None:
                 print("Entering loop with iterations: ", iterations, flush = True)
