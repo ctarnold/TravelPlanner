@@ -200,7 +200,7 @@ def eval_score(set_type: str, file_path: str):
         result['Commonsense Constraint Macro Pass Rate'] = final_commonsense_cnt / 1000
         result['Hard Constraint Micro Pass Rate'] = constraint_dis_record['hard']['pass'] / 2290
         result['Hard Constraint Macro Pass Rate'] = final_hardConstraint_cnt / 1000
-        result['Final Pass Rate'] = final_all_cnt / 1000
+        result['Final Pass Rate'] = final_all_cnt / 1000 # TODO: This line is what I'm interested in. Just want final pass rate for whatever N queries from test I end up using.
     
 
     return result, {"Commonsense Constraint":remap_commonsense_constraint_record, "Hard Constraint":remap_hard_constraint_record}
