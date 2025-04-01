@@ -171,7 +171,7 @@ class ReactAgent:
                 name = "/scratch/gpfs/ca2992/models/Llama-3.1-8B-Instruct"
                 self.llm = LocalModel(model_path=name) 
                 self.llm.name=name 
-            print("Managed LLM: ", self.llm.name)
+            # print("Managed LLM: ", self.llm.name)
             self.max_token_length = 30000
 
         self.illegal_early_stop_patience = illegal_early_stop_patience
@@ -274,7 +274,7 @@ class ReactAgent:
 
 
         # action_type, action_arg = parse_action(action)
-        print(self.scratchpad.split('\n')[-1])
+        # print(self.scratchpad.split('\n')[-1])
         # self.log_file.write(self.scratchpad.split('\n')[-1]+'\n')
 
         # Observe
@@ -288,7 +288,7 @@ class ReactAgent:
         else:
             print("\n\n Action input: ", action, "\n\n", flush=True)
             self.tool_history += (action + '\n')
-            print("\n\nFirst response ", action, "\n\n", flush=True)
+            print("\n\nFirst response ", action_type, "\n\n", flush=True)
             
             if action_type != "Planner":
                 if action_type in actionMapping:

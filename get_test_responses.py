@@ -19,8 +19,6 @@ queries = df['query'][0:49]
 n = 5
 sets = [queries[i:i + n] for i in range(0, len(queries), n)]
 
-print(sets[0])
-
 dir = '/scratch/gpfs/ca2992/EvalData/'
 
 def run_slice_and_write(agent: ManagerAgent, index):
@@ -35,6 +33,7 @@ def run_slice_and_write(agent: ManagerAgent, index):
         dict[request] = plan
         results.append(dict)
         # Clean and reset the agent.
+        agent = "" # will slow things down, BUT completely clear model memory
         agent = ManagerAgent(query = "", tools= tools_list)
         if i % 3 == 0: # save some cpu mem
             with open(file_str, mode = "a+") as f:

@@ -56,6 +56,16 @@ class ManagerAgent:
         Evaluates the plan against the criteria and returns feedback.
         """
         print("\nEvaluating Plan...\n\n", flush = True)
+       
+        prompt = self.format_eval_prompt(plan, scratchpad)
+
+        self.llm.setMode("eval")
+        evaluation = self.llm(prompt)
+
+        # print("\nEvaluation: ", evaluation, "\n\n", flush = True)
+        return evaluation
+    
+    def format_eval_prompt(self, plan, scratchpad):
         prompt = "You are a manager agent evaluating a travel plan. Evaluate the plan on Budget Compliance, Room Rules, Room Type, Cuisine, Transportation, and Common Sense. Provide feedback for each specification, with reference to the user query. For example, if the plan is over budget, you need to include this in your feedback, as for the other categories."
         
         prompt = prompt + " The query is as follows: \n" + self.query + "\n\n"
@@ -71,12 +81,7 @@ class ManagerAgent:
         prompt = prompt + "Please see the following scratch work by a previous agent, including data and tools called. Scratchpad: " + scratchpad + "\n"
 
         prompt = prompt + "Give Feedback: \n"
-
-        self.llm.setMode("eval")
-        evaluation = self.llm(prompt)
-
-        print("\nEvaluation: ", evaluation, "\n\n", flush = True)
-        return evaluation
+        return prompt
 
     def refine_plan(self, plan: str, feedback: str, scratchpad:str) -> tuple[str, str, str]:
         """
@@ -103,9 +108,9 @@ class ManagerAgent:
         print("\nREFINING PLAN\n", flush = True)
         self.react_agent.reset_tool_history()
         self.react_agent.set_name("refinement")
-        refined_plan, refined_scratch, json = self.react_agent.run(refinement_prompt, reset=False) # Do I want true or false? True new agent, false keeps mems+ context.
-        
-        return refined_plan, refined_scratch, str(json)
+        refined_plan, refined_scratch, _ = self.react_agent.run(refinement_prompt, reset=False) # Do I want true or false? True new agent, false keeps mems+ context.
+        null_string = "not used"
+        return refined_plan, refined_scratch, null_string
 
     def run(self, query: str) -> tuple[str, str]:
         """
@@ -113,14 +118,14 @@ class ManagerAgent:
         """
         print("\nRunning ManagerAgent...", flush = True)
         # print("\nQuery:", query + "\n")
-        plan, scratchpad, json = self.react_agent.run(query)
+        plan, scratchpad, _ = self.react_agent.run(query)
 
         iterations = 1
         while plan == None:
                 print("Entering loop with iterations: ", iterations, flush = True)
                 iterations += 1
-                plan, scratchpad, json  = self.react_agent.run(query)
-        print("\nInitial Plan: ", plan, flush = True)
+                plan, scratchpad, _  = self.react_agent.run(query)
+        print("\nInitial Plan Generated", flush = True)
 
         if (len(plan) == 0 and len(str(json)) == 0):
             print("ERROR: No initial plan generated. Exiting.", flush=True)
@@ -134,17 +139,17 @@ class ManagerAgent:
         for i in range(self.max_iterations):
             evaluations = self.evaluate_plan(plan = str(plan), scratchpad=scratchpad)
 
-            new_plan, new_scratch, new_json = self.refine_plan(plan, evaluations, scratchpad)
+            new_plan, new_scratch, _ = self.refine_plan(plan, evaluations, scratchpad)
             if new_plan is not None and len(new_plan) != 0:
                 print("\n\n used new plan \n\n", flush=True)
                 plan = new_plan
                 scratchpad = scratchpad + new_scratch
-                json = new_json
             else:
                 print("\n\n new plan empty resetting agent \n\n", flush=True)
                 self.reset_agent()
         print("\nManagerAgent finished.")
-        return plan, str(json)
+        null_string = "not used"
+        return plan, null_string
 
 if __name__ == '__main__':
     # Example usage
