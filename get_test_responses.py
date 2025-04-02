@@ -14,7 +14,7 @@ tools_list = ["notebook", "flights", "attractions", "accommodations",
 # Display the DataFrame with specific columns
 
 queries = df['query']
-queries = df['query'][0:54]
+queries = df['query'][0:59]
 
 n = 5
 sets = [queries[i:i + n] for i in range(0, len(queries), n)]
