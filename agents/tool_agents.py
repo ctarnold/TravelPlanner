@@ -630,6 +630,10 @@ class ReactAgent:
         self.last_actions = []
         self.last_action_type = []
 
+        self.feedback = ""
+        self.tool_pad = "" # history of the results of tools
+        self.tool_history = "" # history of which tools are called
+
         if 'notebook' in self.tools:
             self.tools['notebook'].reset()
     
