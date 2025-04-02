@@ -40,6 +40,7 @@ class ManagerAgent:
     def reset_agent(self):
         self.query = ""
         self.react_agent.reset_agent()
+        self.react_agent.set_name("local")
         try:
             self.llm = LocalModel(model_path="../../agents/models/Qwen2.5-0.5B-Instruct") 
         except:
