@@ -573,7 +573,7 @@ class ReactAgent:
                 iterations = 0
                 return request
             except Exception as e:
-                # # print("\n\nException caught in prompt agent.\n\n", str(e), flush=True)
+                print("\n\nException caught in prompt agent.\n\n", str(e), flush=True)
                 iterations+=1
                 catch_openai_api_error() # TODO: Can this be openai error?
                 # # print(self._build_agent_prompt())
