@@ -33,12 +33,11 @@ def run_slice_and_write(agent: ManagerAgent, index):
         dict[request] = plan
         results.append(dict)
         agent.reset_agent()
-        if i % 3 == 0: # save some cpu mem
-            with open(file_str, mode = "a+") as f:
-                for item in results:
-                    print("###\n", file = f)
-                    print(str(item) + " \n", file = f)
-            results = []
+        with open(file_str, mode = "a+") as f:
+            for item in results:
+                print("###\n", file = f)
+                print(str(item) + " \n", file = f)
+        results = []
         i += 1
     with open(file_str, mode = "a+") as f:
         for item in results:
