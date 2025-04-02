@@ -257,6 +257,7 @@ class ReactAgent:
         self.last_action_type.append(action_type)
 
         if (self.compare_action_types()):
+            self.step_n += 1
             print("\nStuck in type loop. \n", flush = True)
             return
 

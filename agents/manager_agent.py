@@ -116,9 +116,12 @@ class ManagerAgent:
         self.query = query
         iterations = 1
         while plan == None:
-                print("Entering loop with iterations: ", iterations, flush = True)
-                iterations += 1
-                plan, scratchpad, _  = self.react_agent.run(query)
+            print("Entering loop with iterations: ", iterations, flush = True)
+            iterations += 1
+            plan, scratchpad, _  = self.react_agent.run(query)
+            if plan == None:
+                self.react_agent.reset_agent()
+
         print("\nInitial Plan Generated", flush = True)
 
         if (len(plan) == 0 and len(str(json)) == 0):
