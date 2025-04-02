@@ -9,6 +9,7 @@
 #SBATCH --mail-type=begin        # send email when job begins
 #SBATCH --mail-type=end          # send email when job ends
 #SBATCH --mail-user=ca2992@princeton.edu
+#SBATCH --constraint=gpu80
 
 module purge
 module load anaconda3/2024.6
