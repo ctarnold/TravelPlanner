@@ -95,6 +95,7 @@ class ReactAgent:
         self.feedback = ""
         self.tool_pad = "" # history of the results of tools
         self.tool_history = "" # history of which tools are called
+        self.tool_loop_counter = 0
 
         self.json_log = []
 
@@ -259,6 +260,8 @@ class ReactAgent:
         if (self.compare_action_types()):
             self.step_n += 1
             print("\nStuck in type loop. \n", flush = True)
+            self.tool_loop_counter += 1
+            # self.scratchpad += "\n You are stuck in an action loop. Call a different tool to exit."
             return
 
         self.json_log[-1]['action'] = self.scratchpad.split('\n')[-1].replace(f'\nAction {self.step_n}:',"")
@@ -614,6 +617,8 @@ class ReactAgent:
         return self.finished
 
     def is_halted(self) -> bool:
+        if self.tool_loop_counter == 4:
+            return True
         return ((self.step_n > self.max_steps) or (
                     len(self.enc.encode(self._build_agent_prompt())) > self.max_token_length)) and not self.finished
 
@@ -633,6 +638,7 @@ class ReactAgent:
         self.feedback = ""
         self.tool_pad = "" # history of the results of tools
         self.tool_history = "" # history of which tools are called
+        self.tool_loop_counter = 0
 
         if 'notebook' in self.tools:
             self.tools['notebook'].reset()
