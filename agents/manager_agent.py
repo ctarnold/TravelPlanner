@@ -39,13 +39,7 @@ class ManagerAgent:
     
     def reset_agent(self):
         self.query = ""
-        self.react_agent = ReactAgent(
-            args=None,
-            tools=self.tools,
-            react_llm_name=self.react_llm_name,
-            planner_llm_name=self.planner_llm_name,
-            max_steps=30
-        ) 
+        self.react_agent.reset_agent()
         try:
             self.llm = LocalModel(model_path="../../agents/models/Qwen2.5-0.5B-Instruct") 
         except:

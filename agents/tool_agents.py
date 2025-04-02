@@ -199,14 +199,14 @@ class ReactAgent:
 
         self.enc = tiktoken.encoding_for_model("gpt-3.5-turbo")
 
-        self.__reset_agent()
+        self.reset_agent()
 
     def run(self, query, reset=True):
 
         self.query = query
         
         if reset:
-            self.__reset_agent()
+            self.reset_agent()
 
         while not self.is_halted() and not self.is_finished():
             self.step()
@@ -617,7 +617,7 @@ class ReactAgent:
                     len(self.enc.encode(self._build_agent_prompt())) > self.max_token_length)) and not self.finished
 
     # TODO: Validate if init to self.answer = None would help. 
-    def __reset_agent(self) -> None:
+    def reset_agent(self) -> None:
         self.step_n = 1
         self.finished = False
         self.answer = None # Changed from ''

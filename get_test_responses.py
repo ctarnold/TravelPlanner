@@ -14,7 +14,7 @@ tools_list = ["notebook", "flights", "attractions", "accommodations",
 # Display the DataFrame with specific columns
 
 queries = df['query']
-queries = df['query'][0:49]
+queries = df['query'][0:54]
 
 n = 5
 sets = [queries[i:i + n] for i in range(0, len(queries), n)]
@@ -32,9 +32,7 @@ def run_slice_and_write(agent: ManagerAgent, index):
         dict = {}
         dict[request] = plan
         results.append(dict)
-        # Clean and reset the agent.
-        agent = "" # will slow things down, BUT completely clear model memory
-        agent = ManagerAgent(query = "", tools= tools_list)
+        agent.reset_agent()
         if i % 3 == 0: # save some cpu mem
             with open(file_str, mode = "a+") as f:
                 for item in results:
