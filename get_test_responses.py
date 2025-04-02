@@ -14,12 +14,12 @@ tools_list = ["notebook", "flights", "attractions", "accommodations",
 # Display the DataFrame with specific columns
 
 queries = df['query']
-queries = df['query'][0:59]
+queries = df['query'][60:160]
 
-n = 5
+n = 10
 sets = [queries[i:i + n] for i in range(0, len(queries), n)]
 
-dir = '/scratch/gpfs/ca2992/EvalData/'
+dir = '/scratch/gpfs/ca2992/EvalData/large_batch'
 
 def run_slice_and_write(agent: ManagerAgent, index):
     file_str = dir + "out_" + str(index) +".txt"
@@ -36,6 +36,8 @@ def run_slice_and_write(agent: ManagerAgent, index):
         with open(file_str, mode = "a+") as f:
             for item in results:
                 print("###\n", file = f)
+                q_number = 60+n*index + i
+                print("\nQuery: ", q_number, "\n", file=f)
                 print(str(item) + " \n", file = f)
         results = []
         i += 1
