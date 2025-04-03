@@ -31,6 +31,7 @@ def run_slice_and_write(agent: ManagerAgent, index):
     for val in (sets[index]):
         q_number = init+n*index + i
         if (q_number not in clean_up):
+            i += 1
             continue
         request = val
         print("\nrequest in eval ", request, "\n", flush = True)
