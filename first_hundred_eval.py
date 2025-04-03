@@ -25,7 +25,7 @@ sets = [queries[i:i + n] for i in range(0, len(queries), n)]
 dir = '/scratch/gpfs/ca2992/EvalData/first_hundred/'
 
 def run_slice_and_write(agent: ManagerAgent, index):
-    file_str = dir + "out_" + str(index) +".txt"
+    file_str = dir + "out_" + "clean" +".txt"
     results = []
     i = 0
     for val in (sets[index]):
