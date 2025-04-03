@@ -17,7 +17,7 @@ queries = df['query']
 init = 0
 queries = df['query'][init:100]
 
-clean_up = [99, 19, 39, 69]
+clean_up = [14]
 
 n = 100
 sets = [queries[i:i + n] for i in range(0, len(queries), n)]
