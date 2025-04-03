@@ -15,9 +15,11 @@ tools_list = ["notebook", "flights", "attractions", "accommodations",
 
 queries = df['query']
 init = 0
-queries = df['query'][init:99]
+queries = df['query'][init:100]
 
-n = 10
+clean_up = [99, 19, 39, 69]
+
+n = 100
 sets = [queries[i:i + n] for i in range(0, len(queries), n)]
 
 dir = '/scratch/gpfs/ca2992/EvalData/first_hundred/'
@@ -28,6 +30,8 @@ def run_slice_and_write(agent: ManagerAgent, index):
     i = 0
     for val in (sets[index]):
         q_number = init+n*index + i
+        if (q_number not in clean_up):
+            continue
         request = val
         print("\nrequest in eval ", request, "\n", flush = True)
         plan, _ = agent.run(request)
