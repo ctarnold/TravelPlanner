@@ -7,7 +7,7 @@ def main():
 
     
     # Test query
-    query = "Please create a 3-day travel itinerary for one person, beginning in Dallas and ending in Indianapolis between March 25th and March 27th, 2022. My budget for this trip is $1,300."
+    query = "Please plan a trip for me starting from Sarasota to Chicago for 3 days, from March 22nd to March 24th, 2022. The budget for this trip is set at $1,900"
     
     manager = ManagerAgent(query = query, tools=tools_list)
     final_plan, _ = manager.run(query)
