@@ -259,7 +259,7 @@ class ReactAgent:
 
         if (self.compare_action_types()):
             self.step_n += 1
-            print("\nStuck in type loop. \n", flush = True)
+            # print("\nStuck in type loop. \n", flush = True)
             self.tool_loop_counter += 1
             # self.scratchpad += "\n You are stuck in an action loop. Call a different tool to exit."
             return
@@ -269,11 +269,11 @@ class ReactAgent:
 
         # examine if the same action has been repeated 3 times consecutively
         if len(self.last_actions) == 3:
-            print("The same action has been repeated 3 times consecutively. So we stop here.", flush=True)
+            # print("The same action has been repeated 3 times consecutively. So we stop here.", flush=True)
             # self.log_file.write("The same action has been repeated 3 times consecutively. So we stop here.")
             self.json_log[-1]['state'] = 'same action 3 times repeated'
             self.finished = True
-            print("\n\nNO ANSWER GIVEN\n\n", flush=True)
+            # print("\n\nNO ANSWER GIVEN\n\n", flush=True)
             return # may return here with no answer
 
 
@@ -290,9 +290,9 @@ class ReactAgent:
             self.scratchpad += "No feedback from the environment due to the null action. Please make sure your action does not start with [Thought, Action, Observation]."
         
         else:
-            print("\n\n Action input: ", action, "\n\n", flush=True)
+            # print("\n\n Action input: ", action, "\n\n", flush=True)
             self.tool_history += (action + '\n')
-            print("\n\nFirst response ", action_type, "\n\n", flush=True)
+            # print("\n\nFirst response ", action_type, "\n\n", flush=True)
             
             if action_type != "Planner":
                 if action_type in actionMapping:
@@ -576,7 +576,7 @@ class ReactAgent:
                 iterations = 0
                 return request
             except Exception as e:
-                print("\n\nException caught in prompt agent.\n\n", str(e), flush=True)
+                # print("\n\nException caught in prompt agent.\n\n", str(e), flush=True)
                 iterations+=1
                 catch_openai_api_error() # TODO: Can this be openai error?
                 # # print(self._build_agent_prompt())

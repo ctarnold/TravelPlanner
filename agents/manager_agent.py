@@ -112,7 +112,7 @@ class ManagerAgent:
         Runs the manager agent to generate and refine a travel plan.
         """
         print("\nRunning ManagerAgent...", flush = True)
-        # print("\nQuery:", query + "\n")
+        print("\nQuery:", query + "\n")
         plan, scratchpad, _ = self.react_agent.run(query)
         self.query = query
         iterations = 1
@@ -123,7 +123,7 @@ class ManagerAgent:
             if plan == None:
                 self.react_agent.reset_agent()
 
-        print("\nInitial Plan Generated", flush = True)
+        print("\nInitial Plan Generated", plan, flush = True)
 
         if (len(plan) == 0 and len(str(json)) == 0):
             print("ERROR: No initial plan generated. Exiting.", flush=True)
@@ -136,6 +136,7 @@ class ManagerAgent:
         print("\nEvaluating Plan with ", self.max_iterations, " iterations.")
         for i in range(self.max_iterations):
             evaluations = self.evaluate_plan(plan = str(plan), scratchpad=scratchpad)
+            print("Evaluations: ", evaluations, flush = True)
 
             new_plan, new_scratch, _ = self.refine_plan(plan, evaluations, scratchpad)
             if new_plan is not None and len(new_plan) != 0:
@@ -157,4 +158,3 @@ if __name__ == '__main__':
     manager = ManagerAgent(query=query, tools=tools_list)
     final_plan, json = manager.run(query)
     print("Final Plan:", final_plan)
-    print("JSON:", json)
